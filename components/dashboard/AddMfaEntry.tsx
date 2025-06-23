@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import { InView } from '@/components/motion-primitives/in-view'
 import { Button, Card, FormInput, SectionHeader, StatusMessage } from '@/components/ui'
-import { createClient } from '@/utils/supabase/client'
 
 interface AddMfaEntryProps {
   onAdd: () => void
@@ -29,29 +28,41 @@ export default function AddMfaEntry({ onAdd }: AddMfaEntryProps) {
     setIsLoading(true)
     
     try {
-      const supabase = createClient()
-      const { error: insertError } = await supabase
-        .from('mfa_entries')
-        .insert({
+      const response = await fetch('/api/mfa', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           name: name.trim(),
           secret: secret.trim(),
           notes: notes.trim() || null,
-        })
+        }),
+      })
 
-      if (insertError) {
-        console.error('Error adding MFA entry:', insertError)
-        setError('Failed to add MFA entry. Please try again.')
+      const data = await response.json()
+
+      if (!response.ok) {
+        console.error('Error adding MFA entry:', data.error)
+        // Handle specific error cases
+        if (response.status === 401) {
+          setError('You must be logged in to add MFA entries. Please refresh the page and try again.')
+        } else if (response.status === 400) {
+          setError(data.error || 'Invalid input data')
+        } else {
+          setError(data.error || 'Failed to add MFA entry. Please try again.')
+        }
         return
       }
 
-      // Reset form
+      // Reset form on success
       setName('')
       setSecret('')
       setNotes('')
       onAdd()
     } catch (err) {
       console.error('Error adding MFA entry:', err)
-      setError('An unexpected error occurred. Please try again.')
+      setError('Network error. Please check your connection and try again.')
     } finally {
       setIsLoading(false)
     }

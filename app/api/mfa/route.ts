@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const supabase = await createClient()
     
-    const { data: user, error: authError } = await supabase.auth.getUser()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -19,7 +19,8 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      console.error('Database error fetching MFA entries:', error)
+      return NextResponse.json({ error: 'Failed to fetch MFA entries' }, { status: 500 })
     }
 
     // Decrypt secrets for client use
@@ -29,7 +30,8 @@ export async function GET() {
     }))
 
     return NextResponse.json({ entries: decryptedEntries })
-  } catch {
+  } catch (error) {
+    console.error('MFA GET API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -38,7 +40,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
     
-    const { data: user, error: authError } = await supabase.auth.getUser()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -50,13 +52,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Name and secret are required' }, { status: 400 })
     }
 
-    const encryptedSecret = encryptSecret(secret)
+    // Validate secret format (basic TOTP secret validation)
+    if (typeof secret !== 'string' || secret.trim().length < 16) {
+      return NextResponse.json({ error: 'Invalid secret format' }, { status: 400 })
+    }
+
+    const encryptedSecret = encryptSecret(secret.trim())
 
     const newEntry: MfaEntryInsert = {
-      user_id: user.user.id,
-      name,
+      user_id: user.id,
+      name: name.trim(),
       secret: encryptedSecret,
-      notes: notes || null,
+      notes: notes?.trim() || null,
     }
 
     const { data: entry, error } = await supabase
@@ -66,17 +73,44 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      console.error('Database error inserting MFA entry:', error)
+      
+      // Handle specific database errors
+      if (error.code === '42501') {
+        return NextResponse.json({ error: 'Permission denied' }, { status: 403 })
+      } else if (error.code === '23505') {
+        return NextResponse.json({ error: 'An entry with this name already exists' }, { status: 409 })
+      } else {
+        return NextResponse.json({ error: 'Failed to create MFA entry' }, { status: 500 })
+      }
     }
 
-    // Return with decrypted secret
+    // Return with decrypted secret for immediate use
     const responseEntry = {
       ...entry,
       secret: decryptSecret(entry.secret)
     }
 
+    // Track MFA entry creation event
+    try {
+      await supabase
+        .from('usage_events')
+        .insert({
+          user_id: user.id,
+          action: 'mfa_added',
+          metadata: {
+            entry_name: name.trim(),
+            entry_id: entry.id
+          }
+        })
+    } catch (usageError) {
+      // Don't fail the request if usage tracking fails
+      console.warn('Failed to track MFA creation event:', usageError)
+    }
+
     return NextResponse.json({ entry: responseEntry }, { status: 201 })
-  } catch {
+  } catch (error) {
+    console.error('MFA API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 } 
