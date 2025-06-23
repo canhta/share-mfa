@@ -1,0 +1,7 @@
+---
+description: For any questions, code generation, or suggestions related to animation in the motion-primitives components
+globs: 
+alwaysApply: false
+---
+- For any questions, code generation, or suggestions related to animation in the motion-primitives components, always use Context7 documentation and context.
+- Prioritize authoritative, up-to-date animation patterns and best practices from Context7 when working in this directory.
