@@ -1,85 +1,85 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import { TextEffect } from '@/components/motion-primitives/text-effect'
-import { generateTOTP, getTimeRemaining } from '@/lib/totp'
-import type { MfaEntry } from '@/types/database'
+import { TextEffect } from "@/components/motion-primitives/text-effect";
+import { generateTOTP, getTimeRemaining } from "@/lib/totp";
+import type { MfaEntry } from "@/types/database";
 
-import AddMfaEntry from '../dashboard/AddMfaEntry'
-import MfaEntryCard from './MfaEntryCard'
+import AddMfaEntry from "../dashboard/AddMfaEntry";
+import MfaEntryCard from "./MfaEntryCard";
 
 export default function MfaEntryList() {
-  const [entries, setEntries] = useState<MfaEntry[]>([])
-  const [loading, setLoading] = useState(true)
-  const [currentCodes, setCurrentCodes] = useState<Record<string, string>>({})
-  const [timeRemaining, setTimeRemaining] = useState(30)
+  const [entries, setEntries] = useState<MfaEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentCodes, setCurrentCodes] = useState<Record<string, string>>({});
+  const [timeRemaining, setTimeRemaining] = useState(30);
 
   const fetchEntries = async () => {
     try {
-      const response = await fetch('/api/mfa')
+      const response = await fetch("/api/mfa");
       if (response.ok) {
-        const data = await response.json()
-        setEntries(data.entries || [])
-        
+        const data = await response.json();
+        setEntries(data.entries || []);
+
         // Generate initial TOTP codes
-        const codes: Record<string, string> = {}
+        const codes: Record<string, string> = {};
         data.entries?.forEach((entry: MfaEntry) => {
           if (entry.secret) {
-            codes[entry.id] = generateTOTP(entry.secret)
+            codes[entry.id] = generateTOTP(entry.secret);
           }
-        })
-        setCurrentCodes(codes)
+        });
+        setCurrentCodes(codes);
       }
     } catch (error) {
-      console.error('Error fetching MFA entries:', error)
+      console.error("Error fetching MFA entries:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchEntries()
-  }, [])
+    fetchEntries();
+  }, []);
 
   // Update TOTP codes and countdown timer
   useEffect(() => {
     const updateCodes = () => {
-      const codes: Record<string, string> = {}
+      const codes: Record<string, string> = {};
       entries.forEach((entry) => {
         if (entry.secret) {
-          codes[entry.id] = generateTOTP(entry.secret)
+          codes[entry.id] = generateTOTP(entry.secret);
         }
-      })
-      setCurrentCodes(codes)
-      setTimeRemaining(getTimeRemaining())
-    }
+      });
+      setCurrentCodes(codes);
+      setTimeRemaining(getTimeRemaining());
+    };
 
-    updateCodes() // Initial update
-    const interval = setInterval(updateCodes, 1000) // Update every second
+    updateCodes(); // Initial update
+    const interval = setInterval(updateCodes, 1000); // Update every second
 
-    return () => clearInterval(interval)
-  }, [entries])
+    return () => clearInterval(interval);
+  }, [entries]);
 
   const handleEntryAdded = () => {
-    fetchEntries() // Refresh the entire list
-  }
+    fetchEntries(); // Refresh the entire list
+  };
 
   const handleEntryDeleted = (entryId: string) => {
-    setEntries(prev => prev.filter(entry => entry.id !== entryId))
-    setCurrentCodes(prev => {
-      const updated = { ...prev }
-      delete updated[entryId]
-      return updated
-    })
-  }
+    setEntries((prev) => prev.filter((entry) => entry.id !== entryId));
+    setCurrentCodes((prev) => {
+      const updated = { ...prev };
+      delete updated[entryId];
+      return updated;
+    });
+  };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -108,20 +108,21 @@ export default function MfaEntryList() {
               />
             </svg>
           </div>
-          <TextEffect 
-            per="word" 
+          <TextEffect
+            per="word"
             preset="slide"
             className="text-lg font-medium text-gray-900 dark:text-white mb-2"
           >
             No MFA codes yet
           </TextEffect>
-          <TextEffect 
-            per="word" 
+          <TextEffect
+            per="word"
             preset="fade-in-blur"
             delay={0.3}
             className="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-sm mx-auto"
           >
-            Get started by adding your first multi-factor authentication code to begin sharing securely.
+            Get started by adding your first multi-factor authentication code to
+            begin sharing securely.
           </TextEffect>
         </div>
       ) : (
@@ -130,7 +131,7 @@ export default function MfaEntryList() {
             <MfaEntryCard
               key={entry.id}
               entry={entry}
-              currentCode={currentCodes[entry.id] || '------'}
+              currentCode={currentCodes[entry.id] || "------"}
               timeRemaining={timeRemaining}
               onDelete={() => handleEntryDeleted(entry.id)}
             />
@@ -138,5 +139,5 @@ export default function MfaEntryList() {
         </div>
       )}
     </div>
-  )
-} 
+  );
+}

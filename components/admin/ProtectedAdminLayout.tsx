@@ -1,78 +1,79 @@
-'use client'
+"use client";
 
-import type { User } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
-import { ReactNode, useEffect, useState } from 'react'
+import type { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect, useState } from "react";
 
-import AdminLayout from '@/components/admin/AdminLayout'
+import AdminLayout from "@/components/admin/AdminLayout";
 
 interface ProtectedAdminLayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 interface LoadingState {
-  isLoading: boolean
-  user: User | null
-  isAdmin: boolean
-  error: string | null
+  isLoading: boolean;
+  user: User | null;
+  isAdmin: boolean;
+  error: string | null;
 }
 
-export default function ProtectedAdminLayout({ children }: ProtectedAdminLayoutProps) {
-  const router = useRouter()
+export default function ProtectedAdminLayout({
+  children,
+}: ProtectedAdminLayoutProps) {
+  const router = useRouter();
   const [state, setState] = useState<LoadingState>({
     isLoading: true,
     user: null,
     isAdmin: false,
-    error: null
-  })
+    error: null,
+  });
 
   useEffect(() => {
     const checkAuthAndRole = async () => {
       try {
-        const response = await fetch('/api/auth/admin')
-        
+        const response = await fetch("/api/auth/admin");
+
         if (response.status === 401) {
-          router.push('/login')
-          return
+          router.push("/login");
+          return;
         }
 
         if (response.status === 403) {
-          router.push('/dashboard')
-          return
+          router.push("/dashboard");
+          return;
         }
 
         if (!response.ok) {
-          const errorData = await response.json()
-          setState(prev => ({ 
-            ...prev, 
-            isLoading: false, 
-            error: errorData.error || 'Failed to verify admin permissions' 
-          }))
-          return
+          const errorData = await response.json();
+          setState((prev) => ({
+            ...prev,
+            isLoading: false,
+            error: errorData.error || "Failed to verify admin permissions",
+          }));
+          return;
         }
 
-        const data = await response.json()
-        
+        const data = await response.json();
+
         // User is authenticated and is admin
         setState({
           isLoading: false,
           user: data.user,
           isAdmin: data.isAdmin,
-          error: null
-        })
-
+          error: null,
+        });
       } catch (error) {
-        console.error('Error in auth check:', error)
-        setState(prev => ({ 
-          ...prev, 
-          isLoading: false, 
-          error: 'Authentication error occurred' 
-        }))
+        console.error("Error in auth check:", error);
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: "Authentication error occurred",
+        }));
       }
-    }
+    };
 
-    checkAuthAndRole()
-  }, [router])
+    checkAuthAndRole();
+  }, [router]);
 
   // Loading state
   if (state.isLoading) {
@@ -83,7 +84,7 @@ export default function ProtectedAdminLayout({ children }: ProtectedAdminLayoutP
           <p className="mt-4 text-gray-600">Verifying admin access...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Error state
@@ -95,7 +96,7 @@ export default function ProtectedAdminLayout({ children }: ProtectedAdminLayoutP
             <h3 className="font-bold">Access Error</h3>
             <p>{state.error}</p>
             <button
-              onClick={() => router.push('/dashboard')}
+              onClick={() => router.push("/dashboard")}
               className="mt-3 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded"
             >
               Return to Dashboard
@@ -103,7 +104,7 @@ export default function ProtectedAdminLayout({ children }: ProtectedAdminLayoutP
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Not admin (should not reach here due to redirect, but safety check)
@@ -115,7 +116,7 @@ export default function ProtectedAdminLayout({ children }: ProtectedAdminLayoutP
             <h3 className="font-bold">Access Denied</h3>
             <p>You don&apos;t have permission to access the admin panel.</p>
             <button
-              onClick={() => router.push('/dashboard')}
+              onClick={() => router.push("/dashboard")}
               className="mt-3 bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded"
             >
               Return to Dashboard
@@ -123,13 +124,9 @@ export default function ProtectedAdminLayout({ children }: ProtectedAdminLayoutP
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // User is authenticated and admin - render admin layout
-  return (
-    <AdminLayout user={state.user}>
-      {children}
-    </AdminLayout>
-  )
+  return <AdminLayout user={state.user}>{children}</AdminLayout>;
 }

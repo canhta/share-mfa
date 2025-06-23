@@ -1,41 +1,41 @@
-'use client'
+"use client";
 
-import { BarChart3, Shield, TrendingUp, Users } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { BarChart3, Shield, TrendingUp, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface DashboardStats {
-  totalUsers: number
-  activeUsers: number
-  mfaEntriesCreated: number
-  shareLinksGenerated: number
-  unreadAlerts: number
-  systemHealth: string
+  totalUsers: number;
+  activeUsers: number;
+  mfaEntriesCreated: number;
+  shareLinksGenerated: number;
+  unreadAlerts: number;
+  systemHealth: string;
 }
 
 interface AnalyticsData {
   overview: {
-    totalUsers: number
-    activeUsers: number
-    mfaEntriesCreated: number
-    shareLinksGenerated: number
-  }
+    totalUsers: number;
+    activeUsers: number;
+    mfaEntriesCreated: number;
+    shareLinksGenerated: number;
+  };
   userAnalytics: {
     tierDistribution: {
-      free: number
-      pro: number
-      enterprise: number
-    }
-  }
+      free: number;
+      pro: number;
+      enterprise: number;
+    };
+  };
   leadAnalytics: {
-    total: number
-    new: number
-    contacted: number
-    converted: number
-  }
+    total: number;
+    new: number;
+    contacted: number;
+    converted: number;
+  };
   revenueAnalytics: {
-    totalRevenue: number
-    subscriptions: number
-  }
+    totalRevenue: number;
+    subscriptions: number;
+  };
 }
 
 export default function AdminDashboard() {
@@ -45,50 +45,49 @@ export default function AdminDashboard() {
     mfaEntriesCreated: 0,
     shareLinksGenerated: 0,
     unreadAlerts: 0,
-    systemHealth: 'healthy'
-  })
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
-  const [loading, setLoading] = useState(true)
+    systemHealth: "healthy",
+  });
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         // Fetch analytics data
-        const analyticsResponse = await fetch('/api/admin/analytics')
+        const analyticsResponse = await fetch("/api/admin/analytics");
         if (analyticsResponse.ok) {
-          const analyticsData = await analyticsResponse.json()
-          setAnalytics(analyticsData)
-          
+          const analyticsData = await analyticsResponse.json();
+          setAnalytics(analyticsData);
+
           // Update stats from analytics
-          setStats(prev => ({
+          setStats((prev) => ({
             ...prev,
             totalUsers: analyticsData.overview.totalUsers,
             activeUsers: analyticsData.overview.activeUsers,
             mfaEntriesCreated: analyticsData.overview.mfaEntriesCreated,
-            shareLinksGenerated: analyticsData.overview.shareLinksGenerated
-          }))
+            shareLinksGenerated: analyticsData.overview.shareLinksGenerated,
+          }));
         }
 
         // Fetch system health
-        const systemResponse = await fetch('/api/admin/system')
+        const systemResponse = await fetch("/api/admin/system");
         if (systemResponse.ok) {
-          const systemData = await systemResponse.json()
-          setStats(prev => ({
+          const systemData = await systemResponse.json();
+          setStats((prev) => ({
             ...prev,
             systemHealth: systemData.systemHealth.status,
-            unreadAlerts: systemData.systemHealth.alerts.unresolved
-          }))
+            unreadAlerts: systemData.systemHealth.alerts.unresolved,
+          }));
         }
-
       } catch (error) {
-        console.error('Error fetching dashboard data:', error)
+        console.error("Error fetching dashboard data:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchDashboardData()
-  }, [])
+    fetchDashboardData();
+  }, []);
 
   if (loading) {
     return (
@@ -111,39 +110,40 @@ export default function AdminDashboard() {
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   const statCards = [
     {
-      name: 'Total Users',
+      name: "Total Users",
       stat: stats.totalUsers.toLocaleString(),
       icon: Users,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
     },
     {
-      name: 'Active Users',
+      name: "Active Users",
       stat: stats.activeUsers.toLocaleString(),
       icon: TrendingUp,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100'
+      color: "text-green-600",
+      bgColor: "bg-green-100",
     },
     {
-      name: 'MFA Entries',
+      name: "MFA Entries",
       stat: stats.mfaEntriesCreated.toLocaleString(),
       icon: Shield,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
     },
     {
-      name: 'System Health',
+      name: "System Health",
       stat: stats.systemHealth,
       icon: BarChart3,
-      color: stats.systemHealth === 'healthy' ? 'text-green-600' : 'text-red-600',
-      bgColor: stats.systemHealth === 'healthy' ? 'bg-green-100' : 'bg-red-100'
-    }
-  ]
+      color:
+        stats.systemHealth === "healthy" ? "text-green-600" : "text-red-600",
+      bgColor: stats.systemHealth === "healthy" ? "bg-green-100" : "bg-red-100",
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -160,9 +160,12 @@ export default function AdminDashboard() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((item) => {
-          const IconComponent = item.icon
+          const IconComponent = item.icon;
           return (
-            <div key={item.name} className="bg-white overflow-hidden shadow rounded-lg">
+            <div
+              key={item.name}
+              className="bg-white overflow-hidden shadow rounded-lg"
+            >
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -183,7 +186,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -268,7 +271,9 @@ export default function AdminDashboard() {
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Active Subscriptions</span>
+                  <span className="text-sm text-gray-600">
+                    Active Subscriptions
+                  </span>
                   <span className="text-sm font-semibold text-gray-900">
                     {analytics.revenueAnalytics.subscriptions}
                   </span>
@@ -286,17 +291,26 @@ export default function AdminDashboard() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">System Health</span>
-                  <span className={`text-sm font-semibold ${
-                    stats.systemHealth === 'healthy' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {stats.systemHealth.charAt(0).toUpperCase() + stats.systemHealth.slice(1)}
+                  <span
+                    className={`text-sm font-semibold ${
+                      stats.systemHealth === "healthy"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {stats.systemHealth.charAt(0).toUpperCase() +
+                      stats.systemHealth.slice(1)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Unresolved Alerts</span>
-                  <span className={`text-sm font-semibold ${
-                    stats.unreadAlerts > 0 ? 'text-red-600' : 'text-green-600'
-                  }`}>
+                  <span className="text-sm text-gray-600">
+                    Unresolved Alerts
+                  </span>
+                  <span
+                    className={`text-sm font-semibold ${
+                      stats.unreadAlerts > 0 ? "text-red-600" : "text-green-600"
+                    }`}
+                  >
                     {stats.unreadAlerts}
                   </span>
                 </div>
@@ -318,15 +332,21 @@ export default function AdminDashboard() {
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <Users className="h-8 w-8 text-blue-600 mb-2" />
-              <h4 className="text-sm font-medium text-gray-900">Manage Users</h4>
-              <p className="text-xs text-gray-500">View and manage user accounts</p>
+              <h4 className="text-sm font-medium text-gray-900">
+                Manage Users
+              </h4>
+              <p className="text-xs text-gray-500">
+                View and manage user accounts
+              </p>
             </a>
             <a
               href="/admin/leads"
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <TrendingUp className="h-8 w-8 text-green-600 mb-2" />
-              <h4 className="text-sm font-medium text-gray-900">Review Leads</h4>
+              <h4 className="text-sm font-medium text-gray-900">
+                Review Leads
+              </h4>
               <p className="text-xs text-gray-500">Follow up on new leads</p>
             </a>
             <a
@@ -334,7 +354,9 @@ export default function AdminDashboard() {
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <BarChart3 className="h-8 w-8 text-purple-600 mb-2" />
-              <h4 className="text-sm font-medium text-gray-900">View Analytics</h4>
+              <h4 className="text-sm font-medium text-gray-900">
+                View Analytics
+              </h4>
               <p className="text-xs text-gray-500">Detailed platform metrics</p>
             </a>
             <a
@@ -342,12 +364,14 @@ export default function AdminDashboard() {
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <Shield className="h-8 w-8 text-red-600 mb-2" />
-              <h4 className="text-sm font-medium text-gray-900">System Health</h4>
+              <h4 className="text-sm font-medium text-gray-900">
+                System Health
+              </h4>
               <p className="text-xs text-gray-500">Monitor system status</p>
             </a>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

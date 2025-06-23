@@ -1,89 +1,89 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import { InView } from '@/components/motion-primitives/in-view'
-import { TextEffect } from '@/components/motion-primitives/text-effect'
-import { Button, EmptyState } from '@/components/ui'
-import { generateTOTP, getTimeRemaining } from '@/lib/totp'
-import type { MfaEntry } from '@/types/database'
+import { InView } from "@/components/motion-primitives/in-view";
+import { TextEffect } from "@/components/motion-primitives/text-effect";
+import { Button, EmptyState } from "@/components/ui";
+import { generateTOTP, getTimeRemaining } from "@/lib/totp";
+import type { MfaEntry } from "@/types/database";
 
-import AddMfaModal from './AddMfaModal'
-import MfaEntryCard from './MfaEntryCard'
+import AddMfaModal from "./AddMfaModal";
+import MfaEntryCard from "./MfaEntryCard";
 
 export default function MfaManagement() {
-  const [entries, setEntries] = useState<MfaEntry[]>([])
-  const [loading, setLoading] = useState(true)
-  const [currentCodes, setCurrentCodes] = useState<Record<string, string>>({})
-  const [timeRemaining, setTimeRemaining] = useState(30)
-  const [showAddModal, setShowAddModal] = useState(false)
+  const [entries, setEntries] = useState<MfaEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentCodes, setCurrentCodes] = useState<Record<string, string>>({});
+  const [timeRemaining, setTimeRemaining] = useState(30);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const fetchEntries = async () => {
     try {
-      const response = await fetch('/api/mfa')
+      const response = await fetch("/api/mfa");
       if (response.ok) {
-        const data = await response.json()
-        setEntries(data.entries || [])
-        
+        const data = await response.json();
+        setEntries(data.entries || []);
+
         // Generate initial TOTP codes
-        const codes: Record<string, string> = {}
+        const codes: Record<string, string> = {};
         data.entries?.forEach((entry: MfaEntry) => {
           if (entry.secret) {
-            codes[entry.id] = generateTOTP(entry.secret)
+            codes[entry.id] = generateTOTP(entry.secret);
           }
-        })
-        setCurrentCodes(codes)
+        });
+        setCurrentCodes(codes);
       }
     } catch (error) {
-      console.error('Error fetching MFA entries:', error)
+      console.error("Error fetching MFA entries:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchEntries()
-  }, [])
+    fetchEntries();
+  }, []);
 
   // Update TOTP codes and countdown timer
   useEffect(() => {
     const updateCodes = () => {
-      const codes: Record<string, string> = {}
+      const codes: Record<string, string> = {};
       entries.forEach((entry) => {
         if (entry.secret) {
-          codes[entry.id] = generateTOTP(entry.secret)
+          codes[entry.id] = generateTOTP(entry.secret);
         }
-      })
-      setCurrentCodes(codes)
-      setTimeRemaining(getTimeRemaining())
-    }
+      });
+      setCurrentCodes(codes);
+      setTimeRemaining(getTimeRemaining());
+    };
 
-    updateCodes() // Initial update
-    const interval = setInterval(updateCodes, 1000) // Update every second
+    updateCodes(); // Initial update
+    const interval = setInterval(updateCodes, 1000); // Update every second
 
-    return () => clearInterval(interval)
-  }, [entries])
+    return () => clearInterval(interval);
+  }, [entries]);
 
   const handleEntryAdded = () => {
-    fetchEntries() // Refresh the entire list
-    setShowAddModal(false)
-  }
+    fetchEntries(); // Refresh the entire list
+    setShowAddModal(false);
+  };
 
   const handleEntryDeleted = (entryId: string) => {
-    setEntries(prev => prev.filter(entry => entry.id !== entryId))
-    setCurrentCodes(prev => {
-      const updated = { ...prev }
-      delete updated[entryId]
-      return updated
-    })
-  }
+    setEntries((prev) => prev.filter((entry) => entry.id !== entryId));
+    setCurrentCodes((prev) => {
+      const updated = { ...prev };
+      delete updated[entryId];
+      return updated;
+    });
+  };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -92,22 +92,23 @@ export default function MfaManagement() {
       <InView
         variants={{
           hidden: { opacity: 0, y: 20 },
-          visible: { opacity: 1, y: 0 }
+          visible: { opacity: 1, y: 0 },
         }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         viewOptions={{ once: true }}
       >
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 glass-neutral rounded-2xl">
           <div>
-            <TextEffect 
-              per="word" 
+            <TextEffect
+              per="word"
               preset="slide"
               className="text-xl font-semibold text-slate-900 mb-1"
             >
               Your MFA Codes
             </TextEffect>
             <div className="text-sm text-slate-600">
-              {entries.length} {entries.length === 1 ? 'code' : 'codes'} configured
+              {entries.length} {entries.length === 1 ? "code" : "codes"}{" "}
+              configured
             </div>
           </div>
           <Button
@@ -139,7 +140,7 @@ export default function MfaManagement() {
         <InView
           variants={{
             hidden: { opacity: 0, scale: 0.95 },
-            visible: { opacity: 1, scale: 1 }
+            visible: { opacity: 1, scale: 1 },
           }}
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
           viewOptions={{ once: true }}
@@ -165,7 +166,7 @@ export default function MfaManagement() {
             action={{
               label: "Add Your First MFA Code",
               onClick: () => setShowAddModal(true),
-              variant: "primary"
+              variant: "primary",
             }}
           />
         </InView>
@@ -176,18 +177,18 @@ export default function MfaManagement() {
               key={entry.id}
               variants={{
                 hidden: { opacity: 0, y: 30, scale: 0.95 },
-                visible: { opacity: 1, y: 0, scale: 1 }
+                visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ 
-                duration: 0.5, 
-                delay: 0.1 + (index * 0.1), 
-                ease: "easeOut" 
+              transition={{
+                duration: 0.5,
+                delay: 0.1 + index * 0.1,
+                ease: "easeOut",
               }}
               viewOptions={{ once: true }}
             >
               <MfaEntryCard
                 entry={entry}
-                currentCode={currentCodes[entry.id] || '------'}
+                currentCode={currentCodes[entry.id] || "------"}
                 timeRemaining={timeRemaining}
                 onDelete={() => handleEntryDeleted(entry.id)}
               />
@@ -203,5 +204,5 @@ export default function MfaManagement() {
         onAdd={handleEntryAdded}
       />
     </div>
-  )
+  );
 }

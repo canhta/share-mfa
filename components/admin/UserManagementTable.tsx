@@ -1,114 +1,124 @@
-'use client'
+"use client";
 
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Search, 
-  User 
-} from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { ChevronLeft, ChevronRight, Search, User } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 interface User {
-  id: string
-  display_name: string | null
-  user_tier: 'free' | 'pro' | 'enterprise'
-  subscription_status: 'active' | 'canceled' | 'past_due' | 'trialing' | null
-  onboarding_completed: boolean
-  created_at: string
-  available_credits: number
-  total_credits_earned: number
+  id: string;
+  display_name: string | null;
+  user_tier: "free" | "pro" | "enterprise";
+  subscription_status: "active" | "canceled" | "past_due" | "trialing" | null;
+  onboarding_completed: boolean;
+  created_at: string;
+  available_credits: number;
+  total_credits_earned: number;
 }
 
 interface UserManagementTableProps {
-  onUserSelect?: (user: User) => void
+  onUserSelect?: (user: User) => void;
 }
 
-export default function UserManagementTable({ onUserSelect }: UserManagementTableProps) {
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [search, setSearch] = useState('')
-  const [tierFilter, setTierFilter] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
+export default function UserManagementTable({
+  onUserSelect,
+}: UserManagementTableProps) {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
+  const [tierFilter, setTierFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   const fetchUsers = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '20',
+        limit: "20",
         ...(search && { search }),
         ...(tierFilter && { tier: tierFilter }),
-        ...(statusFilter && { status: statusFilter })
-      })
+        ...(statusFilter && { status: statusFilter }),
+      });
 
-      const response = await fetch(`/api/admin/users?${params}`)
-      
+      const response = await fetch(`/api/admin/users?${params}`);
+
       if (!response.ok) {
-        throw new Error('Failed to fetch users')
+        throw new Error("Failed to fetch users");
       }
 
-      const data = await response.json()
-      setUsers(data.users)
-      setTotalPages(data.pagination.pages)
+      const data = await response.json();
+      setUsers(data.users);
+      setTotalPages(data.pagination.pages);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [page, search, tierFilter, statusFilter])
+  }, [page, search, tierFilter, statusFilter]);
 
   useEffect(() => {
-    fetchUsers()
-  }, [fetchUsers])
+    fetchUsers();
+  }, [fetchUsers]);
 
-  const handleUserAction = async (userId: string, action: string, value?: unknown) => {
+  const handleUserAction = async (
+    userId: string,
+    action: string,
+    value?: unknown,
+  ) => {
     try {
-      const response = await fetch('/api/admin/users', {
-        method: 'PUT',
+      const response = await fetch("/api/admin/users", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId,
           action,
           value,
-          reason: `Admin ${action} action`
+          reason: `Admin ${action} action`,
         }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Failed to update user')
+        throw new Error("Failed to update user");
       }
 
       // Refresh the users list
-      fetchUsers()
+      fetchUsers();
     } catch (err) {
-      console.error('Error updating user:', err)
-      alert('Failed to update user')
+      console.error("Error updating user:", err);
+      alert("Failed to update user");
     }
-  }
+  };
 
   const getTierBadgeColor = (tier: string) => {
     switch (tier) {
-      case 'free': return 'bg-gray-100 text-gray-800'
-      case 'pro': return 'bg-blue-100 text-blue-800'
-      case 'enterprise': return 'bg-purple-100 text-purple-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case "free":
+        return "bg-gray-100 text-gray-800";
+      case "pro":
+        return "bg-blue-100 text-blue-800";
+      case "enterprise":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   const getStatusBadgeColor = (status: string | null) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800'
-      case 'trialing': return 'bg-yellow-100 text-yellow-800'
-      case 'past_due': return 'bg-red-100 text-red-800'
-      case 'canceled': return 'bg-gray-100 text-gray-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case "active":
+        return "bg-green-100 text-green-800";
+      case "trialing":
+        return "bg-yellow-100 text-yellow-800";
+      case "past_due":
+        return "bg-red-100 text-red-800";
+      case "canceled":
+        return "bg-gray-100 text-gray-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   if (loading && users.length === 0) {
     return (
@@ -127,7 +137,7 @@ export default function UserManagementTable({ onUserSelect }: UserManagementTabl
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -137,7 +147,7 @@ export default function UserManagementTable({ onUserSelect }: UserManagementTabl
           Error loading users: {error}
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -234,7 +244,7 @@ export default function UserManagementTable({ onUserSelect }: UserManagementTabl
                     </div>
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {user.display_name || 'No name'}
+                        {user.display_name || "No name"}
                       </div>
                       <div className="text-sm text-gray-500">
                         {user.id.substring(0, 8)}...
@@ -243,13 +253,17 @@ export default function UserManagementTable({ onUserSelect }: UserManagementTabl
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTierBadgeColor(user.user_tier)}`}>
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTierBadgeColor(user.user_tier)}`}
+                  >
                     {user.user_tier}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(user.subscription_status)}`}>
-                    {user.subscription_status || 'none'}
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(user.subscription_status)}`}
+                  >
+                    {user.subscription_status || "none"}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -269,8 +283,12 @@ export default function UserManagementTable({ onUserSelect }: UserManagementTabl
                     <select
                       onChange={(e) => {
                         if (e.target.value) {
-                          handleUserAction(user.id, 'change_tier', e.target.value)
-                          e.target.value = '' // Reset selection
+                          handleUserAction(
+                            user.id,
+                            "change_tier",
+                            e.target.value,
+                          );
+                          e.target.value = ""; // Reset selection
                         }
                       }}
                       className="text-green-600 hover:text-green-900 border-none bg-transparent cursor-pointer"
@@ -310,7 +328,7 @@ export default function UserManagementTable({ onUserSelect }: UserManagementTabl
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Page <span className="font-medium">{page}</span> of{' '}
+                Page <span className="font-medium">{page}</span> of{" "}
                 <span className="font-medium">{totalPages}</span>
               </p>
             </div>
@@ -336,5 +354,5 @@ export default function UserManagementTable({ onUserSelect }: UserManagementTabl
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -151,5 +151,4 @@ updated_at Timestamp Auto-populated
 
 This comprehensive, concise specification equips a Cursor agent to generate boilerplate, implement core features, and guide further refinements.
 
-
 Refer: https://supabase.com/docs/guides/getting-started/quickstarts/nextjs

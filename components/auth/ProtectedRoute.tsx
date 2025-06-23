@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { ReactNode, useEffect } from 'react'
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect } from "react";
 
-import { useAuth } from './AuthProvider'
+import { useAuth } from "./AuthProvider";
 
 interface ProtectedRouteProps {
-  children: ReactNode
-  redirectTo?: string
-  requireAuth?: boolean
-  loadingComponent?: ReactNode
+  children: ReactNode;
+  redirectTo?: string;
+  requireAuth?: boolean;
+  loadingComponent?: ReactNode;
 }
 
 const DefaultLoading = () => (
@@ -23,31 +23,31 @@ const DefaultLoading = () => (
       </div>
     </div>
   </div>
-)
+);
 
-export default function ProtectedRoute({ 
-  children, 
-  redirectTo = '/login',
+export default function ProtectedRoute({
+  children,
+  redirectTo = "/login",
   requireAuth = true,
-  loadingComponent = <DefaultLoading />
+  loadingComponent = <DefaultLoading />,
 }: ProtectedRouteProps) {
-  const router = useRouter()
-  const { user, loading } = useAuth()
+  const router = useRouter();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (!loading && requireAuth && !user) {
-      router.push(redirectTo)
+      router.push(redirectTo);
     }
-  }, [user, loading, requireAuth, router, redirectTo])
+  }, [user, loading, requireAuth, router, redirectTo]);
 
   if (loading) {
-    return <>{loadingComponent}</>
+    return <>{loadingComponent}</>;
   }
 
   if (requireAuth && !user) {
     // Component will unmount due to redirect, but return null just in case
-    return null
+    return null;
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }

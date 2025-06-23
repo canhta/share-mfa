@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
-import { motion } from 'motion/react'
-import Link from 'next/link'
+import { motion } from "motion/react";
+import Link from "next/link";
 
-import { InView } from '@/components/motion-primitives/in-view'
-import { TextEffect } from '@/components/motion-primitives/text-effect'
+import { InView } from "@/components/motion-primitives/in-view";
+import { TextEffect } from "@/components/motion-primitives/text-effect";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="footer-texture">
@@ -15,7 +15,7 @@ export default function Footer() {
         <InView
           variants={{
             hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0 }
+            visible: { opacity: 1, y: 0 },
           }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewOptions={{ once: true }}
@@ -23,8 +23,8 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Brand Section */}
             <div className="space-y-4">
-              <TextEffect 
-                per="char" 
+              <TextEffect
+                per="char"
                 preset="slide"
                 className="text-xl font-bold text-gray-900"
                 speedReveal={1.2}
@@ -32,7 +32,8 @@ export default function Footer() {
                 ShareMFA
               </TextEffect>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Securely share your TOTP-based multi-factor authentication codes with trusted friends and family members.
+                Securely share your TOTP-based multi-factor authentication codes
+                with trusted friends and family members.
               </p>
             </div>
 
@@ -43,15 +44,15 @@ export default function Footer() {
               </h3>
               <div className="space-y-2">
                 {[
-                  { name: 'Dashboard', href: '/dashboard' },
-                  { name: 'Pricing', href: '/pricing' },
-                  { name: 'Billing', href: '/billing' }
+                  { name: "MFA", href: "/mfa" },
+                  { name: "Billing", href: "/billing" },
+                  { name: "Pricing", href: "/pricing" },
                 ].map((link, index) => (
                   <motion.div
                     key={link.name}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + (index * 0.05), duration: 0.5 }}
+                    transition={{ delay: 0.1 + index * 0.05, duration: 0.5 }}
                   >
                     <Link
                       href={link.href}
@@ -71,15 +72,15 @@ export default function Footer() {
               </h3>
               <div className="space-y-2">
                 {[
-                  { name: 'Privacy Policy', href: '/privacy' },
-                  { name: 'Terms of Service', href: '/terms' },
-                  { name: 'Security', href: '/security' }
+                  { name: "Privacy Policy", href: "/privacy" },
+                  { name: "Terms of Service", href: "/terms" },
+                  { name: "Security", href: "/security" },
                 ].map((link, index) => (
                   <motion.div
                     key={link.name}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + (index * 0.05), duration: 0.5 }}
+                    transition={{ delay: 0.2 + index * 0.05, duration: 0.5 }}
                   >
                     <Link
                       href={link.href}
@@ -94,7 +95,7 @@ export default function Footer() {
           </div>
 
           {/* Bottom Border */}
-          <motion.div 
+          <motion.div
             className="mt-12 pt-8 border-t border-gray-200/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -118,5 +119,5 @@ export default function Footer() {
         </InView>
       </div>
     </footer>
-  )
-} 
+  );
+}

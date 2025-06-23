@@ -1,47 +1,48 @@
-'use client'
+"use client";
 
-import { ArrowRight, CheckCircle, Gift, Rocket } from 'lucide-react'
-import { useState } from 'react'
+import { ArrowRight, CheckCircle, Gift, Rocket } from "lucide-react";
+import { useState } from "react";
 
-import Button from '@/components/ui/Button'
+import Button from "@/components/ui/Button";
 
 interface CompletionStepProps {
-  onComplete: () => void
-  hasInvitationCode?: boolean
+  onComplete: () => void;
+  hasInvitationCode?: boolean;
 }
 
-export default function CompletionStep({ 
-  onComplete, 
-  hasInvitationCode = false 
+export default function CompletionStep({
+  onComplete,
+  hasInvitationCode = false,
 }: CompletionStepProps) {
-  const [isCompleting, setIsCompleting] = useState(false)
+  const [isCompleting, setIsCompleting] = useState(false);
 
   const handleComplete = async () => {
-    setIsCompleting(true)
-    
+    setIsCompleting(true);
+
     try {
       // Add a small delay for better UX
-      await new Promise(resolve => setTimeout(resolve, 500))
-      onComplete()
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      onComplete();
     } catch (error) {
-      console.error('Completion error:', error)
+      console.error("Completion error:", error);
     } finally {
-      setIsCompleting(false)
+      setIsCompleting(false);
     }
-  }
+  };
 
   return (
     <div className="text-center">
       <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mb-6">
         <CheckCircle className="w-8 h-8 text-white" />
       </div>
-      
+
       <h2 className="text-3xl font-bold text-gray-900 mb-4">
         Welcome to ShareMFA! 🎉
       </h2>
-      
+
       <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-        Your account is now set up and ready to use. Let&apos;s get you started with sharing your MFA codes securely.
+        Your account is now set up and ready to use. Let&apos;s get you started
+        with sharing your MFA codes securely.
       </p>
 
       {/* Features Overview */}
@@ -72,10 +73,9 @@ export default function CompletionStep({
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">Free Credits</h3>
           <p className="text-sm text-gray-600">
-            {hasInvitationCode 
-              ? 'Bonus credits earned from your invitation code!' 
-              : 'Start with free sharing credits, earn more by referring friends'
-            }
+            {hasInvitationCode
+              ? "Bonus credits earned from your invitation code!"
+              : "Start with free sharing credits, earn more by referring friends"}
           </p>
         </div>
       </div>
@@ -87,8 +87,9 @@ export default function CompletionStep({
             <span className="font-medium">Invitation Code Bonus!</span>
           </div>
           <p className="text-sm text-purple-600">
-            Thanks for using an invitation code! Your referrer will receive bonus credits, 
-            and you&apos;ll get extra credits too once our referral program launches.
+            Thanks for using an invitation code! Your referrer will receive
+            bonus credits, and you&apos;ll get extra credits too once our
+            referral program launches.
           </p>
         </div>
       )}
@@ -99,7 +100,9 @@ export default function CompletionStep({
         <div className="space-y-3 text-sm text-gray-600">
           <div className="flex items-center">
             <ArrowRight className="w-4 h-4 mr-3 text-blue-500" />
-            <span>Add your first MFA entry (authenticator app or manual entry)</span>
+            <span>
+              Add your first MFA entry (authenticator app or manual entry)
+            </span>
           </div>
           <div className="flex items-center">
             <ArrowRight className="w-4 h-4 mr-3 text-blue-500" />
@@ -117,9 +120,9 @@ export default function CompletionStep({
         disabled={isCompleting}
         className="w-full md:w-auto px-8 py-3 text-lg"
       >
-        {isCompleting ? 'Finishing setup...' : 'Go to Dashboard'}
+        {isCompleting ? "Finishing setup..." : "Go to Dashboard"}
         {!isCompleting && <ArrowRight className="w-5 h-5 ml-2" />}
       </Button>
     </div>
-  )
+  );
 }

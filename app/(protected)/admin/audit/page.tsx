@@ -1,13 +1,13 @@
-import { InView } from '@/components/motion-primitives/in-view'
-import { TextEffect } from '@/components/motion-primitives/text-effect'
-import Button from '@/components/ui/Button'
-import Card from '@/components/ui/Card'
-import FormInput from '@/components/ui/FormInput'
-import Select from '@/components/ui/Select'
+import { InView } from "@/components/motion-primitives/in-view";
+import { TextEffect } from "@/components/motion-primitives/text-effect";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import FormInput from "@/components/ui/FormInput";
+import Select from "@/components/ui/Select";
 
 /**
  * Admin Audit Page
- * 
+ *
  * Authentication and admin role authorization are handled by parent layouts.
  * This page focuses purely on rendering audit logs content.
  */
@@ -19,21 +19,21 @@ export default function AdminAuditPage() {
           <InView
             variants={{
               hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0 }
+              visible: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 0.5, ease: "easeOut" }}
             viewOptions={{ once: true }}
           >
             <div>
-              <TextEffect 
-                per="word" 
+              <TextEffect
+                per="word"
                 preset="slide"
                 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2"
               >
                 Audit Logs
               </TextEffect>
-              <TextEffect 
-                per="word" 
+              <TextEffect
+                per="word"
                 preset="fade-in-blur"
                 delay={0.3}
                 className="text-base text-slate-600"
@@ -47,13 +47,15 @@ export default function AdminAuditPage() {
           <InView
             variants={{
               hidden: { opacity: 0, y: 30, scale: 0.95 },
-              visible: { opacity: 1, y: 0, scale: 1 }
+              visible: { opacity: 1, y: 0, scale: 1 },
             }}
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             viewOptions={{ once: true }}
           >
             <Card className="surface-elevated p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-6">Filters</h3>
+              <h3 className="text-lg font-semibold text-slate-900 mb-6">
+                Filters
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <FormInput
                   id="audit-date-range"
@@ -65,11 +67,11 @@ export default function AdminAuditPage() {
                   id="audit-action-type"
                   label="Action Type"
                   options={[
-                    { value: 'all', label: 'All Actions' },
-                    { value: 'login', label: 'User Login' },
-                    { value: 'mfa-creation', label: 'MFA Creation' },
-                    { value: 'share-created', label: 'Share Created' },
-                    { value: 'admin-action', label: 'Admin Action' }
+                    { value: "all", label: "All Actions" },
+                    { value: "login", label: "User Login" },
+                    { value: "mfa-creation", label: "MFA Creation" },
+                    { value: "share-created", label: "Share Created" },
+                    { value: "admin-action", label: "Admin Action" },
                   ]}
                   className="focus-ring-neutral"
                 />
@@ -81,10 +83,7 @@ export default function AdminAuditPage() {
                   className="focus-ring-neutral"
                 />
                 <div className="flex items-end">
-                  <Button
-                    variant="primary"
-                    className="w-full rounded-xl"
-                  >
+                  <Button variant="primary" className="w-full rounded-xl">
                     Search
                   </Button>
                 </div>
@@ -96,14 +95,16 @@ export default function AdminAuditPage() {
           <InView
             variants={{
               hidden: { opacity: 0, y: 30, scale: 0.95 },
-              visible: { opacity: 1, y: 0, scale: 1 }
+              visible: { opacity: 1, y: 0, scale: 1 },
             }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             viewOptions={{ once: true }}
           >
             <Card className="surface-elevated overflow-hidden">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
+                <h3 className="text-lg font-semibold text-slate-900">
+                  Recent Activity
+                </h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-border">
@@ -222,7 +223,7 @@ export default function AdminAuditPage() {
                   </tbody>
                 </table>
               </div>
-              
+
               {/* Pagination */}
               <div className="bg-surface px-4 py-3 flex items-center justify-between border-t border-border sm:px-6">
                 <div className="flex-1 flex justify-between sm:hidden">
@@ -236,13 +237,20 @@ export default function AdminAuditPage() {
                 <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm text-slate-700">
-                      Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
+                      Showing <span className="font-medium">1</span> to{" "}
+                      <span className="font-medium">10</span> of{" "}
                       <span className="font-medium">97</span> results
                     </p>
                   </div>
                   <div>
-                    <nav className="relative z-0 inline-flex rounded-xl shadow-sm -space-x-px" aria-label="Pagination">
-                      <Button variant="outline" className="rounded-l-xl border-r-0">
+                    <nav
+                      className="relative z-0 inline-flex rounded-xl shadow-sm -space-x-px"
+                      aria-label="Pagination"
+                    >
+                      <Button
+                        variant="outline"
+                        className="rounded-l-xl border-r-0"
+                      >
                         Previous
                       </Button>
                       <Button variant="primary" className="border-r-0">
@@ -266,5 +274,5 @@ export default function AdminAuditPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

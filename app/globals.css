@@ -59,10 +59,16 @@ body {
 
 /* Enhanced background patterns with depth */
 .bg-neutral-texture {
-  background-image: 
-    radial-gradient(circle at 25px 25px, rgba(0, 0, 0, 0.02) 2px, transparent 0),
+  background-image:
+    radial-gradient(
+      circle at 25px 25px,
+      rgba(0, 0, 0, 0.02) 2px,
+      transparent 0
+    ),
     radial-gradient(circle at 75px 75px, rgba(0, 0, 0, 0.01) 1px, transparent 0);
-  background-size: 100px 100px, 50px 50px;
+  background-size:
+    100px 100px,
+    50px 50px;
 }
 
 /* Sophisticated gradient backgrounds */
@@ -84,7 +90,7 @@ body {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.05),
     0 4px 12px rgba(0, 0, 0, 0.03);
 }

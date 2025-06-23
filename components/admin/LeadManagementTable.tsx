@@ -1,121 +1,130 @@
-'use client'
+"use client";
 
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Mail, 
-  Search, 
-  Star 
-} from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { ChevronLeft, ChevronRight, Mail, Search, Star } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Lead {
-  id: string
-  email: string
-  name: string | null
-  company: string | null
-  tier_interest: 'pro' | 'enterprise' | 'newsletter'
-  status: 'new' | 'contacted' | 'converted'
-  source: string
-  lead_score: number
-  notes: string | null
-  created_at: string
-  follow_up_date: string | null
-  last_contacted_at: string | null
-  conversion_date: string | null
+  id: string;
+  email: string;
+  name: string | null;
+  company: string | null;
+  tier_interest: "pro" | "enterprise" | "newsletter";
+  status: "new" | "contacted" | "converted";
+  source: string;
+  lead_score: number;
+  notes: string | null;
+  created_at: string;
+  follow_up_date: string | null;
+  last_contacted_at: string | null;
+  conversion_date: string | null;
 }
 
 interface LeadManagementTableProps {
-  onLeadSelect?: (lead: Lead) => void
+  onLeadSelect?: (lead: Lead) => void;
 }
 
-export default function LeadManagementTable({ onLeadSelect }: LeadManagementTableProps) {
-  const [leads, setLeads] = useState<Lead[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
-  const [tierFilter, setTierFilter] = useState('')
-  const [sourceFilter, setSourceFilter] = useState('')
+export default function LeadManagementTable({
+  onLeadSelect,
+}: LeadManagementTableProps) {
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [tierFilter, setTierFilter] = useState("");
+  const [sourceFilter, setSourceFilter] = useState("");
 
   const fetchLeads = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '20',
+        limit: "20",
         ...(search && { search }),
         ...(statusFilter && { status: statusFilter }),
         ...(tierFilter && { tier_interest: tierFilter }),
-        ...(sourceFilter && { source: sourceFilter })
-      })
+        ...(sourceFilter && { source: sourceFilter }),
+      });
 
-      const response = await fetch(`/api/admin/leads?${params}`)
-      
+      const response = await fetch(`/api/admin/leads?${params}`);
+
       if (!response.ok) {
-        throw new Error('Failed to fetch leads')
+        throw new Error("Failed to fetch leads");
       }
 
-      const data = await response.json()
-      setLeads(data.leads)
-      setTotalPages(data.pagination.pages)
+      const data = await response.json();
+      setLeads(data.leads);
+      setTotalPages(data.pagination.pages);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [page, search, statusFilter, tierFilter, sourceFilter])
+  }, [page, search, statusFilter, tierFilter, sourceFilter]);
 
   useEffect(() => {
-    fetchLeads()
-  }, [fetchLeads])
+    fetchLeads();
+  }, [fetchLeads]);
 
-  const handleLeadAction = async (leadId: string, action: string, value?: unknown, notes?: string) => {
+  const handleLeadAction = async (
+    leadId: string,
+    action: string,
+    value?: unknown,
+    notes?: string,
+  ) => {
     try {
-      const response = await fetch('/api/admin/leads', {
-        method: 'PUT',
+      const response = await fetch("/api/admin/leads", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           leadId,
           action,
           value,
-          notes
+          notes,
         }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Failed to update lead')
+        throw new Error("Failed to update lead");
       }
 
       // Refresh the leads list
-      fetchLeads()
+      fetchLeads();
     } catch (err) {
-      console.error('Error updating lead:', err)
-      alert('Failed to update lead')
+      console.error("Error updating lead:", err);
+      alert("Failed to update lead");
     }
-  }
+  };
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'new': return 'bg-blue-100 text-blue-800'
-      case 'contacted': return 'bg-yellow-100 text-yellow-800'
-      case 'converted': return 'bg-green-100 text-green-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case "new":
+        return "bg-blue-100 text-blue-800";
+      case "contacted":
+        return "bg-yellow-100 text-yellow-800";
+      case "converted":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   const getTierBadgeColor = (tier: string) => {
     switch (tier) {
-      case 'pro': return 'bg-purple-100 text-purple-800'
-      case 'enterprise': return 'bg-red-100 text-red-800'
-      case 'newsletter': return 'bg-gray-100 text-gray-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case "pro":
+        return "bg-purple-100 text-purple-800";
+      case "enterprise":
+        return "bg-red-100 text-red-800";
+      case "newsletter":
+        return "bg-gray-100 text-gray-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   const renderStars = (score: number) => {
     return (
@@ -124,13 +133,13 @@ export default function LeadManagementTable({ onLeadSelect }: LeadManagementTabl
           <Star
             key={star}
             className={`h-4 w-4 ${
-              star <= score ? 'text-yellow-400 fill-current' : 'text-gray-300'
+              star <= score ? "text-yellow-400 fill-current" : "text-gray-300"
             }`}
           />
         ))}
       </div>
-    )
-  }
+    );
+  };
 
   if (loading && leads.length === 0) {
     return (
@@ -149,7 +158,7 @@ export default function LeadManagementTable({ onLeadSelect }: LeadManagementTabl
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -159,7 +168,7 @@ export default function LeadManagementTable({ onLeadSelect }: LeadManagementTabl
           Error loading leads: {error}
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -270,11 +279,9 @@ export default function LeadManagementTable({ onLeadSelect }: LeadManagementTabl
                     </div>
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {lead.name || 'No name'}
+                        {lead.name || "No name"}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {lead.email}
-                      </div>
+                      <div className="text-sm text-gray-500">{lead.email}</div>
                       {lead.company && (
                         <div className="text-xs text-gray-400">
                           {lead.company}
@@ -284,12 +291,16 @@ export default function LeadManagementTable({ onLeadSelect }: LeadManagementTabl
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTierBadgeColor(lead.tier_interest)}`}>
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTierBadgeColor(lead.tier_interest)}`}
+                  >
                     {lead.tier_interest}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(lead.status)}`}>
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(lead.status)}`}
+                  >
                     {lead.status}
                   </span>
                 </td>
@@ -312,8 +323,12 @@ export default function LeadManagementTable({ onLeadSelect }: LeadManagementTabl
                   <select
                     onChange={(e) => {
                       if (e.target.value) {
-                        handleLeadAction(lead.id, 'update_status', e.target.value)
-                        e.target.value = '' // Reset selection
+                        handleLeadAction(
+                          lead.id,
+                          "update_status",
+                          e.target.value,
+                        );
+                        e.target.value = ""; // Reset selection
                       }
                     }}
                     className="text-green-600 hover:text-green-900 border-none bg-transparent cursor-pointer"
@@ -352,7 +367,7 @@ export default function LeadManagementTable({ onLeadSelect }: LeadManagementTabl
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Page <span className="font-medium">{page}</span> of{' '}
+                Page <span className="font-medium">{page}</span> of{" "}
                 <span className="font-medium">{totalPages}</span>
               </p>
             </div>
@@ -378,5 +393,5 @@ export default function LeadManagementTable({ onLeadSelect }: LeadManagementTabl
         </div>
       )}
     </div>
-  )
+  );
 }

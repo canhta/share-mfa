@@ -1,34 +1,34 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { InView } from '@/components/motion-primitives/in-view'
-import { TextEffect } from '@/components/motion-primitives/text-effect'
-import { Button, Card } from '@/components/ui'
-import type { MfaEntry } from '@/types/database'
+import { InView } from "@/components/motion-primitives/in-view";
+import { TextEffect } from "@/components/motion-primitives/text-effect";
+import { Button, Card } from "@/components/ui";
+import type { MfaEntry } from "@/types/database";
 
 export default function MfaEntrySummary() {
-  const [entries, setEntries] = useState<MfaEntry[]>([])
-  const [loading, setLoading] = useState(true)
+  const [entries, setEntries] = useState<MfaEntry[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchEntries = async () => {
     try {
-      const response = await fetch('/api/mfa')
+      const response = await fetch("/api/mfa");
       if (response.ok) {
-        const data = await response.json()
-        setEntries(data.entries || [])
+        const data = await response.json();
+        setEntries(data.entries || []);
       }
     } catch (error) {
-      console.error('Error fetching MFA entries:', error)
+      console.error("Error fetching MFA entries:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchEntries()
-  }, [])
+    fetchEntries();
+  }, []);
 
   if (loading) {
     return (
@@ -37,32 +37,38 @@ export default function MfaEntrySummary() {
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
         </div>
       </Card>
-    )
+    );
   }
 
   return (
     <InView
       variants={{
         hidden: { opacity: 0, y: 20, scale: 0.95 },
-        visible: { opacity: 1, y: 0, scale: 1 }
+        visible: { opacity: 1, y: 0, scale: 1 },
       }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       viewOptions={{ once: true }}
     >
-      <Card hover variant="elevated" padding="lg" className="transition-all duration-200">
+      <Card
+        hover
+        variant="elevated"
+        padding="lg"
+        className="transition-all duration-200"
+      >
         <div className="space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <TextEffect 
-                per="word" 
+              <TextEffect
+                per="word"
                 preset="slide"
                 className="text-xl font-semibold text-slate-900 mb-1"
               >
                 MFA Codes
               </TextEffect>
               <div className="text-sm text-slate-600">
-                {entries.length} {entries.length === 1 ? 'code' : 'codes'} configured
+                {entries.length} {entries.length === 1 ? "code" : "codes"}{" "}
+                configured
               </div>
             </div>
             <Link href="/mfa">
@@ -103,15 +109,15 @@ export default function MfaEntrySummary() {
                   />
                 </svg>
               </div>
-              <TextEffect 
-                per="word" 
+              <TextEffect
+                per="word"
                 preset="slide"
                 className="text-base font-medium text-slate-900 mb-2"
               >
                 No MFA codes yet
               </TextEffect>
-              <TextEffect 
-                per="word" 
+              <TextEffect
+                per="word"
                 preset="fade-in-blur"
                 delay={0.3}
                 className="text-sm text-slate-600 mb-4"
@@ -149,7 +155,9 @@ export default function MfaEntrySummary() {
                       </svg>
                     </div>
                     <div>
-                      <div className="font-medium text-slate-900">{entry.name}</div>
+                      <div className="font-medium text-slate-900">
+                        {entry.name}
+                      </div>
                       {entry.notes && (
                         <div className="text-sm text-slate-600 truncate max-w-xs">
                           {entry.notes}
@@ -157,16 +165,18 @@ export default function MfaEntrySummary() {
                       )}
                     </div>
                   </div>
-                  <div className="text-sm text-slate-500">
-                    Active
-                  </div>
+                  <div className="text-sm text-slate-500">Active</div>
                 </div>
               ))}
 
               {entries.length > 3 && (
                 <div className="text-center pt-2">
                   <Link href="/mfa">
-                    <Button variant="ghost" size="sm" className="text-slate-600">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-slate-600"
+                    >
                       View {entries.length - 3} more codes
                     </Button>
                   </Link>
@@ -177,5 +187,5 @@ export default function MfaEntrySummary() {
         </div>
       </Card>
     </InView>
-  )
+  );
 }

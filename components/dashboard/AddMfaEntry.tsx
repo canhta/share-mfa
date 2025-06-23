@@ -1,78 +1,86 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 
-import { InView } from '@/components/motion-primitives/in-view'
-import { Button, Card, FormInput, SectionHeader, StatusMessage } from '@/components/ui'
+import { InView } from "@/components/motion-primitives/in-view";
+import {
+  Button,
+  Card,
+  FormInput,
+  SectionHeader,
+  StatusMessage,
+} from "@/components/ui";
 
 interface AddMfaEntryProps {
-  onAdd: () => void
+  onAdd: () => void;
 }
 
 export default function AddMfaEntry({ onAdd }: AddMfaEntryProps) {
-  const [name, setName] = useState('')
-  const [secret, setSecret] = useState('')
-  const [notes, setNotes] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [name, setName] = useState("");
+  const [secret, setSecret] = useState("");
+  const [notes, setNotes] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    
+    e.preventDefault();
+    setError("");
+
     if (!name.trim() || !secret.trim()) {
-      setError('Name and secret are required')
-      return
+      setError("Name and secret are required");
+      return;
     }
 
-    setIsLoading(true)
-    
+    setIsLoading(true);
+
     try {
-      const response = await fetch('/api/mfa', {
-        method: 'POST',
+      const response = await fetch("/api/mfa", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: name.trim(),
           secret: secret.trim(),
           notes: notes.trim() || null,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        console.error('Error adding MFA entry:', data.error)
+        console.error("Error adding MFA entry:", data.error);
         // Handle specific error cases
         if (response.status === 401) {
-          setError('You must be logged in to add MFA entries. Please refresh the page and try again.')
+          setError(
+            "You must be logged in to add MFA entries. Please refresh the page and try again.",
+          );
         } else if (response.status === 400) {
-          setError(data.error || 'Invalid input data')
+          setError(data.error || "Invalid input data");
         } else {
-          setError(data.error || 'Failed to add MFA entry. Please try again.')
+          setError(data.error || "Failed to add MFA entry. Please try again.");
         }
-        return
+        return;
       }
 
       // Reset form on success
-      setName('')
-      setSecret('')
-      setNotes('')
-      onAdd()
+      setName("");
+      setSecret("");
+      setNotes("");
+      onAdd();
     } catch (err) {
-      console.error('Error adding MFA entry:', err)
-      setError('Network error. Please check your connection and try again.')
+      console.error("Error adding MFA entry:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <InView
       variants={{
         hidden: { opacity: 0, y: 20, scale: 0.95 },
-        visible: { opacity: 1, y: 0, scale: 1 }
+        visible: { opacity: 1, y: 0, scale: 1 },
       }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       viewOptions={{ once: true }}
@@ -122,10 +130,7 @@ export default function AddMfaEntry({ onAdd }: AddMfaEntryProps) {
           />
 
           {error && (
-            <StatusMessage 
-              variant="error" 
-              onClose={() => setError('')}
-            >
+            <StatusMessage variant="error" onClose={() => setError("")}>
               {error}
             </StatusMessage>
           )}
@@ -144,5 +149,5 @@ export default function AddMfaEntry({ onAdd }: AddMfaEntryProps) {
         </form>
       </Card>
     </InView>
-  )
-} 
+  );
+}

@@ -11,6 +11,7 @@ This guide will walk you through setting up all the required credentials and ser
 ## 🗂️ Required Services & Credentials
 
 You'll need accounts and credentials from:
+
 1. **Supabase** (Database & Authentication)
 2. **Google Cloud Console** (OAuth Authentication)
 
@@ -42,6 +43,7 @@ You'll need accounts and credentials from:
    - Go to "API" section
 
 2. **Copy Required Values**
+
    ```
    Project URL: https://[your-project-ref].supabase.co
    Anon (public) key: eyJ... (long string starting with eyJ)
@@ -100,6 +102,7 @@ You'll need accounts and credentials from:
    - Click "Create"
 
 2. **Fill Required Information**
+
    ```
    App name: MFA Share
    User support email: your-email@example.com
@@ -121,14 +124,15 @@ You'll need accounts and credentials from:
    - Click "Create Credentials" > "OAuth 2.0 Client IDs"
 
 2. **Configure OAuth Client**
+
    ```
    Application type: Web application
    Name: MFA Share Web Client
-   
+
    Authorized JavaScript origins:
    - http://localhost:3000 (for development)
    - https://yourdomain.com (for production)
-   
+
    Authorized redirect URIs:
    - http://localhost:3000/api/auth/callback (for development)
    - https://yourdomain.com/api/auth/callback (for production)
@@ -242,6 +246,7 @@ npm run dev
 ### Quick Fixes for Common Issues
 
 #### 1. "Invalid URL" Error (Current Issue)
+
 ```bash
 # Check your .env.local file
 cat .env.local
@@ -252,6 +257,7 @@ cat .env.local
 ```
 
 #### 2. Environment Variables Not Loading
+
 ```bash
 # Restart dev server after changing .env.local
 npm run dev
@@ -261,11 +267,13 @@ node -e "console.log('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)"
 ```
 
 #### 3. Google OAuth Errors
+
 - Verify Client ID ends with `.apps.googleusercontent.com`
 - Check redirect URIs match exactly (http vs https)
 - Ensure Google APIs are enabled
 
 #### 4. Database Connection Issues
+
 - Verify the SQL migration ran successfully in Supabase
 - Check the `mfa_entries` table exists in Table Editor
 
@@ -284,4 +292,4 @@ The most common issue is copying the wrong values or having formatting issues in
 
 ---
 
-This guide should resolve the "Invalid URL" error you're seeing. The key is getting the correct Supabase project URL and anon key from your Supabase dashboard. 
+This guide should resolve the "Invalid URL" error you're seeing. The key is getting the correct Supabase project URL and anon key from your Supabase dashboard.

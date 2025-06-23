@@ -1,60 +1,61 @@
-'use client'
+"use client";
 
-import { Building, Gift,Mail, Target, User } from 'lucide-react'
-import { useState } from 'react'
+import { Building, Gift, Mail, Target, User } from "lucide-react";
+import { useState } from "react";
 
-import Button from '@/components/ui/Button'
-import FormInput from '@/components/ui/FormInput'
-import { OnboardingData } from '@/types/database'
+import Button from "@/components/ui/Button";
+import FormInput from "@/components/ui/FormInput";
+import { OnboardingData } from "@/types/database";
 
 interface ProfileSetupStepProps {
-  onNext: (data: OnboardingData) => void
-  onBack: () => void
-  initialData?: Partial<OnboardingData>
+  onNext: (data: OnboardingData) => void;
+  onBack: () => void;
+  initialData?: Partial<OnboardingData>;
 }
 
-export default function ProfileSetupStep({ 
-  onNext, 
-  onBack, 
-  initialData = {} 
+export default function ProfileSetupStep({
+  onNext,
+  onBack,
+  initialData = {},
 }: ProfileSetupStepProps) {
   const [formData, setFormData] = useState<OnboardingData>({
-    displayName: initialData.displayName || '',
-    company: initialData.company || '',
-    useCase: initialData.useCase || 'personal',
+    displayName: initialData.displayName || "",
+    company: initialData.company || "",
+    useCase: initialData.useCase || "personal",
     newsletterConsent: initialData.newsletterConsent ?? true,
     productUpdatesConsent: initialData.productUpdatesConsent ?? true,
-    invitationCode: initialData.invitationCode || ''
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
+    invitationCode: initialData.invitationCode || "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    
+    e.preventDefault();
+    setIsSubmitting(true);
+
     try {
       // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500))
-      onNext(formData)
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      onNext(formData);
     } catch (error) {
-      console.error('Profile setup error:', error)
+      console.error("Profile setup error:", error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  const handleInputChange = (field: keyof OnboardingData) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const value = e.target.type === 'checkbox' 
-      ? (e.target as HTMLInputElement).checked 
-      : e.target.value
-    
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }))
-  }
+  const handleInputChange =
+    (field: keyof OnboardingData) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const value =
+        e.target.type === "checkbox"
+          ? (e.target as HTMLInputElement).checked
+          : e.target.value;
+
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
 
   return (
     <div>
@@ -65,9 +66,7 @@ export default function ProfileSetupStep({
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           Set up your profile
         </h2>
-        <p className="text-gray-600">
-          Help us personalize your experience
-        </p>
+        <p className="text-gray-600">Help us personalize your experience</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -83,8 +82,8 @@ export default function ProfileSetupStep({
             id="display-name"
             label="Display Name"
             placeholder="How should we address you?"
-            value={formData.displayName || ''}
-            onChange={handleInputChange('displayName')}
+            value={formData.displayName || ""}
+            onChange={handleInputChange("displayName")}
           />
         </div>
 
@@ -100,8 +99,8 @@ export default function ProfileSetupStep({
             id="company"
             label="Company"
             placeholder="Your company or organization"
-            value={formData.company || ''}
-            onChange={handleInputChange('company')}
+            value={formData.company || ""}
+            onChange={handleInputChange("company")}
           />
         </div>
 
@@ -114,8 +113,8 @@ export default function ProfileSetupStep({
             </label>
           </div>
           <select
-            value={formData.useCase || 'personal'}
-            onChange={handleInputChange('useCase')}
+            value={formData.useCase || "personal"}
+            onChange={handleInputChange("useCase")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="personal">Personal use</option>
@@ -136,11 +135,12 @@ export default function ProfileSetupStep({
             id="invitation-code"
             label="Invitation Code"
             placeholder="Enter invitation code if you have one"
-            value={formData.invitationCode || ''}
-            onChange={handleInputChange('invitationCode')}
+            value={formData.invitationCode || ""}
+            onChange={handleInputChange("invitationCode")}
           />
           <p className="mt-1 text-xs text-gray-500">
-            Have an invitation code? Enter it here to earn rewards for your referrer!
+            Have an invitation code? Enter it here to earn rewards for your
+            referrer!
           </p>
         </div>
 
@@ -152,25 +152,25 @@ export default function ProfileSetupStep({
               Communication Preferences
             </label>
           </div>
-          
+
           <div className="space-y-3">
             <label className="flex items-center">
               <input
                 type="checkbox"
                 checked={formData.productUpdatesConsent}
-                onChange={handleInputChange('productUpdatesConsent')}
+                onChange={handleInputChange("productUpdatesConsent")}
                 className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">
                 Product updates and security notifications
               </span>
             </label>
-            
+
             <label className="flex items-center">
               <input
                 type="checkbox"
                 checked={formData.newsletterConsent}
-                onChange={handleInputChange('newsletterConsent')}
+                onChange={handleInputChange("newsletterConsent")}
                 className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">
@@ -182,21 +182,14 @@ export default function ProfileSetupStep({
 
         {/* Actions */}
         <div className="flex justify-between pt-6">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onBack}
-          >
+          <Button type="button" variant="secondary" onClick={onBack}>
             Back
           </Button>
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Saving...' : 'Continue'}
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : "Continue"}
           </Button>
         </div>
       </form>
     </div>
-  )
+  );
 }
