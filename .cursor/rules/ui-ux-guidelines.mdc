@@ -1,0 +1,176 @@
+---
+description: 
+globs: UIUX,design,component,common,animation,motion,primitives
+alwaysApply: false
+---
+# MFA Sharing App UI/UX Design System
+
+## Design Philosophy
+- **Neutral Sophistication**: Clean, professional aesthetic using gray-based color palette
+- **Glassmorphism**: Utilize backdrop-blur effects, surface elevation, and subtle transparency
+- **Motion-First**: Every interaction should feel fluid with micro-animations
+- **Accessibility**: Maintain WCAG AA contrast ratios and focus states
+
+## Color System & Theming
+
+### Primary Color Palette
+```css
+--background: #fafafa;
+--foreground: #171717;
+--primary: #404040;
+--primary-foreground: #fafafa;
+--secondary: #f5f5f5;
+--muted: #f9f9f9;
+--border: #e5e5e5;
+```
+
+### Surface Treatment
+- Use `glass-neutral` class for main cards and modals
+- Apply `surface-elevated` for subtle depth
+- Add `bg-neutral-texture` for textured backgrounds
+- Implement `bg-gradient-neutral` for smooth gradients
+
+
+## Animation Guidelines
+
+### Motion Primitives Usage
+1. **Text Animations**
+   - Use `TextEffect` with presets: `slide`, `fade-in-blur`, `scale`, `fade`
+   - Stagger by `word` for headers, `char` for special effects
+   - Speed: 1.0-1.2 for normal text, higher for emphasis
+
+2. **Element Entrance**
+   - `InView` component for scroll-triggered animations
+   - Standard variants: `{ hidden: { opacity: 0, y: 20, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1 } }`
+   - Duration: 0.5-0.6s with `easeOut`
+
+3. **Interactive Elements**
+   - Hover: `scale: 1.02`, `y: -2`
+   - Tap: `scale: 0.98`
+   - Transition duration: 0.15-0.2s
+
+### Animation Timing
+- **Micro-interactions**: 0.15-0.2s
+- **Page transitions**: 0.4-0.6s
+- **Scroll animations**: 0.5-0.8s
+- **Loading states**: 1s (linear for spinners)
+
+## Component Standards
+
+### Cards
+```tsx
+// Always use the Card component with appropriate variants
+<Card hover variant="elevated" padding="md">
+  {content}
+</Card>
+```
+- Variants: `default`, `elevated`, `flat`, `outline`
+- Always include hover effects for interactive cards
+- Use `GlowEffect` for special emphasis
+
+### Buttons
+```tsx
+// Standard button usage with motion wrapper
+<Button variant="primary" size="md" className="rounded-xl">
+  {content}
+</Button>
+```
+- Variants: `primary`, `secondary`, `outline`, `ghost`, `destructive`
+- Always wrapped in motion for hover/tap effects
+- Use `loading` prop for async actions
+
+### Form Elements
+- All inputs use `FormInput` or `FormTextarea` components
+- Include proper focus states with `focus-ring-neutral`
+- Provide loading states for async operations
+
+### Progress Indicators
+- Use `AnimatedNumber` for countdown timers
+- Color-code time remaining (blue → yellow → red)
+- Include visual progress bars with smooth transitions
+
+## Layout Patterns
+
+### Page Structure
+```tsx
+<div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Content with proper spacing */}
+  </div>
+</div>
+```
+
+### Grid Systems
+- Use CSS Grid for complex layouts
+- Responsive: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+- Gap: `gap-6` for cards, `gap-4` for form elements
+
+### Mobile Responsiveness
+- Mobile-first approach with `sm:`, `md:`, `lg:` breakpoints
+- Touch-friendly tap targets (minimum 44px)
+- Proper text scaling and spacing
+
+## Typography Scale
+- **Hero**: `text-5xl sm:text-7xl font-display`
+- **Headers**: `text-2xl font-semibold`
+- **Body**: `text-base leading-relaxed`
+- **Caption**: `text-sm text-muted-foreground`
+- **Code**: `font-mono` for TOTP codes and technical content
+
+## Interaction Patterns
+
+### Loading States
+- Use `motion` for spinner animations
+- Show skeleton states where appropriate
+- Disable interactive elements during loading
+
+### Error Handling
+- Use Alert component for user feedback
+- Provide clear error messages
+- Include retry mechanisms where appropriate
+
+### Copy Functionality
+- Use `CopyButton` component for copyable text
+- Provide visual feedback on copy success
+- Support keyboard shortcuts
+
+## Best Practices
+
+### Performance
+- Use `InView` component to lazy-load animations
+- Implement proper loading states
+- Optimize motion for 60fps
+
+### Accessibility
+- Include proper ARIA labels
+- Support keyboard navigation
+- Maintain focus management in modals
+
+### Code Organization
+- Keep animation variants in component files
+- Use consistent naming for motion variants
+- Extract common animation patterns to utilities
+
+### Component Composition
+- Prefer composition over prop drilling
+- Use forwardRef for ref forwarding
+- Implement proper TypeScript interfaces
+
+## File Naming Conventions
+- Components: PascalCase (e.g., `MfaEntryCard.tsx`)
+- Utilities: camelCase (e.g., `animations.ts`)
+- CSS classes: kebab-case with BEM-like structure
+
+## Responsive Design
+- Design mobile-first
+- Use Tailwind responsive prefixes
+- Test on multiple screen sizes
+- Ensure touch targets are adequate (44px minimum)
+
+## Animation Performance
+- Use `transform` properties for smooth animations
+- Avoid animating `width`, `height`, or `top/left`
+- Prefer `scale`, `translate`, and `opacity`
+- Use `will-change` sparingly and clean up after animations
+
+Remember: Every component should feel intentional, every animation should serve a purpose, and every interaction should delight the user while maintaining the professional, secure aesthetic of the MFA sharing application.
