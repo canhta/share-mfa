@@ -1,10 +1,13 @@
+'use client'
+
+import { useRequireUser } from '@/components/auth'
 import DashboardHeader from '@/components/dashboard/DashboardHeader'
 import MfaEntryList from '@/components/dashboard/MfaEntryList'
 import ShareStatusDashboard from '@/components/dashboard/ShareStatusDashboard'
 import UsageStats from '@/components/dashboard/UsageStats'
 import { InView } from '@/components/motion-primitives/in-view'
 import { TextEffect } from '@/components/motion-primitives/text-effect'
-import { createClient } from '@/utils/supabase/server'
+import { LoadingSpinner } from '@/components/ui'
 
 /**
  * Dashboard Page - Main user dashboard
@@ -12,11 +15,16 @@ import { createClient } from '@/utils/supabase/server'
  * Authentication is handled by the parent (protected) layout.
  * This page focuses purely on rendering dashboard content.
  */
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  
-  // User is guaranteed to be authenticated by parent layout
-  const { data: { user } } = await supabase.auth.getUser()
+export default function DashboardPage() {
+  const { user, loading } = useRequireUser()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-neutral bg-neutral-texture flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
+  }
   
   return (
     <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">

@@ -1,22 +1,30 @@
 'use client'
 
 import Button from '@/components/ui/Button'
-import { createClient } from '@/utils/supabase/client'
 
 export default function GoogleSignInButton() {
-  const supabase = createClient()
-
   const handleGoogleSignIn = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/api/auth/callback`,
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          provider: 'google',
+          redirectTo: `${window.location.origin}/api/auth/callback`
+        }),
       })
-      
-      if (error) {
-        console.error('Error signing in with Google:', error.message)
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        console.error('Error signing in with Google:', data.error)
+        return
+      }
+
+      if (data.url) {
+        window.location.href = data.url
       }
     } catch (error) {
       console.error('Unexpected error:', error)

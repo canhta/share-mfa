@@ -1,8 +1,11 @@
+'use client'
+
+import { useRequireUser } from '@/components/auth'
 import BillingDashboard from '@/components/dashboard/BillingDashboard'
 import DashboardHeader from '@/components/dashboard/DashboardHeader'
 import { InView } from '@/components/motion-primitives/in-view'
 import { TextEffect } from '@/components/motion-primitives/text-effect'
-import { createClient } from '@/utils/supabase/server'
+import { LoadingSpinner } from '@/components/ui'
 
 /**
  * Billing Page - User billing and subscription management
@@ -10,11 +13,16 @@ import { createClient } from '@/utils/supabase/server'
  * Authentication is handled by the parent (protected) layout.
  * This page focuses purely on rendering billing content.
  */
-export default async function BillingPage() {
-  const supabase = await createClient()
-  
-  // User is guaranteed to be authenticated by parent layout
-  const { data: { user } } = await supabase.auth.getUser()
+export default function BillingPage() {
+  const { user, loading } = useRequireUser()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-neutral bg-neutral-texture flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">

@@ -11,8 +11,6 @@ import { useState } from 'react'
 import { InView } from '@/components/motion-primitives/in-view'
 import { TextEffect } from '@/components/motion-primitives/text-effect'
 import Button from '@/components/ui/Button'
-import { createClient } from '@/utils/supabase/client'
-
 interface DashboardHeaderProps {
   user: User
 }
@@ -20,13 +18,21 @@ interface DashboardHeaderProps {
 export default function DashboardHeader({ user }: DashboardHeaderProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const supabase = createClient()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      router.push('/login')
+      router.refresh()
+    } catch (error) {
+      console.error('Error signing out:', error)
+    }
   }
 
   const navigation = [

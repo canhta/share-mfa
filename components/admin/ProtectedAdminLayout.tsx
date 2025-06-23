@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
 
 import AdminLayout from '@/components/admin/AdminLayout'
-import { createClient } from '@/utils/supabase/client'
 
 interface ProtectedAdminLayoutProps {
   children: ReactNode
@@ -30,43 +29,35 @@ export default function ProtectedAdminLayout({ children }: ProtectedAdminLayoutP
   useEffect(() => {
     const checkAuthAndRole = async () => {
       try {
-        const supabase = createClient()
-
-        // Check authentication
-        const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-        if (authError || !user) {
+        const response = await fetch('/api/auth/admin')
+        
+        if (response.status === 401) {
           router.push('/login')
           return
         }
 
-        // Check admin role
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single()
-
-        if (profileError) {
-          console.error('Error fetching profile:', profileError)
-          setState(prev => ({ 
-            ...prev, 
-            isLoading: false, 
-            error: 'Failed to verify admin permissions' 
-          }))
-          return
-        }
-
-        if (!profile || profile.role !== 'admin') {
+        if (response.status === 403) {
           router.push('/dashboard')
           return
         }
 
+        if (!response.ok) {
+          const errorData = await response.json()
+          setState(prev => ({ 
+            ...prev, 
+            isLoading: false, 
+            error: errorData.error || 'Failed to verify admin permissions' 
+          }))
+          return
+        }
+
+        const data = await response.json()
+        
         // User is authenticated and is admin
         setState({
           isLoading: false,
-          user,
-          isAdmin: true,
+          user: data.user,
+          isAdmin: data.isAdmin,
           error: null
         })
 

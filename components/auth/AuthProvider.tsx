@@ -20,9 +20,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const getInitialUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      setLoading(false)
+      try {
+        const response = await fetch('/api/auth/user')
+        if (response.ok) {
+          const data = await response.json()
+          setUser(data.user)
+        } else {
+          setUser(null)
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error)
+        setUser(null)
+      } finally {
+        setLoading(false)
+      }
     }
 
     getInitialUser()
@@ -40,7 +51,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [supabase.auth])
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      setUser(null)
+    } catch (error) {
+      console.error('Error signing out:', error)
+    }
   }
 
   return (

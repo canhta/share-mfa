@@ -18,8 +18,6 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useState } from 'react'
 
-import { createClient } from '@/utils/supabase/client'
-
 interface AdminLayoutProps {
   children: ReactNode
   user: User
@@ -38,13 +36,21 @@ const adminNavigation = [
 export default function AdminLayout({ children, user }: AdminLayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const supabase = createClient()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      router.push('/login')
+      router.refresh()
+    } catch (error) {
+      console.error('Error signing out:', error)
+    }
   }
 
   const isActivePath = (path: string) => pathname === path

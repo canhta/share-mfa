@@ -1,20 +1,33 @@
+'use client'
+
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 import { InView } from '@/components/motion-primitives/in-view'
 import { TextEffect } from '@/components/motion-primitives/text-effect'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
-import { createClient } from '@/utils/supabase/server'
 
-export default async function HomePage() {
-  const supabase = await createClient()
-  
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (user) {
-    redirect('/dashboard')
-  }
+export default function HomePage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/user')
+        if (response.ok) {
+          router.push('/dashboard')
+        }
+             } catch {
+         // User not authenticated, stay on this page
+         console.log('User not authenticated')
+       }
+    }
+
+    checkAuth()
+  }, [router])
 
   return (
     <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">

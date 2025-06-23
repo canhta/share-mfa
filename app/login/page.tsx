@@ -1,19 +1,32 @@
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
 import { InView } from '@/components/motion-primitives/in-view'
 import { TextEffect } from '@/components/motion-primitives/text-effect'
 import Card from '@/components/ui/Card'
-import { createClient } from '@/utils/supabase/server'
 
-export default async function LoginPage() {
-  const supabase = await createClient()
-  
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (user) {
-    redirect('/dashboard')
-  }
+export default function LoginPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/user')
+        if (response.ok) {
+          router.push('/dashboard')
+        }
+             } catch {
+         // User not authenticated, stay on login page
+         console.log('User not authenticated')
+       }
+    }
+
+    checkAuth()
+  }, [router])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-neutral bg-neutral-texture py-12 px-4 sm:px-6 lg:px-8">

@@ -22,7 +22,7 @@ export async function GET() {
         *,
         mfa_entries!inner(
           id,
-          service_name,
+          name,
           user_id
         )
       `)
@@ -41,13 +41,13 @@ export async function GET() {
     const transformedLinks = sharedLinks?.map(link => ({
       id: link.id,
       mfa_entry_id: link.mfa_entry_id,
-      token: link.token,
+      token: link.share_token,
       expires_at: link.expires_at,
-      access_count: link.access_count,
-      max_access_count: link.max_access_count,
-      is_active: link.is_active,
+      access_count: link.click_count,
+      max_access_count: null, // This field doesn't exist in current schema
+      is_active: link.status === 'active',
       created_at: link.created_at,
-      service_name: link.mfa_entries?.service_name
+      service_name: link.mfa_entries?.name
     })) || []
 
     return NextResponse.json({

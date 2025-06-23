@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
 
 import { AuthProvider } from '@/components/auth/AuthProvider'
+import { UserProvider } from '@/components/auth/UserProvider'
 import { createClient } from '@/utils/supabase/server'
 
 interface ProtectedLayoutProps {
@@ -29,9 +30,11 @@ export default async function ProtectedLayout({ children }: ProtectedLayoutProps
 
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
-        {children}
-      </div>
+      <UserProvider>
+        <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
+          {children}
+        </div>
+      </UserProvider>
     </AuthProvider>
   )
 }
