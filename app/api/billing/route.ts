@@ -78,7 +78,7 @@ export async function GET() {
     // Get user profile with billing info
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('subscription_status, subscription_plan, available_credits, trial_ends_at')
+      .select('subscription_status, user_tier, available_credits, current_period_end')
       .eq('id', user.id)
       .single()
 
@@ -108,7 +108,7 @@ export async function GET() {
 
     // Calculate trial status
     const now = new Date()
-    const trialEndsAt = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null
+    const trialEndsAt = profile.current_period_end ? new Date(profile.current_period_end) : null
     const isTrialActive = trialEndsAt && trialEndsAt > now
     const trialDaysRemaining = isTrialActive 
       ? Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
@@ -133,12 +133,12 @@ export async function GET() {
       }
     }
 
-    const currentPlan = planDetails[profile.subscription_plan as keyof typeof planDetails] || planDetails.free
+    const currentPlan = planDetails[profile.user_tier as keyof typeof planDetails] || planDetails.free
 
     return NextResponse.json({
       subscription: {
         status: profile.subscription_status || 'free',
-        plan: profile.subscription_plan || 'free',
+        plan: profile.user_tier || 'free',
         plan_details: currentPlan,
         trial_active: isTrialActive,
         trial_days_remaining: trialDaysRemaining,
