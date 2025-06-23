@@ -6,7 +6,7 @@ interface ModalActionsProps {
 
 export default function ModalActions({ children }: ModalActionsProps) {
   return (
-    <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200/60 dark:border-gray-600/30 mt-6">
+    <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200/60 mt-6">
       {children}
     </div>
   )

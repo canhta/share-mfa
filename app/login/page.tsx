@@ -31,7 +31,7 @@ export default async function LoginPage() {
               <TextEffect 
                 per="word" 
                 preset="slide"
-                className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white"
+                className="mt-6 text-center text-3xl font-extrabold text-gray-900"
               >
                 Sign in to MFA Share
               </TextEffect>
@@ -39,7 +39,7 @@ export default async function LoginPage() {
                 per="word" 
                 preset="fade-in-blur"
                 delay={0.4}
-                className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400"
+                className="mt-2 text-center text-sm text-gray-600"
               >
                 Securely share your TOTP codes with friends
               </TextEffect>
@@ -66,7 +66,7 @@ export default async function LoginPage() {
                 viewOptions={{ once: true }}
               >
                 <div className="text-center">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-500">
                     By signing in, you agree to our terms of service and privacy policy.
                   </p>
                 </div>

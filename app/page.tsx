@@ -23,7 +23,7 @@ export default async function HomePage() {
           <TextEffect 
             per="word" 
             preset="slide"
-            className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 dark:text-white sm:text-7xl"
+            className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl"
             speedReveal={1.2}
           >
             Securely share MFA codes with friends
@@ -32,7 +32,7 @@ export default async function HomePage() {
             per="word" 
             preset="fade-in-blur"
             delay={0.5}
-            className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700 dark:text-gray-300"
+            className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700"
           >
             Share your TOTP-based multi-factor authentication codes securely with trusted friends and family members.
           </TextEffect>
@@ -69,13 +69,13 @@ export default async function HomePage() {
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-200 text-white dark:text-black">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 text-white">
                   <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Secure by Design</h3>
-                <p className="mt-2 text-base text-slate-600 dark:text-gray-400">
+                <h3 className="mt-6 text-xl font-semibold text-slate-900">Secure by Design</h3>
+                <p className="mt-2 text-base text-slate-600">
                   All secrets are encrypted at rest and shared links can be password protected.
                 </p>
               </Card>
@@ -90,13 +90,13 @@ export default async function HomePage() {
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-200 text-white dark:text-black">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 text-white">
                   <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Easy Sharing</h3>
-                <p className="mt-2 text-base text-slate-600 dark:text-gray-400">
+                <h3 className="mt-6 text-xl font-semibold text-slate-900">Easy Sharing</h3>
+                <p className="mt-2 text-base text-slate-600">
                   Generate shareable links with customizable expiration and password protection.
                 </p>
               </Card>
@@ -111,13 +111,13 @@ export default async function HomePage() {
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-200 text-white dark:text-black">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 text-white">
                   <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Google Integration</h3>
-                <p className="mt-2 text-base text-slate-600 dark:text-gray-400">
+                <h3 className="mt-6 text-xl font-semibold text-slate-900">Google Integration</h3>
+                <p className="mt-2 text-base text-slate-600">
                   Sign in with Google and import your existing authenticator codes.
                 </p>
               </Card>

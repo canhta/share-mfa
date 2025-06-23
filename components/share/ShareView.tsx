@@ -101,10 +101,10 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
         <div className="text-center">
           <svg
-            className="mx-auto h-12 w-12 text-red-400 dark:text-red-500"
+            className="mx-auto h-12 w-12 text-red-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -116,8 +116,8 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.232 15.5c-.77.833.192 2.5 1.732 2.5z"
             />
           </svg>
-          <h3 className="mt-2 text-lg font-medium text-gray-900 dark:text-white">Access Error</h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{error}</p>
+          <h3 className="mt-2 text-lg font-medium text-gray-900">Access Error</h3>
+          <p className="mt-1 text-sm text-gray-500">{error}</p>
         </div>
       </div>
     )
@@ -125,10 +125,10 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
 
   if (requiresPassword) {
     return (
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password Required
             </label>
             <input
@@ -136,7 +136,7 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+              className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               placeholder="Enter the password to access this MFA code"
               required
             />
@@ -144,7 +144,7 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
           <button
             type="submit"
             disabled={loading || !password}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 disabled:opacity-50 transition-colors"
+            className="btn-primary text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
           >
             {loading ? 'Validating...' : 'Access MFA Code'}
           </button>
@@ -155,9 +155,9 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
 
   if (loading || !entry) {
     return (
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       </div>
     )
@@ -166,51 +166,51 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
   const progressPercentage = (timeRemaining / 30) * 100
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+    <div className="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{entry.name}</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">{entry.name}</h2>
         {entry.notes && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{entry.notes}</p>
+          <p className="text-sm text-gray-500 mb-4">{entry.notes}</p>
         )}
         
         <div 
-          className="cursor-pointer bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 mb-4 group"
+          className="cursor-pointer bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-all duration-200 mb-4 group"
           onClick={copyCode}
           title="Click to copy"
         >
-          <span className="text-3xl sm:text-4xl font-mono font-bold text-gray-900 dark:text-white tracking-wider group-hover:scale-105 transition-transform duration-200 inline-block">
+          <span className="text-3xl sm:text-4xl font-mono font-bold text-gray-900 tracking-wider group-hover:scale-105 transition-transform duration-200 inline-block">
             {currentCode}
           </span>
           <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <span className="text-xs text-gray-500 dark:text-gray-400">Click to copy</span>
+            <span className="text-xs text-gray-500">Click to copy</span>
           </div>
         </div>
         
         <div className="flex items-center justify-between mb-4">
-          <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-3 mr-3">
+          <div className="flex-1 bg-gray-200 rounded-full h-3 mr-3">
             <div
               className={`h-3 rounded-full transition-all duration-1000 ${
                 timeRemaining > 10 
-                  ? 'bg-blue-600 dark:bg-blue-500' 
+                  ? 'bg-blue-600' 
                   : timeRemaining > 5 
-                  ? 'bg-yellow-500 dark:bg-yellow-400' 
-                  : 'bg-red-500 dark:bg-red-400'
+                  ? 'bg-yellow-500' 
+                  : 'bg-red-500'
               }`}
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
           <span className={`text-sm font-mono font-medium ${
             timeRemaining > 10 
-              ? 'text-gray-500 dark:text-gray-400' 
+              ? 'text-gray-500' 
               : timeRemaining > 5 
-              ? 'text-yellow-600 dark:text-yellow-400' 
-              : 'text-red-600 dark:text-red-400'
+              ? 'text-yellow-600' 
+              : 'text-red-600'
           }`}>
             {timeRemaining}s
           </span>
         </div>
         
-        <p className="text-xs text-gray-400 dark:text-gray-500">
+        <p className="text-xs text-gray-400">
           This code updates every 30 seconds. Click to copy.
         </p>
       </div>

@@ -23,9 +23,53 @@ export default function AddMfaEntry({ onEntryAdded }: AddMfaEntryProps) {
     totpUri: '',
   })
   const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState({
+    name: '',
+    totpUri: '',
+    general: '',
+  })
+
+  const resetForm = () => {
+    setFormData({ name: '', secret: '', notes: '', totpUri: '' })
+    setErrors({ name: '', totpUri: '', general: '' })
+  }
+
+  const validateForm = () => {
+    const newErrors = { name: '', totpUri: '', general: '' }
+    let isValid = true
+
+    // If TOTP URI is provided, validate its format
+    if (formData.totpUri.trim() && !formData.totpUri.startsWith('otpauth://totp/')) {
+      newErrors.totpUri = 'TOTP URI must start with "otpauth://totp/"'
+      isValid = false
+    }
+
+    // At least name should be provided, or a valid TOTP URI, or a secret
+    const hasName = formData.name.trim()
+    const hasValidTotpUri = formData.totpUri.trim() && formData.totpUri.startsWith('otpauth://totp/')
+    const hasSecret = formData.secret.trim()
+
+    if (!hasName && !hasValidTotpUri && !hasSecret) {
+      newErrors.general = 'Please provide at least a name, a valid TOTP URI, or a secret'
+      isValid = false
+    }
+
+    setErrors(newErrors)
+    return isValid
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    resetForm()
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!validateForm()) {
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -38,6 +82,10 @@ export default function AddMfaEntry({ onEntryAdded }: AddMfaEntryProps) {
         if (parsed) {
           secret = parsed.secret
           if (!name) name = parsed.name
+        } else {
+          setErrors(prev => ({ ...prev, totpUri: 'Invalid TOTP URI format' }))
+          setLoading(false)
+          return
         }
       }
 
@@ -61,13 +109,14 @@ export default function AddMfaEntry({ onEntryAdded }: AddMfaEntryProps) {
       if (response.ok) {
         const data = await response.json()
         onEntryAdded(data.entry)
-        setIsModalOpen(false)
-        setFormData({ name: '', secret: '', notes: '', totpUri: '' })
+        handleCloseModal()
       } else {
-        console.error('Failed to create MFA entry')
+        const errorData = await response.json()
+        setErrors(prev => ({ ...prev, general: errorData.error || 'Failed to create MFA entry' }))
       }
     } catch (error) {
       console.error('Error creating MFA entry:', error)
+      setErrors(prev => ({ ...prev, general: 'Network error occurred' }))
     } finally {
       setLoading(false)
     }
@@ -87,18 +136,37 @@ export default function AddMfaEntry({ onEntryAdded }: AddMfaEntryProps) {
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         title="Add MFA Code"
         maxWidth="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-5">
+          {errors.general && (
+            <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-4 border border-red-200 dark:border-red-800">
+              <div className="flex">
+                <svg className="h-5 w-5 text-red-400 dark:text-red-300" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-3">
+                  <p className="text-sm text-red-700 dark:text-red-200">{errors.general}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <FormInput
             label="Name"
             id="name"
             type="text"
             value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => {
+              setFormData(prev => ({ ...prev, name: e.target.value }))
+              if (errors.general && e.target.value.trim()) {
+                setErrors(prev => ({ ...prev, general: '' }))
+              }
+            }}
             placeholder="e.g., Google Account"
+            error={errors.name}
           />
 
           <FormInput
@@ -106,8 +174,17 @@ export default function AddMfaEntry({ onEntryAdded }: AddMfaEntryProps) {
             id="totpUri"
             type="text"
             value={formData.totpUri}
-            onChange={(e) => setFormData(prev => ({ ...prev, totpUri: e.target.value }))}
+            onChange={(e) => {
+              setFormData(prev => ({ ...prev, totpUri: e.target.value }))
+              if (errors.totpUri) {
+                setErrors(prev => ({ ...prev, totpUri: '' }))
+              }
+              if (errors.general && e.target.value.trim()) {
+                setErrors(prev => ({ ...prev, general: '' }))
+              }
+            }}
             placeholder="otpauth://totp/..."
+            error={errors.totpUri}
           />
 
           <FormInput
@@ -115,7 +192,12 @@ export default function AddMfaEntry({ onEntryAdded }: AddMfaEntryProps) {
             id="secret"
             type="text"
             value={formData.secret}
-            onChange={(e) => setFormData(prev => ({ ...prev, secret: e.target.value }))}
+            onChange={(e) => {
+              setFormData(prev => ({ ...prev, secret: e.target.value }))
+              if (errors.general && e.target.value.trim()) {
+                setErrors(prev => ({ ...prev, general: '' }))
+              }
+            }}
             placeholder="Leave blank to generate"
           />
 
@@ -129,7 +211,7 @@ export default function AddMfaEntry({ onEntryAdded }: AddMfaEntryProps) {
           />
 
           <ModalActions>
-            <Button onClick={() => setIsModalOpen(false)} variant="secondary">
+            <Button onClick={handleCloseModal} variant="secondary">
               Cancel
             </Button>
             <Button type="submit" variant="primary" loading={loading} disabled={loading}>

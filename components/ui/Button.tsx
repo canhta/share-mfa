@@ -17,7 +17,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', loading = false, disabled, children, onClick, ...props }, ref) => {
     const baseClasses = [
       'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200',
-      'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900',
+      'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white',
       'disabled:opacity-50 disabled:pointer-events-none',
       'relative overflow-hidden'
     ]
@@ -25,25 +25,23 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const variants = {
       primary: [
         'bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black',
-        'dark:from-gray-200 dark:to-gray-100 dark:hover:from-gray-100 dark:hover:to-white',
-        'text-white dark:text-black shadow-lg shadow-gray-500/20 hover:shadow-gray-500/30',
-        'focus:ring-gray-500 border border-gray-800 hover:border-gray-900 dark:border-gray-200 dark:hover:border-gray-100'
+        'text-white shadow-lg shadow-gray-500/20 hover:shadow-gray-500/30',
+        'focus:ring-gray-500 border border-gray-800 hover:border-gray-900'
       ],
       secondary: [
         'bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300',
-        'dark:from-gray-800 dark:to-gray-700 dark:hover:from-gray-700 dark:hover:to-gray-600',
-        'text-gray-900 dark:text-gray-100 shadow-sm',
-        'focus:ring-gray-400 border border-gray-200 dark:border-gray-700'
+        'text-gray-900 shadow-sm',
+        'focus:ring-gray-400 border border-gray-200'
       ],
       outline: [
-        'border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500',
-        'bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50',
-        'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100',
+        'border-2 border-gray-300 hover:border-gray-400',
+        'bg-transparent hover:bg-gray-50',
+        'text-gray-700 hover:text-gray-900',
         'focus:ring-gray-400'
       ],
       ghost: [
-        'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800/50',
-        'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100',
+        'bg-transparent hover:bg-gray-100',
+        'text-gray-700 hover:text-gray-900',
         'focus:ring-gray-400'
       ],
       destructive: [

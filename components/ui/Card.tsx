@@ -36,13 +36,13 @@ export default function Card({
       'glass-neutral'
     ],
     flat: [
-      'bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur-sm',
-      'border border-gray-200/40 dark:border-gray-700/30'
+      'bg-gray-50/80 backdrop-blur-sm',
+      'border border-gray-200/40'
     ],
     outline: [
       'bg-transparent',
-      'border-2 border-gray-300 dark:border-gray-600',
-      'hover:bg-gray-50/50 dark:hover:bg-gray-800/50'
+      'border-2 border-gray-300',
+      'hover:bg-gray-50/50'
     ]
   }
 
@@ -65,7 +65,7 @@ export default function Card({
         'rounded-2xl transition-all duration-200',
         variantClasses[variant],
         paddingClasses[padding],
-        hover && 'cursor-pointer hover:shadow-lg hover:shadow-gray-200/30 dark:hover:shadow-gray-900/30',
+        hover && 'cursor-pointer hover:shadow-lg hover:shadow-gray-200/30',
         className
       )}
       {...motionProps}

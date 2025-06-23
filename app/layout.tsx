@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { ScrollProgress } from "@/components/motion-primitives/scroll-progress";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import Footer from "@/components/ui/Footer";
 
 const geistSans = Geist({
@@ -33,16 +32,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        <ThemeProvider
-          defaultTheme="system"
-          storageKey="mfa-share-theme"
-        >
-          <ScrollProgress className="fixed top-0 z-50" />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
+        <ScrollProgress className="fixed top-0 z-50" />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
