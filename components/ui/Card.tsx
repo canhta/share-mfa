@@ -1,0 +1,81 @@
+'use client'
+
+import { motion } from 'motion/react'
+import { ReactNode } from 'react'
+
+import { cn } from '@/lib/utils'
+
+interface CardProps {
+  children: ReactNode
+  className?: string
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  hover?: boolean
+  variant?: 'default' | 'elevated' | 'flat' | 'outline'
+}
+
+export default function Card({ 
+  children, 
+  className = '', 
+  padding = 'md',
+  hover = false,
+  variant = 'default'
+}: CardProps) {
+  const paddingClasses = {
+    none: '',
+    sm: 'p-4',
+    md: 'p-6',
+    lg: 'p-8',
+    xl: 'p-10'
+  }
+
+  const variantClasses = {
+    default: [
+      'bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm',
+      'border border-gray-200/60 dark:border-gray-700/40',
+      'shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+    ],
+    elevated: [
+      'bg-white dark:bg-gray-900',
+      'border border-gray-200/60 dark:border-gray-700/40',
+      'shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50',
+      'ring-1 ring-black/5 dark:ring-white/10'
+    ],
+    flat: [
+      'bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm',
+      'border border-gray-200/40 dark:border-gray-700/30'
+    ],
+    outline: [
+      'bg-transparent',
+      'border-2 border-gray-200 dark:border-gray-700',
+      'hover:bg-gray-50/50 dark:hover:bg-gray-800/50'
+    ]
+  }
+
+  const MotionCard = hover ? motion.div : 'div'
+  const motionProps = hover ? {
+    whileHover: { 
+      y: -2,
+      scale: 1.02,
+      transition: { duration: 0.2, ease: 'easeOut' as const }
+    },
+    whileTap: { 
+      scale: 0.98,
+      transition: { duration: 0.1 }
+    }
+  } : {}
+
+  return (
+    <MotionCard
+      className={cn(
+        'rounded-2xl transition-all duration-200',
+        variantClasses[variant],
+        paddingClasses[padding],
+        hover && 'cursor-pointer hover:shadow-lg hover:shadow-gray-200/30 dark:hover:shadow-gray-900/30',
+        className
+      )}
+      {...motionProps}
+    >
+      {children}
+    </MotionCard>
+  )
+} 

@@ -1,103 +1,130 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
-export default function Home() {
+import { InView } from '@/components/motion-primitives/in-view'
+import { TextEffect } from '@/components/motion-primitives/text-effect'
+import Button from '@/components/ui/Button'
+import Card from '@/components/ui/Card'
+import { createClient } from '@/utils/supabase/server'
+
+export default async function HomePage() {
+  const supabase = await createClient()
+  
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (user) {
+    redirect('/dashboard')
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 bg-subtle-pattern">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="pt-20 pb-16 text-center lg:pt-32">
+          <TextEffect 
+            per="word" 
+            preset="slide"
+            className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 dark:text-white sm:text-7xl"
+            speedReveal={1.2}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Securely share MFA codes with friends
+          </TextEffect>
+          <TextEffect 
+            per="word" 
+            preset="fade-in-blur"
+            delay={0.5}
+            className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700 dark:text-gray-300"
           >
-            Read our docs
-          </a>
+            Share your TOTP-based multi-factor authentication codes securely with trusted friends and family members.
+          </TextEffect>
+          <div className="mt-10 flex justify-center gap-x-6">
+            <InView
+              variants={{
+                hidden: { opacity: 0, y: 20, scale: 0.9 },
+                visible: { opacity: 1, y: 0, scale: 1 }
+              }}
+              transition={{ duration: 0.6, delay: 1.0, ease: "easeOut" }}
+              viewOptions={{ once: true }}
+            >
+              <Link href="/login">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="btn-shimmer rounded-full"
+                >
+                  Get started
+                </Button>
+              </Link>
+            </InView>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        
+        <div className="mt-20 lg:mt-32">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <InView
+              variants={{
+                hidden: { opacity: 0, y: 40, scale: 0.9 },
+                visible: { opacity: 1, y: 0, scale: 1 }
+              }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+              viewOptions={{ once: true }}
+            >
+              <Card hover className="text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 dark:bg-blue-700 text-white">
+                  <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Secure by Design</h3>
+                <p className="mt-2 text-base text-slate-600 dark:text-gray-400">
+                  All secrets are encrypted at rest and shared links can be password protected.
+                </p>
+              </Card>
+            </InView>
+            
+            <InView
+              variants={{
+                hidden: { opacity: 0, y: 40, scale: 0.9 },
+                visible: { opacity: 1, y: 0, scale: 1 }
+              }}
+              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+              viewOptions={{ once: true }}
+            >
+              <Card hover className="text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 dark:bg-blue-700 text-white">
+                  <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                  </svg>
+                </div>
+                <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Easy Sharing</h3>
+                <p className="mt-2 text-base text-slate-600 dark:text-gray-400">
+                  Generate shareable links with customizable expiration and password protection.
+                </p>
+              </Card>
+            </InView>
+            
+            <InView
+              variants={{
+                hidden: { opacity: 0, y: 40, scale: 0.9 },
+                visible: { opacity: 1, y: 0, scale: 1 }
+              }}
+              transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+              viewOptions={{ once: true }}
+            >
+              <Card hover className="text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 dark:bg-blue-700 text-white">
+                  <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                  </svg>
+                </div>
+                <h3 className="mt-6 text-xl font-semibold text-slate-900 dark:text-white">Google Integration</h3>
+                <p className="mt-2 text-base text-slate-600 dark:text-gray-400">
+                  Sign in with Google and import your existing authenticator codes.
+                </p>
+              </Card>
+            </InView>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
