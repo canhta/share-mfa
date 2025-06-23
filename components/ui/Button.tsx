@@ -24,31 +24,32 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary: [
-        'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800',
-        'text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40',
-        'focus:ring-blue-500 border border-blue-600 hover:border-blue-700'
+        'bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black',
+        'dark:from-gray-200 dark:to-gray-100 dark:hover:from-gray-100 dark:hover:to-white',
+        'text-white dark:text-black shadow-lg shadow-gray-500/20 hover:shadow-gray-500/30',
+        'focus:ring-gray-500 border border-gray-800 hover:border-gray-900 dark:border-gray-200 dark:hover:border-gray-100'
       ],
       secondary: [
         'bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300',
-        'dark:from-gray-700 dark:to-gray-800 dark:hover:from-gray-600 dark:hover:to-gray-700',
+        'dark:from-gray-800 dark:to-gray-700 dark:hover:from-gray-700 dark:hover:to-gray-600',
         'text-gray-900 dark:text-gray-100 shadow-sm',
-        'focus:ring-gray-500 border border-gray-200 dark:border-gray-600'
+        'focus:ring-gray-400 border border-gray-200 dark:border-gray-700'
       ],
       outline: [
         'border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500',
         'bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50',
         'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100',
-        'focus:ring-gray-500'
+        'focus:ring-gray-400'
       ],
       ghost: [
         'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800/50',
         'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100',
-        'focus:ring-gray-500'
+        'focus:ring-gray-400'
       ],
       destructive: [
-        'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800',
-        'text-white shadow-lg shadow-red-500/25 hover:shadow-red-500/40',
-        'focus:ring-red-500 border border-red-600 hover:border-red-700'
+        'bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800',
+        'text-white shadow-lg shadow-gray-500/20 hover:shadow-gray-500/30',
+        'focus:ring-gray-500 border border-gray-600 hover:border-gray-700'
       ]
     }
 
@@ -77,15 +78,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           onClick={onClick}
           {...props}
         >
-          {/* Shimmer effect for primary buttons */}
-          {variant === 'primary' && (
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-              initial={{ x: '-100%' }}
-              whileHover={{ x: '100%' }}
-              transition={{ duration: 0.6, ease: 'easeInOut' }}
-            />
-          )}
+                  {/* Subtle highlight for primary buttons */}
+        {variant === 'primary' && (
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0"
+            whileHover={{ opacity: 1 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          />
+        )}
           
           {loading ? (
             <div className="flex items-center space-x-2">

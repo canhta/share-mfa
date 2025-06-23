@@ -53,10 +53,10 @@ export default function Select({
             'bg-white dark:bg-gray-900/50 backdrop-blur-sm',
             'border border-gray-300/60 dark:border-gray-600/30',
             'rounded-xl shadow-sm transition-all duration-200',
-            'focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500',
+            'focus:ring-2 focus:ring-gray-400/20 focus:border-gray-500',
             'hover:border-gray-400/60 dark:hover:border-gray-500/40',
             'appearance-none cursor-pointer',
-            error && 'border-red-300 dark:border-red-600/50 focus:border-red-500 focus:ring-red-500/20',
+            error && 'border-gray-400 dark:border-gray-500/50 focus:border-gray-600 focus:ring-gray-500/20',
             className
           )}
           {...props}
@@ -83,7 +83,7 @@ export default function Select({
         <AnimatePresence>
           {isFocused && (
             <motion.div
-              className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 pointer-events-none"
+                             className="absolute inset-0 rounded-xl bg-gradient-to-r from-gray-400/10 to-gray-500/10 pointer-events-none"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -96,7 +96,7 @@ export default function Select({
       <AnimatePresence>
         {error && (
           <motion.p 
-            className="text-sm text-red-600 dark:text-red-400 flex items-center space-x-1"
+            className="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-1"
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}

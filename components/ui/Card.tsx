@@ -30,23 +30,18 @@ export default function Card({
 
   const variantClasses = {
     default: [
-      'bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm',
-      'border border-gray-200/60 dark:border-gray-700/40',
-      'shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+      'surface-elevated'
     ],
     elevated: [
-      'bg-white dark:bg-gray-900',
-      'border border-gray-200/60 dark:border-gray-700/40',
-      'shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50',
-      'ring-1 ring-black/5 dark:ring-white/10'
+      'glass-neutral'
     ],
     flat: [
-      'bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm',
+      'bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur-sm',
       'border border-gray-200/40 dark:border-gray-700/30'
     ],
     outline: [
       'bg-transparent',
-      'border-2 border-gray-200 dark:border-gray-700',
+      'border-2 border-gray-300 dark:border-gray-600',
       'hover:bg-gray-50/50 dark:hover:bg-gray-800/50'
     ]
   }

@@ -61,11 +61,11 @@ export default function MfaEntryCard({ entry, currentCode, timeRemaining, onDele
       >
         <Card hover className="transition-all duration-200 relative overflow-hidden">
           <GlowEffect
-            className="opacity-10"
-            colors={timeRemaining > 10 ? ['#3B82F6'] : timeRemaining > 5 ? ['#F59E0B'] : ['#EF4444']}
+            className="opacity-5"
+            colors={timeRemaining > 10 ? ['#6B7280'] : timeRemaining > 5 ? ['#9CA3AF'] : ['#4B5563']}
             mode="static"
             blur="soft"
-            duration={3}
+            duration={4}
           />
           
           <div className="relative z-10">

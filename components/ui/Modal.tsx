@@ -57,7 +57,7 @@ export default function Modal({
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -67,11 +67,7 @@ export default function Modal({
           {/* Modal content */}
           <motion.div
             className={cn(
-              'relative w-full p-8 mx-auto',
-              'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md',
-              'rounded-2xl shadow-2xl',
-              'border border-gray-200/60 dark:border-gray-700/40',
-              'ring-1 ring-black/5 dark:ring-white/10',
+              'relative w-full p-8 mx-auto glass-neutral rounded-2xl',
               maxWidthClass
             )}
             initial={{ opacity: 0, scale: 0.95, y: 20 }}

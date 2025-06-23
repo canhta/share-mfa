@@ -27,7 +27,7 @@ export default function GoogleSignInButton() {
     <Button
       onClick={handleGoogleSignIn}
       variant="primary"
-      className="w-full btn-shimmer"
+      className="w-full"
       size="lg"
     >
       <span className="absolute left-0 inset-y-0 flex items-center pl-3">

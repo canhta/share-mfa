@@ -17,7 +17,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 bg-subtle-pattern">
+    <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="pt-20 pb-16 text-center lg:pt-32">
           <TextEffect 
@@ -49,7 +49,7 @@ export default async function HomePage() {
                 <Button
                   variant="primary"
                   size="lg"
-                  className="btn-shimmer rounded-full"
+                  className="rounded-full"
                 >
                   Get started
                 </Button>
@@ -69,7 +69,7 @@ export default async function HomePage() {
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 dark:bg-blue-700 text-white">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-200 text-white dark:text-black">
                   <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
@@ -90,7 +90,7 @@ export default async function HomePage() {
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 dark:bg-blue-700 text-white">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-200 text-white dark:text-black">
                   <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
@@ -111,7 +111,7 @@ export default async function HomePage() {
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 dark:bg-blue-700 text-white">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-200 text-white dark:text-black">
                   <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
                   </svg>
