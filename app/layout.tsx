@@ -22,6 +22,12 @@ export const metadata: Metadata = {
   keywords: ["MFA", "TOTP", "authentication", "security", "sharing", "two-factor"],
 };
 
+/**
+ * Root Layout - Global layout for the entire application
+ * 
+ * Provides base HTML structure and global styles.
+ * Authentication context is provided by nested layouts where needed.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

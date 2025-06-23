@@ -1,21 +1,22 @@
-import { redirect } from 'next/navigation'
-
 import BillingDashboard from '@/components/dashboard/BillingDashboard'
 import DashboardHeader from '@/components/dashboard/DashboardHeader'
 import { createClient } from '@/utils/supabase/server'
 
+/**
+ * Billing Page - User billing and subscription management
+ * 
+ * Authentication is handled by the parent (protected) layout.
+ * This page focuses purely on rendering billing content.
+ */
 export default async function BillingPage() {
   const supabase = await createClient()
   
-  const { data: { user }, error } = await supabase.auth.getUser()
-  
-  if (error || !user) {
-    redirect('/login')
-  }
+  // User is guaranteed to be authenticated by parent layout
+  const { data: { user } } = await supabase.auth.getUser()
 
   return (
-    <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
-      <DashboardHeader user={user} />
+    <>
+      <DashboardHeader user={user!} />
       
       <main className="max-w-4xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
         <div className="space-y-8">
@@ -33,6 +34,6 @@ export default async function BillingPage() {
           <BillingDashboard />
         </div>
       </main>
-    </div>
+    </>
   )
 }

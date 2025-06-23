@@ -9,6 +9,12 @@ import ProfileSetupStep from '@/components/onboarding/ProfileSetupStep'
 import WelcomeStep from '@/components/onboarding/WelcomeStep'
 import { OnboardingData } from '@/types/database'
 
+/**
+ * Onboarding Page - New user onboarding flow
+ * 
+ * Authentication is handled by the parent (protected) layout.
+ * This page focuses purely on onboarding logic and UI.
+ */
 export default function OnboardingPage() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)

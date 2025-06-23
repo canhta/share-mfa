@@ -1,23 +1,24 @@
-import { redirect } from 'next/navigation'
-
 import DashboardHeader from '@/components/dashboard/DashboardHeader'
 import MfaEntryList from '@/components/dashboard/MfaEntryList'
 import ShareStatusDashboard from '@/components/dashboard/ShareStatusDashboard'
 import UsageStats from '@/components/dashboard/UsageStats'
 import { createClient } from '@/utils/supabase/server'
 
+/**
+ * Dashboard Page - Main user dashboard
+ * 
+ * Authentication is handled by the parent (protected) layout.
+ * This page focuses purely on rendering dashboard content.
+ */
 export default async function DashboardPage() {
   const supabase = await createClient()
   
-  const { data: { user }, error } = await supabase.auth.getUser()
+  // User is guaranteed to be authenticated by parent layout
+  const { data: { user } } = await supabase.auth.getUser()
   
-  if (error || !user) {
-    redirect('/login')
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
-      <DashboardHeader user={user} />
+    <>
+      <DashboardHeader user={user!} />
       
       <main className="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
         <div className="space-y-8">
@@ -31,21 +32,23 @@ export default async function DashboardPage() {
             </p>
           </div>
 
-          {/* Usage Statistics */}
+          {/* Stats Grid */}
           <UsageStats />
 
-          {/* MFA Entries Section */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Your MFA Codes
-            </h3>
-            <MfaEntryList />
+          {/* Two Column Layout for larger screens */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* MFA Entries - Takes up 2/3 on large screens */}
+            <div className="lg:col-span-2">
+              <MfaEntryList />
+            </div>
+            
+            {/* Share Status - Takes up 1/3 on large screens */}
+            <div className="lg:col-span-1">
+              <ShareStatusDashboard />
+            </div>
           </div>
-
-          {/* Shared Links Status */}
-          <ShareStatusDashboard />
         </div>
       </main>
-    </div>
+    </>
   )
-} 
+}
