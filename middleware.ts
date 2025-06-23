@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
  */
 
 // Define protected and public routes
-const protectedRoutes = ['/dashboard', '/admin', '/billing', '/onboarding']
+const protectedRoutes = ['/dashboard', '/admin', '/billing', '/onboarding', '/mfa']
 const publicRoutes = ['/login', '/signup', '/', '/share', '/pricing']
 
 export async function middleware(request: NextRequest) {

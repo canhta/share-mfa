@@ -6,7 +6,7 @@ import { TextEffect } from '@/components/motion-primitives/text-effect'
 import { generateTOTP, getTimeRemaining } from '@/lib/totp'
 import type { MfaEntry } from '@/types/database'
 
-import AddMfaEntry from './AddMfaEntry'
+import AddMfaEntry from '../dashboard/AddMfaEntry'
 import MfaEntryCard from './MfaEntryCard'
 
 export default function MfaEntryList() {

@@ -10,6 +10,7 @@ import type { MfaEntry } from '@/types/database'
 
 import ShareModal from './ShareModal'
 
+
 interface MfaEntryCardProps {
   entry: MfaEntry
   currentCode: string

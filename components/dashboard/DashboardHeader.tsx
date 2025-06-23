@@ -1,7 +1,7 @@
 'use client'
 
 import type { User } from '@supabase/supabase-js'
-import { BarChart3, CreditCard, Home, Menu, X } from 'lucide-react'
+import { BarChart3, CreditCard, Home, Menu, Shield, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -37,6 +37,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'MFA', href: '/mfa', icon: Shield },
     { name: 'Billing', href: '/billing', icon: CreditCard },
     { name: 'Pricing', href: '/pricing', icon: BarChart3 },
   ]
