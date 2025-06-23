@@ -1,56 +1,77 @@
+'use client'
+
+import { motion } from 'motion/react'
 import { ReactNode } from 'react'
+
+import { cn } from '@/lib/utils'
 
 interface AlertProps {
   children: ReactNode
-  variant?: 'info' | 'success' | 'warning' | 'error'
+  variant?: 'default' | 'destructive' | 'warning' | 'success'
   className?: string
+  onClose?: () => void
 }
 
 export default function Alert({ 
   children, 
-  variant = 'info', 
-  className = '' 
+  variant = 'default', 
+  className = '',
+  onClose 
 }: AlertProps) {
-  const variantClasses = {
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
-    success: 'bg-green-50 border-green-200 text-green-800',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-    error: 'bg-red-50 border-red-200 text-red-800'
-  }
-
-  const iconMap = {
-    info: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    success: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    warning: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-      </svg>
-    ),
-    error: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    )
+  const variants = {
+    default: [
+      'bg-gray-50/80 backdrop-blur-sm',
+      'border border-gray-200/60',
+      'text-gray-900'
+    ],
+    destructive: [
+      'bg-gray-100/80 backdrop-blur-sm',
+      'border border-gray-300/60',
+      'text-gray-800'
+    ],
+    warning: [
+      'bg-gray-50/80 backdrop-blur-sm',
+      'border border-gray-200/60',
+      'text-gray-900'
+    ],
+    success: [
+      'bg-gray-50/80 backdrop-blur-sm',
+      'border border-gray-200/60',
+      'text-gray-900'
+    ]
   }
 
   return (
-    <div className={`border rounded-xl p-4 ${variantClasses[variant]} ${className}`}>
-      <div className="flex">
-        <div className="flex-shrink-0">
-          {iconMap[variant]}
-        </div>
-        <div className="ml-3 text-sm">
+    <motion.div
+      className={cn(
+        'p-4 rounded-xl shadow-sm',
+        'animate-fade-up',
+        variants[variant],
+        className
+      )}
+      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
           {children}
         </div>
+        
+        {onClose && (
+          <motion.button
+            onClick={onClose}
+            className="ml-4 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100/60 rounded-lg transition-all duration-200"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </motion.button>
+        )}
       </div>
-    </div>
+    </motion.div>
   )
 } 

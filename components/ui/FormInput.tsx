@@ -1,6 +1,6 @@
 'use client'
 
-import { AnimatePresence,motion } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { InputHTMLAttributes, useState } from 'react'
 
 import { cn } from '@/lib/utils'
@@ -40,13 +40,13 @@ export default function FormInput({ label, id, error, description, className = '
           }}
           className={cn(
             'block w-full px-4 py-3 text-gray-900',
-            'bg-white backdrop-blur-sm',
+            'bg-white/80 backdrop-blur-sm',
             'border border-gray-300/60',
             'rounded-xl shadow-sm transition-all duration-200',
-            'focus:ring-2 focus:ring-gray-400/20 focus:border-gray-500',
+            'focus-ring-neutral focus:border-gray-500',
             'placeholder:text-gray-400',
-            'hover:border-gray-400/60',
-            error && 'border-gray-400 focus:border-gray-600 focus:ring-gray-500/20',
+            'hover:border-gray-400/80 hover:bg-white/90',
+            error && 'border-gray-400 focus:border-gray-600',
             className
           )}
         />
@@ -54,20 +54,20 @@ export default function FormInput({ label, id, error, description, className = '
         {/* Focus indicator */}
         <AnimatePresence>
           {isFocused && (
-                         <motion.div
-               className="absolute inset-0 rounded-xl bg-gradient-to-r from-gray-400/10 to-gray-500/10 pointer-events-none"
-               initial={{ opacity: 0, scale: 0.95 }}
-               animate={{ opacity: 1, scale: 1 }}
-               exit={{ opacity: 0, scale: 0.95 }}
-               transition={{ duration: 0.2, ease: 'easeOut' }}
-             />
+            <motion.div
+              className="absolute inset-0 rounded-xl bg-gradient-to-r from-gray-400/5 to-gray-500/5 pointer-events-none"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            />
           )}
         </AnimatePresence>
       </motion.div>
 
       {description && !error && (
         <motion.p 
-          className="text-xs text-gray-500"
+          className="text-xs text-muted-foreground"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}

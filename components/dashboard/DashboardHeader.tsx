@@ -2,6 +2,7 @@
 
 import type { User } from '@supabase/supabase-js'
 import { BarChart3, CreditCard, Home, Menu, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -9,6 +10,7 @@ import { useState } from 'react'
 
 import { InView } from '@/components/motion-primitives/in-view'
 import { TextEffect } from '@/components/motion-primitives/text-effect'
+import Button from '@/components/ui/Button'
 import { createClient } from '@/utils/supabase/client'
 
 interface DashboardHeaderProps {
@@ -44,7 +46,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       viewOptions={{ once: true }}
     >
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="glass-neutral border-b border-gray-200/40 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             {/* Logo and Brand */}
@@ -53,7 +55,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                 <TextEffect 
                   per="char" 
                   preset="slide"
-                  className="text-2xl sm:text-3xl font-bold text-gray-900 hover:text-blue-600 transition-colors"
+                  className="text-2xl sm:text-3xl font-bold text-gray-900 hover:text-gray-700 transition-colors"
                   speedReveal={1.5}
                 >
                   ShareMFA
@@ -66,18 +68,24 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
               {navigation.map((item) => {
                 const IconComponent = item.icon
                 return (
-                  <Link
+                  <motion.div
                     key={item.name}
-                    href={item.href}
-                    className={`inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                      isActivePath(item.href)
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                    }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
                   >
-                    <IconComponent className="w-4 h-4 mr-2" />
-                    {item.name}
-                  </Link>
+                    <Link
+                      href={item.href}
+                      className={`inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${
+                        isActivePath(item.href)
+                          ? 'bg-gray-100/80 text-gray-900 shadow-sm backdrop-blur-sm'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50/80'
+                      }`}
+                    >
+                      <IconComponent className="w-4 h-4 mr-2" />
+                      {item.name}
+                    </Link>
+                  </motion.div>
                 )
               })}
             </nav>
@@ -93,11 +101,11 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                 transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
                 viewOptions={{ once: true }}
               >
-                <div className="hidden md:flex items-center space-x-3">
+                <div className="hidden md:flex items-center space-x-3 bg-gray-50/50 backdrop-blur-sm rounded-xl px-3 py-2">
                   <div className="flex-shrink-0">
                     <Image
-                      className="h-8 w-8 rounded-full"
-                      src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=3b82f6&color=fff`}
+                      className="h-8 w-8 rounded-full ring-2 ring-gray-200"
+                      src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=404040&color=fff`}
                       alt={user.email || 'User avatar'}
                       width={32}
                       height={32}
@@ -107,7 +115,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                     <p className="text-sm font-medium text-gray-900">
                       {user.user_metadata?.full_name || user.email}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs text-gray-500">
                       {user.email}
                     </p>
                   </div>
@@ -115,16 +123,18 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
               </InView>
 
               {/* Mobile menu button */}
-              <button
+              <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+                className="md:hidden inline-flex items-center justify-center p-2 rounded-xl text-gray-400 hover:text-gray-500 hover:bg-gray-100/80 focus-ring-neutral"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 {isMobileMenuOpen ? (
                   <X className="h-6 w-6" />
                 ) : (
                   <Menu className="h-6 w-6" />
                 )}
-              </button>
+              </motion.button>
               
               {/* Sign Out Button */}
               <InView
@@ -135,9 +145,11 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                 transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
                 viewOptions={{ once: true }}
               >
-                <button
+                <Button
                   onClick={handleSignOut}
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 hover:scale-105"
+                  variant="destructive"
+                  size="sm"
+                  className="rounded-xl"
                 >
                   <span className="hidden sm:inline">Sign out</span>
                   <span className="sm:hidden">
@@ -145,58 +157,77 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013 3v1" />
                     </svg>
                   </span>
-                </button>
+                </Button>
               </InView>
             </div>
           </div>
 
           {/* Mobile Navigation */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-200 pb-4">
-              <div className="pt-4 space-y-1">
-                {/* Mobile User Info */}
-                <div className="flex items-center px-3 py-2 mb-4">
-                  <div className="flex-shrink-0">
-                    <Image
-                      className="h-8 w-8 rounded-full"
-                      src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=3b82f6&color=fff`}
-                      alt={user.email || 'User avatar'}
-                      width={32}
-                      height={32}
-                    />
-                  </div>
-                  <div className="ml-3 min-w-0 flex-1">
-                    <p className="text-sm font-medium text-gray-900">
-                      {user.user_metadata?.full_name || user.email}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {user.email}
-                    </p>
-                  </div>
-                </div>
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div 
+                className="md:hidden border-t border-gray-200/40 pb-4"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <div className="pt-4 space-y-1">
+                  {/* Mobile User Info */}
+                  <motion.div 
+                    className="flex items-center px-3 py-3 mb-4 bg-gray-50/50 backdrop-blur-sm rounded-xl mx-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <div className="flex-shrink-0">
+                      <Image
+                        className="h-8 w-8 rounded-full ring-2 ring-gray-200"
+                        src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=404040&color=fff`}
+                        alt={user.email || 'User avatar'}
+                        width={32}
+                        height={32}
+                      />
+                    </div>
+                    <div className="ml-3 min-w-0 flex-1">
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.user_metadata?.full_name || user.email}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {user.email}
+                      </p>
+                    </div>
+                  </motion.div>
 
-                {/* Mobile Navigation Links */}
-                {navigation.map((item) => {
-                  const IconComponent = item.icon
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex items-center px-3 py-2 text-base font-medium rounded-md transition-colors ${
-                        isActivePath(item.href)
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                      }`}
-                    >
-                      <IconComponent className="w-5 h-5 mr-3" />
-                      {item.name}
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-          )}
+                  {/* Mobile Navigation Links */}
+                  {navigation.map((item, index) => {
+                    const IconComponent = item.icon
+                    return (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 + (index * 0.05) }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`flex items-center mx-3 px-3 py-2.5 text-base font-medium rounded-xl transition-all duration-200 ${
+                            isActivePath(item.href)
+                              ? 'bg-gray-100/80 text-gray-900 shadow-sm backdrop-blur-sm'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50/80'
+                          }`}
+                        >
+                          <IconComponent className="w-5 h-5 mr-3" />
+                          {item.name}
+                        </Link>
+                      </motion.div>
+                    )
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </header>
     </InView>
