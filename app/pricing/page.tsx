@@ -1,8 +1,11 @@
 'use client'
 
-import { Check, Shield, Star, Users,Zap } from 'lucide-react'
+import { Check, Shield, Star, Users, Zap } from 'lucide-react'
 import { useState } from 'react'
 
+import { GlowEffect } from '@/components/motion-primitives/glow-effect'
+import { InView } from '@/components/motion-primitives/in-view'
+import { TextEffect } from '@/components/motion-primitives/text-effect'
 import Alert from '@/components/ui/Alert'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
@@ -93,7 +96,6 @@ const tiers: PricingTier[] = [
 
 export default function PricingPage() {
   const [showContactModal, setShowContactModal] = useState(false)
-  const [showNewsletterModal, setShowNewsletterModal] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
   const [contactForm, setContactForm] = useState<LeadFormData>({
@@ -103,7 +105,6 @@ export default function PricingPage() {
     message: '',
     tierInterest: 'enterprise'
   })
-  const [newsletterEmail, setNewsletterEmail] = useState('')
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -140,42 +141,6 @@ export default function PricingPage() {
     setIsSubmitting(false)
   }
 
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: newsletterEmail,
-          tierInterest: 'newsletter',
-          source: 'pricing_page_newsletter',
-          utm_source: new URLSearchParams(window.location.search).get('utm_source'),
-          utm_medium: new URLSearchParams(window.location.search).get('utm_medium'),
-          utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign'),
-          referrer_url: document.referrer
-        }),
-      })
-
-      if (response.ok) {
-        setSubmitMessage('Thank you for subscribing! Check your email for confirmation.')
-        setNewsletterEmail('')
-        setTimeout(() => setShowNewsletterModal(false), 2000)
-      } else {
-        setSubmitMessage('Something went wrong. Please try again.')
-      }
-    } catch (error) {
-      console.error('Newsletter submission error:', error)
-      setSubmitMessage('Something went wrong. Please try again.')
-    }
-
-    setIsSubmitting(false)
-  }
-
   const handleCtaClick = (tier: PricingTier) => {
     if (tier.name === 'Free') {
       window.location.href = '/login'
@@ -188,258 +153,323 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
       {/* Header */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Simple, transparent{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                pricing
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Choose the perfect plan for your MFA sharing needs. Start free and upgrade as you grow.
-            </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>No setup fees</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>Cancel anytime</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>30-day money back</span>
-              </div>
-            </div>
+            <TextEffect 
+              per="word" 
+              preset="slide"
+              className="text-4xl md:text-6xl font-bold text-slate-900 mb-6"
+              speedReveal={1.2}
+            >
+              Simple, transparent pricing
+            </TextEffect>
+            <TextEffect 
+              per="word" 
+              preset="fade-in-blur"
+              delay={0.5}
+              className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto"
+            >
+              Choose the perfect plan for your MFA sharing needs. Start free and scale as you grow.
+            </TextEffect>
           </div>
         </div>
       </div>
 
-      {/* Pricing Cards */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="grid md:grid-cols-3 gap-8 -mt-12">
-          {tiers.map((tier) => {
-            const Icon = tier.icon
-            return (
-              <Card
-                key={tier.name}
-                className={`relative p-8 ${
-                  tier.popular
-                    ? 'ring-2 ring-blue-500 shadow-2xl scale-105 bg-white'
-                    : 'shadow-lg bg-white'
-                }`}
-              >
+      {/* Pricing Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {tiers.map((tier, index) => (
+            <InView
+              key={tier.name}
+              variants={{
+                hidden: { opacity: 0, y: 40, scale: 0.95 },
+                visible: { opacity: 1, y: 0, scale: 1 }
+              }}
+              transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+              viewOptions={{ once: true }}
+            >
+              <div className="relative">
                 {tier.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-1">
-                      <Star className="w-4 h-4 mr-1" />
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                    <Badge className="bg-primary text-primary-foreground px-3 py-1 text-sm font-medium">
+                      <Star className="w-3 h-3 mr-1" />
                       Most Popular
                     </Badge>
                   </div>
                 )}
-
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg mb-4">
-                    <Icon className="w-6 h-6 text-white" />
+                
+                {tier.popular ? (
+                  <div className="relative h-full">
+                    <GlowEffect 
+                      colors={['#404040', '#525252', '#737373']} 
+                      mode="pulse" 
+                      className="absolute inset-0 -z-10 rounded-2xl" 
+                    />
+                    <Card 
+                      hover 
+                      variant="elevated" 
+                      className="glass-neutral h-full p-8 relative overflow-hidden"
+                    >
+                      <PricingCardContent tier={tier} onCtaClick={handleCtaClick} />
+                    </Card>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{tier.name}</h3>
-                  <p className="text-gray-600 mb-4">{tier.description}</p>
-                  <div className="mb-4">
-                    <span className="text-4xl font-bold text-gray-900">{tier.price}</span>
-                    {tier.price !== 'Custom' && (
-                      <span className="text-gray-600 ml-2">/{tier.duration}</span>
-                    )}
-                  </div>
-                </div>
-
-                <ul className="space-y-4 mb-8">
-                  {tier.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-600">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  variant={tier.ctaVariant}
-                  className="w-full"
-                  onClick={() => handleCtaClick(tier)}
-                >
-                  {tier.cta}
-                </Button>
-              </Card>
-            )
-          })}
+                ) : (
+                  <Card 
+                    hover 
+                    variant="elevated" 
+                    className="surface-elevated h-full p-8"
+                  >
+                    <PricingCardContent tier={tier} onCtaClick={handleCtaClick} />
+                  </Card>
+                )}
+              </div>
+            </InView>
+          ))}
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="bg-gray-50 py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Can I change plans anytime?
-              </h3>
-              <p className="text-gray-600">
-                Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately with prorated billing.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                What happens to my data if I cancel?
-              </h3>
-              <p className="text-gray-600">
-                Your data remains accessible during your current billing period. After cancellation, you can export your data anytime.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Do you offer discounts for teams?
-              </h3>
-              <p className="text-gray-600">
-                Yes! Enterprise plans include volume discounts for teams of 10+ users. Contact sales for custom pricing.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Is my data secure?
-              </h3>
-              <p className="text-gray-600">
-                Absolutely. We use enterprise-grade encryption and follow industry best practices to keep your MFA codes secure.
-              </p>
-            </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <InView
+          variants={{
+            hidden: { opacity: 0, y: 30 },
+            visible: { opacity: 1, y: 0 }
+          }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewOptions={{ once: true }}
+        >
+          <div className="text-center mb-16">
+            <TextEffect 
+              per="word" 
+              preset="slide"
+              className="text-3xl font-bold text-slate-900 mb-4"
+            >
+              Frequently Asked Questions
+            </TextEffect>
           </div>
+        </InView>
+
+        <div className="space-y-6">
+          {[
+            {
+              question: "Can I upgrade or downgrade my plan anytime?",
+              answer: "Yes, you can change your plan at any time. Changes will be reflected in your next billing cycle."
+            },
+            {
+              question: "What happens to my data if I cancel?",
+              answer: "Your data is kept for 30 days after cancellation, giving you time to export or reactivate your account."
+            },
+            {
+              question: "Do you offer refunds?",
+              answer: "We offer a 14-day money-back guarantee for all paid plans, no questions asked."
+            },
+            {
+              question: "How secure is my MFA data?",
+              answer: "All data is encrypted at rest and in transit. We use industry-standard security practices and regular security audits."
+            }
+          ].map((faq, index) => (
+            <InView
+              key={index}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+              viewOptions={{ once: true }}
+            >
+              <Card className="surface-elevated p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  {faq.question}
+                </h3>
+                <p className="text-slate-600 leading-relaxed">
+                  {faq.answer}
+                </p>
+              </Card>
+            </InView>
+          ))}
         </div>
       </div>
 
-      {/* Newsletter Signup */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Stay updated with product news
-          </h2>
-          <p className="text-blue-100 mb-8 text-lg">
-            Get the latest features, security updates, and product announcements.
-          </p>
-          <Button
-            variant="secondary"
-            onClick={() => setShowNewsletterModal(true)}
-            className="bg-white text-blue-600 hover:bg-gray-50"
+      {/* CTA Section */}
+      <div className="bg-gradient-neutral border-t border-border">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <InView
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0 }
+            }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewOptions={{ once: true }}
           >
-            Subscribe to Newsletter
-          </Button>
+            <TextEffect 
+              per="word" 
+              preset="slide"
+              className="text-3xl font-bold text-slate-900 mb-4"
+            >
+              Ready to get started?
+            </TextEffect>
+            <TextEffect 
+              per="word" 
+              preset="fade-in-blur"
+              delay={0.3}
+              className="text-xl text-slate-600 mb-8"
+            >
+              Join thousands of users who trust us with their MFA codes.
+            </TextEffect>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                variant="primary"
+                size="lg"
+                className="rounded-xl"
+                onClick={() => window.location.href = '/login'}
+              >
+                Start Free Trial
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="rounded-xl"
+                onClick={() => setShowContactModal(true)}
+              >
+                Talk to Sales
+              </Button>
+            </div>
+          </InView>
         </div>
       </div>
 
-      {/* Contact Sales Modal */}
-      <Modal
-        isOpen={showContactModal}
-        onClose={() => setShowContactModal(false)}
-        title="Contact Sales"
+      {/* Contact Modal */}
+      {showContactModal && (
+        <Modal
+          isOpen={showContactModal}
+          onClose={() => setShowContactModal(false)}
+          title="Contact Sales"
+        >
+          <form onSubmit={handleContactSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormInput
+                id="contact-name"
+                label="Name"
+                type="text"
+                value={contactForm.name}
+                onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
+                required
+                className="focus-ring-neutral"
+              />
+              <FormInput
+                id="contact-email"
+                label="Email"
+                type="email"
+                value={contactForm.email}
+                onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
+                required
+                className="focus-ring-neutral"
+              />
+            </div>
+            <FormInput
+              id="contact-company"
+              label="Company"
+              type="text"
+              value={contactForm.company}
+              onChange={(e) => setContactForm(prev => ({ ...prev, company: e.target.value }))}
+              className="focus-ring-neutral"
+            />
+            <FormTextarea
+              id="contact-message"
+              label="Message"
+              value={contactForm.message}
+              onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
+              rows={4}
+              placeholder="Tell us about your needs..."
+              className="focus-ring-neutral"
+            />
+            
+            {submitMessage && (
+              <Alert variant={submitMessage.includes('Thank you') ? 'success' : 'destructive'}>
+                {submitMessage}
+              </Alert>
+            )}
+            
+            <ModalActions>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setShowContactModal(false)}
+                className="rounded-xl"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                loading={isSubmitting}
+                className="rounded-xl"
+              >
+                Send Message
+              </Button>
+            </ModalActions>
+          </form>
+        </Modal>
+      )}
+    </div>
+  )
+}
+
+// Extracted component for pricing card content
+function PricingCardContent({ 
+  tier, 
+  onCtaClick 
+}: { 
+  tier: PricingTier
+  onCtaClick: (tier: PricingTier) => void 
+}) {
+  const IconComponent = tier.icon
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-6 rounded-full bg-primary/10">
+        <IconComponent className="w-6 h-6 text-primary" />
+      </div>
+      
+      <div className="text-center mb-6">
+        <h3 className="text-2xl font-semibold text-slate-900 mb-2">
+          {tier.name}
+        </h3>
+        <p className="text-slate-600 mb-4">
+          {tier.description}
+        </p>
+        <div className="flex items-baseline justify-center gap-1">
+          <span className="text-5xl font-bold text-slate-900">
+            {tier.price}
+          </span>
+          <span className="text-slate-600 ml-1">
+            /{tier.duration}
+          </span>
+        </div>
+      </div>
+
+      <ul className="space-y-3 mb-8 flex-grow">
+        {tier.features.map((feature, index) => (
+          <li key={index} className="flex items-start gap-3">
+            <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+            <span className="text-slate-600 text-sm leading-relaxed">
+              {feature}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <Button
+        variant={tier.ctaVariant}
+        size="lg"
+        className="w-full rounded-xl"
+        onClick={() => onCtaClick(tier)}
       >
-        <form onSubmit={handleContactSubmit} className="space-y-4">
-          <FormInput
-            id="contact-name"
-            label="Name"
-            value={contactForm.name}
-            onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
-            required
-          />
-          <FormInput
-            id="contact-email"
-            label="Email"
-            type="email"
-            value={contactForm.email}
-            onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
-            required
-          />
-          <FormInput
-            id="contact-company"
-            label="Company"
-            value={contactForm.company}
-            onChange={(e) => setContactForm(prev => ({ ...prev, company: e.target.value }))}
-            required
-          />
-          <FormTextarea
-            id="contact-message"
-            label="Tell us about your needs"
-            value={contactForm.message}
-            onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
-            rows={4}
-          />
-          
-          {submitMessage && (
-            <Alert variant={submitMessage.includes('Thank you') ? 'success' : 'error'}>
-              {submitMessage}
-            </Alert>
-          )}
-
-          <ModalActions>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setShowContactModal(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </Button>
-          </ModalActions>
-        </form>
-      </Modal>
-
-      {/* Newsletter Modal */}
-      <Modal
-        isOpen={showNewsletterModal}
-        onClose={() => setShowNewsletterModal(false)}
-        title="Subscribe to Newsletter"
-      >
-        <form onSubmit={handleNewsletterSubmit} className="space-y-4">
-          <p className="text-gray-600">
-            Get the latest product updates, security tips, and feature announcements delivered to your inbox.
-          </p>
-          <FormInput
-            id="newsletter-email"
-            label="Email Address"
-            type="email"
-            value={newsletterEmail}
-            onChange={(e) => setNewsletterEmail(e.target.value)}
-            placeholder="your@email.com"
-            required
-          />
-          
-          {submitMessage && (
-            <Alert variant={submitMessage.includes('Thank you') ? 'success' : 'error'}>
-              {submitMessage}
-            </Alert>
-          )}
-
-          <ModalActions>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setShowNewsletterModal(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-            </Button>
-          </ModalActions>
-        </form>
-      </Modal>
+        {tier.cta}
+      </Button>
     </div>
   )
 }

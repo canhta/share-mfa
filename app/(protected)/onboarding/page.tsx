@@ -3,10 +3,13 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+import { InView } from '@/components/motion-primitives/in-view'
+import { TextEffect } from '@/components/motion-primitives/text-effect'
 import CompletionStep from '@/components/onboarding/CompletionStep'
 import OnboardingLayout from '@/components/onboarding/OnboardingLayout'
 import ProfileSetupStep from '@/components/onboarding/ProfileSetupStep'
 import WelcomeStep from '@/components/onboarding/WelcomeStep'
+import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import { OnboardingData } from '@/types/database'
 
 /**
@@ -98,11 +101,26 @@ export default function OnboardingPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
+      <div className="min-h-screen bg-gradient-neutral bg-neutral-texture flex items-center justify-center">
+        <InView
+          variants={{
+            hidden: { opacity: 0, scale: 0.9 },
+            visible: { opacity: 1, scale: 1 }
+          }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewOptions={{ once: true }}
+        >
+          <div className="text-center glass-neutral p-8 rounded-2xl">
+            <LoadingSpinner size="lg" className="mx-auto mb-4" />
+            <TextEffect 
+              per="char" 
+              preset="fade-in-blur"
+              className="text-lg text-slate-700"
+            >
+              Setting up your experience...
+            </TextEffect>
+          </div>
+        </InView>
       </div>
     )
   }
@@ -136,11 +154,22 @@ export default function OnboardingPage() {
   }
 
   return (
-    <OnboardingLayout 
-      currentStep={currentStep}
-      totalSteps={3}
-    >
-      {renderStep()}
-    </OnboardingLayout>
+    <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
+      <OnboardingLayout 
+        currentStep={currentStep}
+        totalSteps={3}
+      >
+        <InView
+          variants={{
+            hidden: { opacity: 0, y: 20, scale: 0.95 },
+            visible: { opacity: 1, y: 0, scale: 1 }
+          }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewOptions={{ once: true }}
+        >
+          {renderStep()}
+        </InView>
+      </OnboardingLayout>
+    </div>
   )
 }
