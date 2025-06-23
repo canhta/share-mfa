@@ -26,9 +26,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Record usage event
+    // Record usage event in the new usage_events table
     const { error: insertError } = await supabase
-      .from('usage_tracking')
+      .from('usage_events')
       .insert({
         user_id: user.id,
         action,
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       })
 
     if (insertError) {
-      console.error('Usage tracking insert error:', insertError)
+      console.error('Usage event insert error:', insertError)
       return NextResponse.json(
         { error: 'Failed to record usage' },
         { status: 500 }
@@ -70,16 +70,16 @@ export async function GET() {
       )
     }
 
-    // Get user's usage statistics
-    const { data: usageStats, error: statsError } = await supabase
-      .from('usage_tracking')
+    // Get user's usage events from the new usage_events table
+    const { data: usageEvents, error: eventsError } = await supabase
+      .from('usage_events')
       .select('action, created_at, metadata')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(100)
 
-    if (statsError) {
-      console.error('Usage stats fetch error:', statsError)
+    if (eventsError) {
+      console.error('Usage events fetch error:', eventsError)
       return NextResponse.json(
         { error: 'Failed to fetch usage statistics' },
         { status: 500 }
@@ -91,33 +91,33 @@ export async function GET() {
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
-    const recentStats = usageStats.filter(stat => new Date(stat.created_at) >= thirtyDaysAgo)
-    const weeklyStats = usageStats.filter(stat => new Date(stat.created_at) >= sevenDaysAgo)
+    const recentEvents = usageEvents.filter(event => new Date(event.created_at) >= thirtyDaysAgo)
+    const weeklyEvents = usageEvents.filter(event => new Date(event.created_at) >= sevenDaysAgo)
 
     const aggregated = {
       total: {
-        shares_generated: usageStats.filter(s => s.action === 'share_generated').length,
-        shares_accessed: usageStats.filter(s => s.action === 'share_accessed').length,
-        mfa_entries_added: usageStats.filter(s => s.action === 'mfa_added').length,
-        qr_codes_scanned: usageStats.filter(s => s.action === 'qr_scanned').length
+        shares_generated: usageEvents.filter(e => e.action === 'share_generated').length,
+        shares_accessed: usageEvents.filter(e => e.action === 'share_accessed').length,
+        mfa_entries_added: usageEvents.filter(e => e.action === 'mfa_added').length,
+        qr_codes_scanned: usageEvents.filter(e => e.action === 'qr_scanned').length
       },
       last_30_days: {
-        shares_generated: recentStats.filter(s => s.action === 'share_generated').length,
-        shares_accessed: recentStats.filter(s => s.action === 'share_accessed').length,
-        mfa_entries_added: recentStats.filter(s => s.action === 'mfa_added').length,
-        qr_codes_scanned: recentStats.filter(s => s.action === 'qr_scanned').length
+        shares_generated: recentEvents.filter(e => e.action === 'share_generated').length,
+        shares_accessed: recentEvents.filter(e => e.action === 'share_accessed').length,
+        mfa_entries_added: recentEvents.filter(e => e.action === 'mfa_added').length,
+        qr_codes_scanned: recentEvents.filter(e => e.action === 'qr_scanned').length
       },
       last_7_days: {
-        shares_generated: weeklyStats.filter(s => s.action === 'share_generated').length,
-        shares_accessed: weeklyStats.filter(s => s.action === 'share_accessed').length,
-        mfa_entries_added: weeklyStats.filter(s => s.action === 'mfa_added').length,
-        qr_codes_scanned: weeklyStats.filter(s => s.action === 'qr_scanned').length
+        shares_generated: weeklyEvents.filter(e => e.action === 'share_generated').length,
+        shares_accessed: weeklyEvents.filter(e => e.action === 'share_accessed').length,
+        mfa_entries_added: weeklyEvents.filter(e => e.action === 'mfa_added').length,
+        qr_codes_scanned: weeklyEvents.filter(e => e.action === 'qr_scanned').length
       }
     }
 
     return NextResponse.json({
       stats: aggregated,
-      recent_activity: usageStats.slice(0, 20) // Return 20 most recent activities
+      recent_activity: usageEvents.slice(0, 20) // Return 20 most recent activities
     })
   } catch (error) {
     console.error('Usage tracking GET API error:', error)

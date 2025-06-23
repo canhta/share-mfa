@@ -61,8 +61,8 @@ export default function MfaEntryList() {
     return () => clearInterval(interval)
   }, [entries])
 
-  const handleEntryAdded = (newEntry: MfaEntry) => {
-    setEntries(prev => [newEntry, ...prev])
+  const handleEntryAdded = () => {
+    fetchEntries() // Refresh the entire list
   }
 
   const handleEntryDeleted = (entryId: string) => {
@@ -88,7 +88,7 @@ export default function MfaEntryList() {
         <div className="hidden sm:block">
           {/* Title moved to dashboard page */}
         </div>
-        <AddMfaEntry onEntryAdded={handleEntryAdded} />
+        <AddMfaEntry onAdd={handleEntryAdded} />
       </div>
 
       {entries.length === 0 ? (

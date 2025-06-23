@@ -97,14 +97,14 @@ export default function ShareModal({ entry, onClose }: ShareModalProps) {
               <Select
                 label="Expires in"
                 id="expiration"
-                value={shareSettings.expirationHours}
+                value={shareSettings.expirationHours.toString()}
                 onChange={(value) => setShareSettings(prev => ({ ...prev, expirationHours: Number(value) }))}
                 options={[
-                  { value: 1, label: '1 hour' },
-                  { value: 6, label: '6 hours' },
-                  { value: 24, label: '24 hours' },
-                  { value: 72, label: '3 days' },
-                  { value: 168, label: '1 week' }
+                  { value: '1', label: '1 hour' },
+                  { value: '6', label: '6 hours' },
+                  { value: '24', label: '24 hours' },
+                  { value: '72', label: '3 days' },
+                  { value: '168', label: '1 week' }
                 ]}
               />
             </div>
@@ -150,7 +150,7 @@ export default function ShareModal({ entry, onClose }: ShareModalProps) {
             </div>
 
             {!shareSettings.embedPasswordInLink && shareSettings.requirePassword && (
-              <Alert variant="info">
+              <Alert variant="default">
                 <strong>Password:</strong> {shareSettings.password}
                 <br />
                 <span className="text-xs">

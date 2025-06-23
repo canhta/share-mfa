@@ -2,7 +2,7 @@
 
 import type { User } from '@supabase/supabase-js'
 import { BarChart3, CreditCard, Home, Menu, X } from 'lucide-react'
-import { motion, AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
