@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
-type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
-
-async function checkAdminRole(supabase: SupabaseClient, userId: string) {
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single();
+async function checkAdminRole(userId: string) {
+  const profile = await prisma.profiles.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
 
   return profile?.role === 'admin';
 }
@@ -25,34 +27,40 @@ export async function GET() {
     }
 
     // Check admin role
-    const isAdmin = await checkAdminRole(supabase, user.id);
+    const isAdmin = await checkAdminRole(user.id);
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Get system metrics from the last 24 hours
-    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-    const { data: systemMetrics } = await supabase
-      .from('system_metrics')
-      .select('*')
-      .gte('created_at', twentyFourHoursAgo)
-      .order('created_at', { ascending: false });
+    const systemMetrics = await prisma.system_metrics.findMany({
+      where: {
+        created_at: {
+          gte: twentyFourHoursAgo,
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
 
     // Get system alerts
-    const { data: systemAlerts } = await supabase
-      .from('system_alerts')
-      .select('*')
-      .eq('resolved', false)
-      .order('created_at', { ascending: false })
-      .limit(50);
+    const systemAlerts = await prisma.system_alerts.findMany({
+      where: {
+        resolved: false,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      take: 50,
+    });
 
     // Get database health metrics
-    const { count: totalUsers } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-
-    const { count: totalMfaEntries } = await supabase.from('mfa_entries').select('*', { count: 'exact', head: true });
-
-    const { count: totalLeads } = await supabase.from('leads').select('*', { count: 'exact', head: true });
+    const totalUsers = await prisma.profiles.count();
+    const totalMfaEntries = await prisma.mfa_entries.count();
+    const totalLeads = await prisma.leads.count();
 
     // Get recent error rates (if available in metrics)
     const errorMetrics = systemMetrics?.filter((m) => m.metric_name?.includes('error_rate')) || [];
@@ -62,21 +70,25 @@ export async function GET() {
     // Calculate average response time
     const avgResponseTime =
       responseTimeMetrics.length > 0
-        ? responseTimeMetrics.reduce((sum, metric) => sum + (metric.metric_value || 0), 0) / responseTimeMetrics.length
+        ? responseTimeMetrics.reduce((sum, metric) => sum + (Number(metric.metric_value) || 0), 0) /
+          responseTimeMetrics.length
         : 0;
 
     // Calculate error rate
-    const currentErrorRate = errorMetrics.length > 0 ? errorMetrics[0]?.metric_value || 0 : 0;
+    const currentErrorRate = errorMetrics.length > 0 ? Number(errorMetrics[0]?.metric_value) || 0 : 0;
 
     // Calculate uptime percentage
-    const currentUptime = uptimeMetrics.length > 0 ? uptimeMetrics[0]?.metric_value || 99.9 : 99.9;
+    const currentUptime = uptimeMetrics.length > 0 ? Number(uptimeMetrics[0]?.metric_value) || 99.9 : 99.9;
 
     // Get recent user sessions for activity monitoring
-    const { count: activeSessions } = await supabase
-      .from('user_sessions')
-      .select('*', { count: 'exact', head: true })
-      .gte('session_start', twentyFourHoursAgo)
-      .is('session_end', null);
+    const activeSessions = await prisma.user_sessions.count({
+      where: {
+        session_start: {
+          gte: twentyFourHoursAgo,
+        },
+        session_end: null,
+      },
+    });
 
     // System health status
     let healthStatus = 'healthy';
@@ -109,7 +121,7 @@ export async function GET() {
         low: systemAlerts?.filter((a) => a.severity === 'low').length || 0,
       },
       metrics: {
-        lastUpdated: systemMetrics?.[0]?.created_at || new Date().toISOString(),
+        lastUpdated: systemMetrics?.[0]?.created_at?.toISOString() || new Date().toISOString(),
         totalMetrics: systemMetrics?.length || 0,
       },
     };
@@ -140,7 +152,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check admin role
-    const isAdmin = await checkAdminRole(supabase, user.id);
+    const isAdmin = await checkAdminRole(user.id);
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
@@ -150,69 +162,60 @@ export async function POST(request: NextRequest) {
 
     if (action === 'acknowledge_alert' && alertId) {
       // Acknowledge an alert
-      const { error: updateError } = await supabase
-        .from('system_alerts')
-        .update({
+      await prisma.system_alerts.update({
+        where: { id: alertId },
+        data: {
           acknowledged: true,
           acknowledged_by: user.id,
-          acknowledged_at: new Date().toISOString(),
-        })
-        .eq('id', alertId);
-
-      if (updateError) {
-        console.error('Error acknowledging alert:', updateError);
-        return NextResponse.json({ error: 'Failed to acknowledge alert' }, { status: 500 });
-      }
+          acknowledged_at: new Date(),
+        },
+      });
 
       // Log admin action
-      await supabase.from('admin_actions').insert({
-        admin_id: user.id,
-        action_type: 'acknowledge_alert',
-        target_id: alertId,
-        target_type: 'alert',
-        description: 'Acknowledged system alert',
+      await prisma.admin_actions.create({
+        data: {
+          admin_id: user.id,
+          action_type: 'acknowledge_alert',
+          target_id: alertId,
+          target_type: 'alert',
+          description: 'Acknowledged system alert',
+        },
       });
 
       return NextResponse.json({ success: true });
     } else if (action === 'resolve_alert' && alertId) {
       // Resolve an alert
-      const { error: updateError } = await supabase
-        .from('system_alerts')
-        .update({
+      await prisma.system_alerts.update({
+        where: { id: alertId },
+        data: {
           resolved: true,
           resolved_by: user.id,
-          resolved_at: new Date().toISOString(),
-        })
-        .eq('id', alertId);
-
-      if (updateError) {
-        console.error('Error resolving alert:', updateError);
-        return NextResponse.json({ error: 'Failed to resolve alert' }, { status: 500 });
-      }
+          resolved_at: new Date(),
+        },
+      });
 
       // Log admin action
-      await supabase.from('admin_actions').insert({
-        admin_id: user.id,
-        action_type: 'resolve_alert',
-        target_id: alertId,
-        target_type: 'alert',
-        description: 'Resolved system alert',
+      await prisma.admin_actions.create({
+        data: {
+          admin_id: user.id,
+          action_type: 'resolve_alert',
+          target_id: alertId,
+          target_type: 'alert',
+          description: 'Resolved system alert',
+        },
       });
 
       return NextResponse.json({ success: true });
     } else if (action === 'add_metric' && metricName && metricValue !== undefined) {
       // Add a manual system metric
-      const { error: insertError } = await supabase.from('system_metrics').insert({
-        metric_name: metricName,
-        metric_value: metricValue,
-        metric_type: metricType || 'gauge',
-        tags: tags || {},
+      await prisma.system_metrics.create({
+        data: {
+          metric_name: metricName,
+          metric_value: metricValue,
+          metric_type: metricType || 'gauge',
+          tags: tags || {},
+        },
       });
-
-      if (insertError) {
-        console.error('Error adding metric:', insertError);
-        return NextResponse.json({ error: 'Failed to add metric' }, { status: 500 });
-      }
 
       return NextResponse.json({ success: true });
     } else {

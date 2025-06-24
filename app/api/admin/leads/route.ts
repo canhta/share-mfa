@@ -1,11 +1,14 @@
+import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
-type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
-
-async function checkAdminRole(supabase: SupabaseClient, userId: string) {
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single();
+async function checkAdminRole(userId: string) {
+  const profile = await prisma.profiles.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
 
   return profile?.role === 'admin';
 }
@@ -25,7 +28,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check admin role
-    const isAdmin = await checkAdminRole(supabase, user.id);
+    const isAdmin = await checkAdminRole(user.id);
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
@@ -41,46 +44,50 @@ export async function GET(request: NextRequest) {
 
     const offset = (page - 1) * limit;
 
-    // Build query
-    let query = supabase.from('leads').select('*');
+    // Build where clause
+    const where: Prisma.leadsWhereInput = {};
 
     // Apply filters
     if (search) {
-      query = query.or(`email.ilike.%${search}%,name.ilike.%${search}%,company.ilike.%${search}%`);
+      where.OR = [
+        { email: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search, mode: 'insensitive' } },
+        { company: { contains: search, mode: 'insensitive' } },
+      ];
     }
 
     if (status) {
-      query = query.eq('status', status);
+      where.status = status;
     }
 
     if (tierInterest) {
-      query = query.eq('tier_interest', tierInterest);
+      where.tier_interest = tierInterest;
     }
 
     if (source) {
-      query = query.eq('source', source);
+      where.source = source;
     }
 
     // Get total count for pagination
-    const { count } = await supabase.from('leads').select('*', { count: 'exact', head: true });
+    const count = await prisma.leads.count({ where });
 
     // Get paginated results
-    const { data: leads, error } = await query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (error) {
-      console.error('Error fetching leads:', error);
-      return NextResponse.json({ error: 'Failed to fetch leads' }, { status: 500 });
-    }
+    const leads = await prisma.leads.findMany({
+      where,
+      orderBy: {
+        created_at: 'desc',
+      },
+      skip: offset,
+      take: limit,
+    });
 
     return NextResponse.json({
       leads,
       pagination: {
         page,
         limit,
-        total: count || 0,
-        pages: Math.ceil((count || 0) / limit),
+        total: count,
+        pages: Math.ceil(count / limit),
       },
     });
   } catch (error) {
@@ -104,7 +111,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Check admin role
-    const isAdmin = await checkAdminRole(supabase, user.id);
+    const isAdmin = await checkAdminRole(user.id);
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
@@ -117,13 +124,15 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get current lead data for audit log
-    const { data: currentLead } = await supabase.from('leads').select('*').eq('id', leadId).single();
+    const currentLead = await prisma.leads.findUnique({
+      where: { id: leadId },
+    });
 
     if (!currentLead) {
       return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
     }
 
-    const updateData: Record<string, unknown> = {};
+    const updateData: Prisma.leadsUpdateInput = {};
     let oldValue = '';
     let newValue = '';
 
@@ -133,10 +142,10 @@ export async function PUT(request: NextRequest) {
         newValue = value;
         updateData.status = value;
         if (value === 'contacted') {
-          updateData.last_contacted_at = new Date().toISOString();
+          updateData.last_contacted_at = new Date();
         }
         if (value === 'converted') {
-          updateData.conversion_date = new Date().toISOString();
+          updateData.conversion_date = new Date();
         }
         break;
 
@@ -149,7 +158,11 @@ export async function PUT(request: NextRequest) {
       case 'assign_to':
         oldValue = currentLead.assigned_to || 'unassigned';
         newValue = value || 'unassigned';
-        updateData.assigned_to = value;
+        if (value) {
+          updateData.users = { connect: { id: value } };
+        } else {
+          updateData.users = { disconnect: true };
+        }
         break;
 
       case 'add_notes':
@@ -159,9 +172,9 @@ export async function PUT(request: NextRequest) {
         break;
 
       case 'set_follow_up':
-        oldValue = currentLead.follow_up_date || '';
+        oldValue = currentLead.follow_up_date?.toISOString() || '';
         newValue = value;
-        updateData.follow_up_date = value;
+        updateData.follow_up_date = new Date(value);
         break;
 
       default:
@@ -169,29 +182,29 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update lead
-    const { error: updateError } = await supabase.from('leads').update(updateData).eq('id', leadId);
-
-    if (updateError) {
-      console.error('Error updating lead:', updateError);
-      return NextResponse.json({ error: 'Failed to update lead' }, { status: 500 });
-    }
-
-    // Log admin action
-    const { error: logError } = await supabase.from('admin_actions').insert({
-      admin_id: user.id,
-      action_type: action,
-      target_id: leadId,
-      target_type: 'lead',
-      old_value: oldValue,
-      new_value: newValue,
-      description: `Admin ${action} for lead ${currentLead.email}`,
-      metadata: {
-        lead_email: currentLead.email,
-        lead_name: currentLead.name,
-      },
+    await prisma.leads.update({
+      where: { id: leadId },
+      data: updateData,
     });
 
-    if (logError) {
+    // Log admin action
+    try {
+      await prisma.admin_actions.create({
+        data: {
+          admin_id: user.id,
+          action_type: action,
+          target_id: leadId,
+          target_type: 'lead',
+          old_value: oldValue,
+          new_value: newValue,
+          description: `Admin ${action} for lead ${currentLead.email}`,
+          metadata: {
+            lead_email: currentLead.email,
+            lead_name: currentLead.name,
+          },
+        },
+      });
+    } catch (logError) {
       console.error('Error logging admin action:', logError);
     }
 

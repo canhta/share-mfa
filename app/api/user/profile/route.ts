@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET() {
@@ -16,14 +17,12 @@ export async function GET() {
     }
 
     // Get user profile
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+    const profile = await prisma.profiles.findUnique({
+      where: { id: user.id },
+    });
 
-    if (profileError) {
-      console.error('Profile fetch error:', profileError);
+    if (!profile) {
+      console.error('Profile not found for user:', user.id);
       return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 });
     }
 
@@ -50,24 +49,17 @@ export async function PUT(request: NextRequest) {
     const updateData = await request.json();
 
     // Update user profile
-    const { data: profile, error: updateError } = await supabase
-      .from('profiles')
-      .update({
+    const profile = await prisma.profiles.update({
+      where: { id: user.id },
+      data: {
         display_name: updateData.display_name,
         company: updateData.company,
         use_case: updateData.use_case,
         newsletter_consent: updateData.newsletter_consent,
         product_updates_consent: updateData.product_updates_consent,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', user.id)
-      .select()
-      .single();
-
-    if (updateError) {
-      console.error('Profile update error:', updateError);
-      return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
-    }
+        updated_at: new Date(),
+      },
+    });
 
     return NextResponse.json({ profile });
   } catch (error) {

@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { decryptSecret, verifyPassword } from '@/lib/crypto';
-import { createClient } from '@/utils/supabase/server';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
     const body = await request.json();
     const { shareToken, password } = body;
 
@@ -15,13 +13,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Find the MFA entry by share token
-    const { data: entry, error } = await supabase
-      .from('mfa_entries')
-      .select('*')
-      .eq('share_token', shareToken)
-      .single();
+    const entry = await prisma.mfa_entries.findUnique({
+      where: { share_token: shareToken },
+    });
 
-    if (error || !entry) {
+    if (!entry) {
       return NextResponse.json({ error: 'Invalid share token' }, { status: 404 });
     }
 

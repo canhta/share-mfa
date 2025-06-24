@@ -1,11 +1,14 @@
+import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
-type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
-
-async function checkAdminRole(supabase: SupabaseClient, userId: string) {
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single();
+async function checkAdminRole(userId: string) {
+  const profile = await prisma.profiles.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
 
   return profile?.role === 'admin';
 }
@@ -25,7 +28,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check admin role
-    const isAdmin = await checkAdminRole(supabase, user.id);
+    const isAdmin = await checkAdminRole(user.id);
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
@@ -40,52 +43,53 @@ export async function GET(request: NextRequest) {
 
     const offset = (page - 1) * limit;
 
-    // Build query
-    let query = supabase.from('profiles').select(`
-        id,
-        display_name,
-        user_tier,
-        subscription_status,
-        onboarding_completed,
-        created_at,
-        updated_at,
-        available_credits,
-        total_credits_earned
-      `);
+    // Build where clause
+    const where: Prisma.profilesWhereInput = {};
 
     // Apply filters
     if (search) {
-      query = query.or(`display_name.ilike.%${search}%,id.ilike.%${search}%`);
+      where.OR = [{ display_name: { contains: search, mode: 'insensitive' } }, { id: { equals: search } }];
     }
 
     if (tier) {
-      query = query.eq('user_tier', tier);
+      where.user_tier = tier;
     }
 
     if (status) {
-      query = query.eq('subscription_status', status);
+      where.subscription_status = status;
     }
 
     // Get total count for pagination
-    const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+    const count = await prisma.profiles.count({ where });
 
     // Get paginated results
-    const { data: users, error } = await query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (error) {
-      console.error('Error fetching users:', error);
-      return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
-    }
+    const users = await prisma.profiles.findMany({
+      where,
+      select: {
+        id: true,
+        display_name: true,
+        user_tier: true,
+        subscription_status: true,
+        onboarding_completed: true,
+        created_at: true,
+        updated_at: true,
+        available_credits: true,
+        total_credits_earned: true,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      skip: offset,
+      take: limit,
+    });
 
     return NextResponse.json({
       users,
       pagination: {
         page,
         limit,
-        total: count || 0,
-        pages: Math.ceil((count || 0) / limit),
+        total: count,
+        pages: Math.ceil(count / limit),
       },
     });
   } catch (error) {
@@ -109,7 +113,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Check admin role
-    const isAdmin = await checkAdminRole(supabase, user.id);
+    const isAdmin = await checkAdminRole(user.id);
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
@@ -122,13 +126,15 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get current user data for audit log
-    const { data: currentUser } = await supabase.from('profiles').select('*').eq('id', userId).single();
+    const currentUser = await prisma.profiles.findUnique({
+      where: { id: userId },
+    });
 
     if (!currentUser) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const updateData: Record<string, unknown> = {};
+    const updateData: Prisma.profilesUpdateInput = {};
     let oldValue = '';
     let newValue = '';
 
@@ -140,14 +146,13 @@ export async function PUT(request: NextRequest) {
         break;
 
       case 'toggle_status':
-        // For now, we'll use a custom field or handle account deactivation
         oldValue = currentUser.subscription_status || 'active';
         newValue = value;
         updateData.subscription_status = value;
         break;
 
       case 'adjust_credits':
-        oldValue = currentUser.available_credits.toString();
+        oldValue = currentUser.available_credits?.toString() || '0';
         newValue = value.toString();
         updateData.available_credits = value;
         break;
@@ -157,26 +162,26 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update user
-    const { error: updateError } = await supabase.from('profiles').update(updateData).eq('id', userId);
-
-    if (updateError) {
-      console.error('Error updating user:', updateError);
-      return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
-    }
-
-    // Log admin action
-    const { error: logError } = await supabase.from('admin_actions').insert({
-      admin_id: user.id,
-      action_type: action,
-      target_id: userId,
-      target_type: 'user',
-      old_value: oldValue,
-      new_value: newValue,
-      description: reason || `Admin ${action} for user`,
-      metadata: { user_email: currentUser.display_name },
+    await prisma.profiles.update({
+      where: { id: userId },
+      data: updateData,
     });
 
-    if (logError) {
+    // Log admin action
+    try {
+      await prisma.admin_actions.create({
+        data: {
+          admin_id: user.id,
+          action_type: action,
+          target_id: userId,
+          target_type: 'user',
+          old_value: oldValue,
+          new_value: newValue,
+          description: reason || `Admin ${action} for user`,
+          metadata: { user_email: currentUser.display_name },
+        },
+      });
+    } catch (logError) {
       console.error('Error logging admin action:', logError);
     }
 

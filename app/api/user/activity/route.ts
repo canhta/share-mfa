@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
 
@@ -15,42 +16,54 @@ export async function GET() {
       return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
     }
 
-    // For now, return mock activity data
-    // In a real implementation, you would fetch from an activity_logs table
-    const mockActivities = [
-      {
-        id: '1',
-        action: 'login',
-        description: 'Signed in to your account',
-        timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
-        ip_address: '192.168.1.100',
-      },
-      {
-        id: '2',
-        action: 'profile_updated',
-        description: 'Updated profile information',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
-        ip_address: '192.168.1.100',
-      },
-      {
-        id: '3',
-        action: 'mfa_created',
-        description: 'Created new MFA entry for "Work Email"',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
-        ip_address: '192.168.1.100',
-      },
-      {
-        id: '4',
-        action: 'mfa_shared',
-        description: 'Shared MFA code via secure link',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
-        ip_address: '192.168.1.100',
-      },
-    ];
+    // Parse query parameters
+    const url = new URL(request.url);
+    const limit = parseInt(url.searchParams.get('limit') || '50');
+    const offset = parseInt(url.searchParams.get('offset') || '0');
 
-    return NextResponse.json({ activities: mockActivities });
+    // Get user activity from usage_events
+    const activities = await prisma.usage_events.findMany({
+      where: { user_id: user.id },
+      orderBy: { created_at: 'desc' },
+      take: limit,
+      skip: offset,
+    });
+
+    // Transform the data to match expected format
+    const formattedActivities = activities.map((activity) => ({
+      id: activity.id,
+      action: activity.action,
+      description: getActionDescription(activity.action, activity.metadata),
+      timestamp: activity.created_at?.toISOString() || new Date().toISOString(),
+      metadata: activity.metadata,
+    }));
+
+    return NextResponse.json({ activities: formattedActivities });
   } catch (error) {
     console.error('Activity API error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+function getActionDescription(action: string, metadata?: unknown): string {
+  const meta = metadata as Record<string, unknown> | null;
+
+  switch (action) {
+    case 'login':
+      return 'Signed in to your account';
+    case 'profile_updated':
+      return 'Updated profile information';
+    case 'mfa_created':
+      return `Created new MFA entry${meta?.name ? ` for "${meta.name}"` : ''}`;
+    case 'mfa_shared':
+      return 'Shared MFA code via secure link';
+    case 'mfa_accessed':
+      return 'MFA code was accessed via shared link';
+    case 'share_generated':
+      return 'Generated a new share link';
+    case 'password_changed':
+      return 'Changed account password';
+    default:
+      return `Performed action: ${action}`;
   }
 }

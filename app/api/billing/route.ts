@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
@@ -36,17 +37,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Record billing event
-    const { error: insertError } = await supabase.from('billing_events').insert({
-      user_id: user.id,
-      event_type,
-      metadata: metadata || {},
-      created_at: new Date().toISOString(),
+    await prisma.billing_events.create({
+      data: {
+        user_id: user.id,
+        event_type,
+        status: 'completed', // Default status for billing events
+        metadata: metadata || {},
+      },
     });
-
-    if (insertError) {
-      console.error('Billing event insert error:', insertError);
-      return NextResponse.json({ error: 'Failed to record billing event' }, { status: 500 });
-    }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
@@ -69,29 +67,33 @@ export async function GET() {
     }
 
     // Get user profile with billing info
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('subscription_status, user_tier, available_credits, current_period_end')
-      .eq('id', user.id)
-      .single();
+    const profile = await prisma.profiles.findUnique({
+      where: { id: user.id },
+      select: {
+        subscription_status: true,
+        user_tier: true,
+        available_credits: true,
+        current_period_end: true,
+      },
+    });
 
-    if (profileError) {
-      console.error('Profile fetch error:', profileError);
-      return NextResponse.json({ error: 'Failed to fetch billing information' }, { status: 500 });
+    if (!profile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
     // Get recent billing events
-    const { data: billingEvents, error: eventsError } = await supabase
-      .from('billing_events')
-      .select('event_type, metadata, created_at')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(10);
-
-    if (eventsError) {
-      console.error('Billing events fetch error:', eventsError);
-      return NextResponse.json({ error: 'Failed to fetch billing events' }, { status: 500 });
-    }
+    const billingEvents = await prisma.billing_events.findMany({
+      where: { user_id: user.id },
+      select: {
+        event_type: true,
+        metadata: true,
+        created_at: true,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      take: 10,
+    });
 
     // Calculate trial status
     const now = new Date();

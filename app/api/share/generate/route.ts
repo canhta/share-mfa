@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { hashPassword } from '@/lib/crypto';
+import { prisma } from '@/lib/prisma';
 import type { ShareResponse } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 
@@ -38,13 +39,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify the MFA entry belongs to the user
-    const { data: entry, error: entryError } = await supabase
-      .from('mfa_entries')
-      .select('id')
-      .eq('id', mfaEntryId)
-      .single();
+    const entry = await prisma.mfa_entries.findFirst({
+      where: {
+        id: mfaEntryId,
+        user_id: user.user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
 
-    if (entryError || !entry) {
+    if (!entry) {
       return NextResponse.json({ error: 'MFA entry not found' }, { status: 404 });
     }
 
@@ -62,20 +67,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Update the MFA entry with sharing settings
-    const { error: updateError } = await supabase
-      .from('mfa_entries')
-      .update({
+    await prisma.mfa_entries.update({
+      where: { id: mfaEntryId },
+      data: {
         share_token: shareToken,
         share_password: hashedPassword,
         require_password: requirePassword,
         embed_password_in_link: embedPasswordInLink,
-        token_expires_at: expiresAt.toISOString(),
-      })
-      .eq('id', mfaEntryId);
-
-    if (updateError) {
-      return NextResponse.json({ error: 'Failed to generate share link' }, { status: 500 });
-    }
+        token_expires_at: expiresAt,
+      },
+    });
 
     // Build share URL
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
