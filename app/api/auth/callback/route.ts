@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: NextRequest) {
@@ -21,18 +22,24 @@ export async function GET(request: NextRequest) {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        const { data: profile } = await supabase.from('profiles').select('id').eq('id', user.id).single();
+        const profile = await prisma.profiles.findUnique({
+          where: { id: user.id },
+          select: { id: true },
+        });
+
         if (!profile) {
-          await supabase.from('profiles').insert({
-            id: user.id,
-            user_tier: 'free',
-            role: 'user',
-            onboarding_completed: false,
-            profile_setup_completed: false,
-            available_credits: 0,
-            total_credits_earned: 0,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
+          await prisma.profiles.create({
+            data: {
+              id: user.id,
+              user_tier: 'free',
+              role: 'user',
+              onboarding_completed: false,
+              profile_setup_completed: false,
+              available_credits: 0,
+              total_credits_earned: 0,
+              created_at: new Date(),
+              updated_at: new Date(),
+            },
           });
         }
       }

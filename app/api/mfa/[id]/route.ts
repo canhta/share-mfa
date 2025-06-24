@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { decryptSecret, encryptSecret } from '@/lib/crypto';
-import type { MfaEntryUpdate } from '@/types/database';
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 interface Params {
@@ -14,13 +14,18 @@ export async function GET(request: NextRequest, { params }: Params) {
     const supabase = await createClient();
 
     const { data: user, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    if (authError || !user.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: entry, error } = await supabase.from('mfa_entries').select('*').eq('id', id).single();
+    const entry = await prisma.mfa_entries.findFirst({
+      where: {
+        id,
+        user_id: user.user.id,
+      },
+    });
 
-    if (error) {
+    if (!entry) {
       return NextResponse.json({ error: 'MFA entry not found' }, { status: 404 });
     }
 
@@ -42,22 +47,32 @@ export async function PUT(request: NextRequest, { params }: Params) {
     const supabase = await createClient();
 
     const { data: user, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    if (authError || !user.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
     const { name, secret, notes } = body;
 
-    const updateData: MfaEntryUpdate = {
+    const updateData: {
+      name?: string;
+      secret?: string;
+      notes?: string | null;
+    } = {
       ...(name && { name }),
       ...(secret && { secret: encryptSecret(secret) }),
       ...(notes !== undefined && { notes }),
     };
 
-    const { data: entry, error } = await supabase.from('mfa_entries').update(updateData).eq('id', id).select().single();
+    const entry = await prisma.mfa_entries.update({
+      where: {
+        id,
+        user_id: user.user.id,
+      },
+      data: updateData,
+    });
 
-    if (error) {
+    if (!entry) {
       return NextResponse.json({ error: 'Failed to update MFA entry' }, { status: 500 });
     }
 
@@ -79,15 +94,16 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     const supabase = await createClient();
 
     const { data: user, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    if (authError || !user.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { error } = await supabase.from('mfa_entries').delete().eq('id', id);
-
-    if (error) {
-      return NextResponse.json({ error: 'Failed to delete MFA entry' }, { status: 500 });
-    }
+    await prisma.mfa_entries.delete({
+      where: {
+        id,
+        user_id: user.user.id,
+      },
+    });
 
     return NextResponse.json({ message: 'MFA entry deleted successfully' });
   } catch {

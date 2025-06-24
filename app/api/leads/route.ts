@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { LeadInsert } from '@/types/database';
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
     const body = await request.json();
     const {
       email,
@@ -32,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create lead data
-    const leadData: LeadInsert = {
+    const leadData = {
       email,
       name: name || null,
       company: company || null,
@@ -43,19 +41,29 @@ export async function POST(request: NextRequest) {
       utm_source: utm_source || null,
       utm_medium: utm_medium || null,
       utm_campaign: utm_campaign || null,
-      status: 'new',
+      status: 'new' as const,
     };
 
-    // Insert lead into database
-    const { data, error } = await supabase.from('leads').insert(leadData).select().single();
+    try {
+      // Insert lead into database
+      const data = await prisma.leads.create({
+        data: leadData,
+      });
 
-    if (error) {
+      return NextResponse.json({
+        message: 'Lead created successfully',
+        lead: data,
+      });
+    } catch (error: unknown) {
       // Handle duplicate lead (same email + tier_interest)
-      if (error.code === '23505') {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
         // Update existing lead instead of creating new one
-        const { data: updatedData, error: updateError } = await supabase
-          .from('leads')
-          .update({
+        await prisma.leads.updateMany({
+          where: {
+            email,
+            tier_interest,
+          },
+          data: {
             name: name || null,
             company: company || null,
             message: message || null,
@@ -64,21 +72,21 @@ export async function POST(request: NextRequest) {
             utm_source: utm_source || null,
             utm_medium: utm_medium || null,
             utm_campaign: utm_campaign || null,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('email', email)
-          .eq('tier_interest', tier_interest)
-          .select()
-          .single();
+            updated_at: new Date(),
+          },
+        });
 
-        if (updateError) {
-          console.error('Error updating lead:', updateError);
-          return NextResponse.json({ error: 'Failed to update lead' }, { status: 500 });
-        }
+        // Get the updated record to return
+        const updatedLead = await prisma.leads.findFirst({
+          where: {
+            email,
+            tier_interest,
+          },
+        });
 
         return NextResponse.json({
           message: 'Lead updated successfully',
-          lead: updatedData,
+          lead: updatedLead,
         });
       }
 
@@ -88,11 +96,6 @@ export async function POST(request: NextRequest) {
 
     // TODO: Send email notification to admin about new lead
     // This would be implemented with your email service of choice
-
-    return NextResponse.json({
-      message: 'Lead created successfully',
-      lead: data,
-    });
   } catch (error) {
     console.error('Unexpected error in leads API:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

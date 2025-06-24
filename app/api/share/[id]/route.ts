@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -18,31 +19,30 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const { id: linkId } = await params;
 
     // Verify the shared link belongs to the user's MFA entries
-    const { data: sharedLink, error: linkError } = await supabase
-      .from('shared_links')
-      .select(
-        `
-        id,
-        mfa_entries!inner(
-          user_id
-        )
-      `
-      )
-      .eq('id', linkId)
-      .eq('mfa_entries.user_id', user.id)
-      .single();
+    const sharedLink = await prisma.shared_links.findFirst({
+      where: {
+        id: linkId,
+        mfa_entries: {
+          user_id: user.id,
+        },
+      },
+      include: {
+        mfa_entries: {
+          select: {
+            user_id: true,
+          },
+        },
+      },
+    });
 
-    if (linkError || !sharedLink) {
+    if (!sharedLink) {
       return NextResponse.json({ error: 'Shared link not found or access denied' }, { status: 404 });
     }
 
     // Delete the shared link
-    const { error: deleteError } = await supabase.from('shared_links').delete().eq('id', linkId);
-
-    if (deleteError) {
-      console.error('Shared link delete error:', deleteError);
-      return NextResponse.json({ error: 'Failed to delete shared link' }, { status: 500 });
-    }
+    await prisma.shared_links.delete({
+      where: { id: linkId },
+    });
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

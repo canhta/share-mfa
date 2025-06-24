@@ -1,6 +1,8 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
+
 /**
  * Next.js 15 Middleware for Authentication and Route Protection
  *
@@ -62,7 +64,10 @@ export async function middleware(request: NextRequest) {
 
     // For admin routes, check role-based access
     if (path.startsWith('/admin')) {
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+      const profile = await prisma.profiles.findUnique({
+        where: { id: user.id },
+        select: { role: true },
+      });
 
       // Redirect non-admin users to dashboard
       if (!profile || profile.role !== 'admin') {
