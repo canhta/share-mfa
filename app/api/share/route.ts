@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET() {
@@ -16,39 +17,38 @@ export async function GET() {
     }
 
     // Get user's shared links with MFA entry details
-    const { data: sharedLinks, error: linksError } = await supabase
-      .from('shared_links')
-      .select(
-        `
-        *,
-        mfa_entries!inner(
-          id,
-          name,
-          user_id
-        )
-      `
-      )
-      .eq('mfa_entries.user_id', user.id)
-      .order('created_at', { ascending: false });
-
-    if (linksError) {
-      console.error('Shared links fetch error:', linksError);
-      return NextResponse.json({ error: 'Failed to fetch shared links' }, { status: 500 });
-    }
+    const sharedLinks = await prisma.shared_links.findMany({
+      where: {
+        mfa_entries: {
+          user_id: user.id,
+        },
+      },
+      include: {
+        mfa_entries: {
+          select: {
+            id: true,
+            name: true,
+            user_id: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
 
     // Transform the data to include service names
-    const transformedLinks =
-      sharedLinks?.map((link) => ({
-        id: link.id,
-        mfa_entry_id: link.mfa_entry_id,
-        token: link.share_token,
-        expires_at: link.expires_at,
-        access_count: link.click_count,
-        max_access_count: null, // This field doesn't exist in current schema
-        is_active: link.status === 'active',
-        created_at: link.created_at,
-        service_name: link.mfa_entries?.name,
-      })) || [];
+    const transformedLinks = sharedLinks.map((link) => ({
+      id: link.id,
+      mfa_entry_id: link.mfa_entry_id,
+      token: link.share_token,
+      expires_at: link.expires_at,
+      access_count: link.click_count,
+      max_access_count: null, // This field doesn't exist in current schema
+      is_active: link.status === 'active',
+      created_at: link.created_at,
+      service_name: link.mfa_entries?.name,
+    }));
 
     return NextResponse.json({
       shared_links: transformedLinks,

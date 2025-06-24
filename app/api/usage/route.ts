@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
@@ -23,18 +24,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid action type' }, { status: 400 });
     }
 
-    // Record usage event in the new usage_events table
-    const { error: insertError } = await supabase.from('usage_events').insert({
-      user_id: user.id,
-      action,
-      metadata: metadata || {},
-      created_at: new Date().toISOString(),
+    // Record usage event in the usage_events table
+    await prisma.usage_events.create({
+      data: {
+        user_id: user.id,
+        action,
+        metadata: metadata || {},
+      },
     });
-
-    if (insertError) {
-      console.error('Usage event insert error:', insertError);
-      return NextResponse.json({ error: 'Failed to record usage' }, { status: 500 });
-    }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
@@ -56,26 +53,29 @@ export async function GET() {
       return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
     }
 
-    // Get user's usage events from the new usage_events table
-    const { data: usageEvents, error: eventsError } = await supabase
-      .from('usage_events')
-      .select('action, created_at, metadata')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(100);
-
-    if (eventsError) {
-      console.error('Usage events fetch error:', eventsError);
-      return NextResponse.json({ error: 'Failed to fetch usage statistics' }, { status: 500 });
-    }
+    // Get user's usage events from the usage_events table
+    const usageEvents = await prisma.usage_events.findMany({
+      where: {
+        user_id: user.id,
+      },
+      select: {
+        action: true,
+        created_at: true,
+        metadata: true,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      take: 100,
+    });
 
     // Aggregate statistics
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    const recentEvents = usageEvents.filter((event) => new Date(event.created_at) >= thirtyDaysAgo);
-    const weeklyEvents = usageEvents.filter((event) => new Date(event.created_at) >= sevenDaysAgo);
+    const recentEvents = usageEvents.filter((event) => event.created_at && new Date(event.created_at) >= thirtyDaysAgo);
+    const weeklyEvents = usageEvents.filter((event) => event.created_at && new Date(event.created_at) >= sevenDaysAgo);
 
     const aggregated = {
       total: {

@@ -1,11 +1,14 @@
+import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
-type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
-
-async function checkAdminRole(supabase: SupabaseClient, userId: string) {
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single();
+async function checkAdminRole(userId: string) {
+  const profile = await prisma.profiles.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
 
   return profile?.role === 'admin';
 }
@@ -25,7 +28,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check admin role
-    const isAdmin = await checkAdminRole(supabase, user.id);
+    const isAdmin = await checkAdminRole(user.id);
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
@@ -42,69 +45,84 @@ export async function GET(request: NextRequest) {
 
     const offset = (page - 1) * limit;
 
-    // Build query
-    let query = supabase.from('admin_actions').select(`
-        *,
-        admin:profiles!admin_actions_admin_id_fkey(display_name)
-      `);
+    // Build where clause
+    const where: Prisma.admin_actionsWhereInput = {};
 
-    // Apply filters
     if (actionType) {
-      query = query.eq('action_type', actionType);
+      where.action_type = actionType;
     }
 
     if (targetType) {
-      query = query.eq('target_type', targetType);
+      where.target_type = targetType;
     }
 
     if (adminId) {
-      query = query.eq('admin_id', adminId);
+      where.admin_id = adminId;
     }
 
-    if (startDate) {
-      query = query.gte('created_at', startDate);
-    }
-
-    if (endDate) {
-      query = query.lte('created_at', endDate + 'T23:59:59.999Z');
+    if (startDate || endDate) {
+      where.created_at = {};
+      if (startDate) {
+        where.created_at.gte = new Date(startDate);
+      }
+      if (endDate) {
+        where.created_at.lte = new Date(endDate + 'T23:59:59.999Z');
+      }
     }
 
     // Get total count for pagination
-    const { count } = await supabase.from('admin_actions').select('*', { count: 'exact', head: true });
+    const count = await prisma.admin_actions.count({ where });
 
-    // Get paginated results
-    const { data: actions, error } = await query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (error) {
-      console.error('Error fetching admin actions:', error);
-      return NextResponse.json({ error: 'Failed to fetch admin actions' }, { status: 500 });
-    }
+    // Get paginated results with admin profile
+    const actions = await prisma.admin_actions.findMany({
+      where,
+      include: {
+        users: {
+          include: {
+            profiles: {
+              select: {
+                display_name: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      skip: offset,
+      take: limit,
+    });
 
     // Get summary statistics
-    const { data: actionTypes } = await supabase
-      .from('admin_actions')
-      .select('action_type')
-      .gte('created_at', startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const recentActions = await prisma.admin_actions.findMany({
+      where: {
+        created_at: {
+          gte: startDate ? new Date(startDate) : thirtyDaysAgo,
+        },
+      },
+      select: {
+        action_type: true,
+      },
+    });
 
-    const actionTypeCounts =
-      actionTypes?.reduce((acc: Record<string, number>, action) => {
-        acc[action.action_type] = (acc[action.action_type] || 0) + 1;
-        return acc;
-      }, {}) || {};
+    const actionTypeCounts = recentActions.reduce((acc: Record<string, number>, action) => {
+      acc[action.action_type] = (acc[action.action_type] || 0) + 1;
+      return acc;
+    }, {});
 
     return NextResponse.json({
       actions,
       pagination: {
         page,
         limit,
-        total: count || 0,
-        pages: Math.ceil((count || 0) / limit),
+        total: count,
+        pages: Math.ceil(count / limit),
       },
       summary: {
         actionTypeCounts,
-        totalActions: count || 0,
+        totalActions: count,
       },
     });
   } catch (error) {

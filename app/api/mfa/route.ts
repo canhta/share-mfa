@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { decryptSecret, encryptSecret } from '@/lib/crypto';
-import type { MfaEntryInsert } from '@/types/database';
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET() {
@@ -16,18 +16,17 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: entries, error } = await supabase
-      .from('mfa_entries')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Database error fetching MFA entries:', error);
-      return NextResponse.json({ error: 'Failed to fetch MFA entries' }, { status: 500 });
-    }
+    const entries = await prisma.mfa_entries.findMany({
+      where: {
+        user_id: user.id,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
 
     // Decrypt secrets for client use
-    const decryptedEntries = entries?.map((entry) => ({
+    const decryptedEntries = entries.map((entry) => ({
       ...entry,
       secret: decryptSecret(entry.secret),
     }));
@@ -65,50 +64,50 @@ export async function POST(request: NextRequest) {
 
     const encryptedSecret = encryptSecret(secret.trim());
 
-    const newEntry: MfaEntryInsert = {
-      user_id: user.id,
-      name: name.trim(),
-      secret: encryptedSecret,
-      notes: notes?.trim() || null,
-    };
+    try {
+      const entry = await prisma.mfa_entries.create({
+        data: {
+          user_id: user.id,
+          name: name.trim(),
+          secret: encryptedSecret,
+          notes: notes?.trim() || null,
+        },
+      });
 
-    const { data: entry, error } = await supabase.from('mfa_entries').insert(newEntry).select().single();
+      // Return with decrypted secret for immediate use
+      const responseEntry = {
+        ...entry,
+        secret: decryptSecret(entry.secret),
+      };
 
-    if (error) {
+      // Track MFA entry creation event
+      try {
+        await prisma.usage_events.create({
+          data: {
+            user_id: user.id,
+            action: 'mfa_added',
+            metadata: {
+              entry_name: name.trim(),
+              entry_id: entry.id,
+            },
+          },
+        });
+      } catch (usageError) {
+        // Don't fail the request if usage tracking fails
+        console.warn('Failed to track MFA creation event:', usageError);
+      }
+
+      return NextResponse.json({ entry: responseEntry }, { status: 201 });
+    } catch (error) {
       console.error('Database error inserting MFA entry:', error);
 
       // Handle specific database errors
-      if (error.code === '42501') {
-        return NextResponse.json({ error: 'Permission denied' }, { status: 403 });
-      } else if (error.code === '23505') {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
         return NextResponse.json({ error: 'An entry with this name already exists' }, { status: 409 });
       } else {
         return NextResponse.json({ error: 'Failed to create MFA entry' }, { status: 500 });
       }
     }
-
-    // Return with decrypted secret for immediate use
-    const responseEntry = {
-      ...entry,
-      secret: decryptSecret(entry.secret),
-    };
-
-    // Track MFA entry creation event
-    try {
-      await supabase.from('usage_events').insert({
-        user_id: user.id,
-        action: 'mfa_added',
-        metadata: {
-          entry_name: name.trim(),
-          entry_id: entry.id,
-        },
-      });
-    } catch (usageError) {
-      // Don't fail the request if usage tracking fails
-      console.warn('Failed to track MFA creation event:', usageError);
-    }
-
-    return NextResponse.json({ entry: responseEntry }, { status: 201 });
   } catch (error) {
     console.error('MFA API error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
