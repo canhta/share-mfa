@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { ReactNode, useEffect } from 'react';
 
-import { useAuth } from "./AuthProvider";
+import { useAuth } from './AuthProvider';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -27,7 +27,7 @@ const DefaultLoading = () => (
 
 export default function ProtectedRoute({
   children,
-  redirectTo = "/login",
+  redirectTo = '/login',
   requireAuth = true,
   loadingComponent = <DefaultLoading />,
 }: ProtectedRouteProps) {

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion } from "motion/react";
-import { ReactNode, useEffect } from "react";
+import { AnimatePresence, motion } from 'motion/react';
+import { ReactNode, useEffect } from 'react';
 
-import Button from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
+import Button from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -14,7 +14,7 @@ interface ConfirmDialogProps {
   description?: string;
   confirmText?: string;
   cancelText?: string;
-  variant?: "default" | "destructive";
+  variant?: 'default' | 'destructive';
   loading?: boolean;
   icon?: ReactNode;
 }
@@ -25,38 +25,33 @@ export default function ConfirmDialog({
   onConfirm,
   title,
   description,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-  variant = "default",
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
+  variant = 'default',
   loading = false,
   icon,
 }: ConfirmDialogProps) {
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !loading) onClose();
+      if (e.key === 'Escape' && !loading) onClose();
     };
 
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden";
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "unset";
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose, loading]);
 
   const defaultIcon =
-    variant === "destructive" ? (
+    variant === 'destructive' ? (
       <div className="w-12 h-12 bg-gray-100/80 rounded-full flex items-center justify-center">
-        <svg
-          className="w-6 h-6 text-gray-600"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -67,12 +62,7 @@ export default function ConfirmDialog({
       </div>
     ) : (
       <div className="w-12 h-12 bg-gray-100/80 rounded-full flex items-center justify-center">
-        <svg
-          className="w-6 h-6 text-gray-600"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -91,7 +81,7 @@ export default function ConfirmDialog({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.13, ease: "easeOut" }}
+          transition={{ duration: 0.13, ease: 'easeOut' }}
         >
           {/* Backdrop */}
           <motion.div
@@ -104,13 +94,11 @@ export default function ConfirmDialog({
 
           {/* Dialog content */}
           <motion.div
-            className={cn(
-              "relative w-full max-w-md p-6 mx-auto glass-neutral rounded-2xl",
-            )}
+            className={cn('relative w-full max-w-md p-6 mx-auto glass-neutral rounded-2xl')}
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.13, ease: "easeOut" }}
+            transition={{ duration: 0.13, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start space-x-4">
@@ -149,19 +137,12 @@ export default function ConfirmDialog({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.13, duration: 0.2 }}
                 >
-                  <Button
-                    onClick={onClose}
-                    variant="secondary"
-                    disabled={loading}
-                    className="rounded-xl"
-                  >
+                  <Button onClick={onClose} variant="secondary" disabled={loading} className="rounded-xl">
                     {cancelText}
                   </Button>
                   <Button
                     onClick={onConfirm}
-                    variant={
-                      variant === "destructive" ? "destructive" : "primary"
-                    }
+                    variant={variant === 'destructive' ? 'destructive' : 'primary'}
                     loading={loading}
                     disabled={loading}
                     className="rounded-xl"

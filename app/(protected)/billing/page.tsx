@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useRequireUser } from "@/components/auth";
-import BillingDashboard from "@/components/dashboard/BillingDashboard";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import { LoadingSpinner } from "@/components/ui";
+import { useRequireUser } from '@/components/auth';
+import BillingDashboard from '@/components/dashboard/BillingDashboard';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import { LoadingSpinner } from '@/components/ui';
 
 /**
  * Billing Page - User billing and subscription management
@@ -36,25 +36,15 @@ export default function BillingPage() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: 0.33, ease: "easeOut" }}
+            transition={{ duration: 0.33, ease: 'easeOut' }}
             viewOptions={{ once: true }}
           >
             <div className="text-center sm:text-left">
-              <TextEffect
-                per="word"
-                preset="slide"
-                className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2"
-              >
+              <TextEffect per="word" preset="slide" className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
                 Billing & Subscription
               </TextEffect>
-              <TextEffect
-                per="word"
-                preset="fade-in-blur"
-                delay={0.3}
-                className="text-base text-slate-600"
-              >
-                Manage your subscription, view usage, and update billing
-                information
+              <TextEffect per="word" preset="fade-in-blur" delay={0.3} className="text-base text-slate-600">
+                Manage your subscription, view usage, and update billing information
               </TextEffect>
             </div>
           </InView>
@@ -65,7 +55,7 @@ export default function BillingPage() {
               hidden: { opacity: 0, y: 30, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
             }}
-            transition={{ duration: 0.4, delay: 0.13, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.13, ease: 'easeOut' }}
             viewOptions={{ once: true }}
           >
             <BillingDashboard />

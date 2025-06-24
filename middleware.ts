@@ -1,5 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
-import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from '@supabase/ssr';
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Next.js 15 Middleware for Authentication and Route Protection
@@ -9,28 +9,17 @@ import { NextRequest, NextResponse } from "next/server";
  */
 
 // Define protected and public routes
-const protectedRoutes = [
-  "/dashboard",
-  "/admin",
-  "/billing",
-  "/onboarding",
-  "/mfa",
-  "/profile",
-];
-const publicRoutes = ["/login", "/signup", "/", "/share", "/pricing"];
+const protectedRoutes = ['/dashboard', '/admin', '/billing', '/onboarding', '/mfa', '/profile'];
+const publicRoutes = ['/login', '/signup', '/', '/share', '/pricing'];
 
 export async function middleware(request: NextRequest) {
   // Check if the current route needs protection
   const path = request.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    path.startsWith(route),
-  );
-  const isPublicRoute = publicRoutes.some(
-    (route) => path === route || path.startsWith(route),
-  );
+  const isProtectedRoute = protectedRoutes.some((route) => path.startsWith(route));
+  const isPublicRoute = publicRoutes.some((route) => path === route || path.startsWith(route));
 
   // Skip auth check for public routes and API routes
-  if (isPublicRoute || path.startsWith("/api") || path.startsWith("/_next")) {
+  if (isPublicRoute || path.startsWith('/api') || path.startsWith('/_next')) {
     return NextResponse.next();
   }
 
@@ -49,18 +38,14 @@ export async function middleware(request: NextRequest) {
             return request.cookies.getAll();
           },
           setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value }) =>
-              request.cookies.set(name, value),
-            );
+            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
             supabaseResponse = NextResponse.next({
               request,
             });
-            cookiesToSet.forEach(({ name, value, options }) =>
-              supabaseResponse.cookies.set(name, value, options),
-            );
+            cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options));
           },
         },
-      },
+      }
     );
 
     // Get user session
@@ -71,22 +56,18 @@ export async function middleware(request: NextRequest) {
     // Redirect unauthenticated users to login
     if (!user) {
       const url = request.nextUrl.clone();
-      url.pathname = "/login";
+      url.pathname = '/login';
       return NextResponse.redirect(url);
     }
 
     // For admin routes, check role-based access
-    if (path.startsWith("/admin")) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+    if (path.startsWith('/admin')) {
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
 
       // Redirect non-admin users to dashboard
-      if (!profile || profile.role !== "admin") {
+      if (!profile || profile.role !== 'admin') {
         const url = request.nextUrl.clone();
-        url.pathname = "/dashboard";
+        url.pathname = '/dashboard';
         return NextResponse.redirect(url);
       }
     }
@@ -107,6 +88,6 @@ export const config = {
      * - public folder
      * Feel free to modify this pattern to include more paths.
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

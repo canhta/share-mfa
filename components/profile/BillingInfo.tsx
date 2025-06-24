@@ -1,25 +1,19 @@
-"use client";
+'use client';
 
-import {
-  ArrowUpRight,
-  Calendar,
-  CreditCard,
-  DollarSign,
-  TrendingUp,
-} from "lucide-react";
-import Link from "next/link";
+import { ArrowUpRight, Calendar, CreditCard, DollarSign, TrendingUp } from 'lucide-react';
+import Link from 'next/link';
 
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 
 interface UserProfile {
   id: string;
   display_name: string | null;
   company: string | null;
-  use_case: "personal" | "business" | "team" | null;
+  use_case: 'personal' | 'business' | 'team' | null;
   newsletter_consent: boolean;
   product_updates_consent: boolean;
-  user_tier: "free" | "pro" | "enterprise";
+  user_tier: 'free' | 'pro' | 'enterprise';
   subscription_status: string | null;
   available_credits: number;
   total_credits_earned: number;
@@ -34,29 +28,24 @@ interface BillingInfoProps {
 export default function BillingInfo({ profile }: BillingInfoProps) {
   const planDetails = {
     free: {
-      name: "Free",
-      price: "$0",
-      features: ["Up to 5 MFA entries", "Basic sharing", "Community support"],
+      name: 'Free',
+      price: '$0',
+      features: ['Up to 5 MFA entries', 'Basic sharing', 'Community support'],
     },
     pro: {
-      name: "Pro",
-      price: "$9.99",
-      features: [
-        "Unlimited MFA entries",
-        "Advanced sharing options",
-        "Priority support",
-        "Custom domains",
-      ],
+      name: 'Pro',
+      price: '$9.99',
+      features: ['Unlimited MFA entries', 'Advanced sharing options', 'Priority support', 'Custom domains'],
     },
     enterprise: {
-      name: "Enterprise",
-      price: "Custom",
+      name: 'Enterprise',
+      price: 'Custom',
       features: [
-        "Everything in Pro",
-        "Team management",
-        "Advanced analytics",
-        "Custom integrations",
-        "Dedicated support",
+        'Everything in Pro',
+        'Team management',
+        'Advanced analytics',
+        'Custom integrations',
+        'Dedicated support',
       ],
     },
   };
@@ -72,7 +61,7 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
             <CreditCard className="w-5 h-5 text-blue-600 mr-2" />
             <h3 className="text-lg font-medium text-gray-900">Current Plan</h3>
           </div>
-          {profile.user_tier === "free" && (
+          {profile.user_tier === 'free' && (
             <Link href="/billing">
               <Button variant="primary" size="sm">
                 <ArrowUpRight className="w-4 h-4 mr-1" />
@@ -85,19 +74,17 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-xl font-bold text-gray-900">
-                {currentPlan.name} Plan
-              </h4>
+              <h4 className="text-xl font-bold text-gray-900">{currentPlan.name} Plan</h4>
               <p className="text-lg text-gray-600">
                 {currentPlan.price}
-                {profile.user_tier !== "free" && "/month"}
+                {profile.user_tier !== 'free' && '/month'}
               </p>
               {profile.subscription_status && (
                 <span
                   className={`inline-flex px-2 py-1 rounded-full text-xs font-medium mt-2 ${
-                    profile.subscription_status === "active"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
+                    profile.subscription_status === 'active'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-yellow-100 text-yellow-800'
                   }`}
                 >
                   {profile.subscription_status}
@@ -105,24 +92,17 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
               )}
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-blue-600">
-                {profile.available_credits}
-              </div>
+              <div className="text-2xl font-bold text-blue-600">{profile.available_credits}</div>
               <div className="text-sm text-gray-600">Available Credits</div>
             </div>
           </div>
         </div>
 
         <div className="mt-4">
-          <h5 className="text-sm font-medium text-gray-900 mb-2">
-            Plan Features
-          </h5>
+          <h5 className="text-sm font-medium text-gray-900 mb-2">Plan Features</h5>
           <ul className="space-y-1">
             {currentPlan.features.map((feature, index) => (
-              <li
-                key={index}
-                className="text-sm text-gray-600 flex items-center"
-              >
+              <li key={index} className="text-sm text-gray-600 flex items-center">
                 <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
                 {feature}
               </li>
@@ -135,9 +115,7 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
       <Card className="p-6">
         <div className="flex items-center mb-4">
           <TrendingUp className="w-5 h-5 text-green-600 mr-2" />
-          <h3 className="text-lg font-medium text-gray-900">
-            Usage Statistics
-          </h3>
+          <h3 className="text-lg font-medium text-gray-900">Usage Statistics</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -147,9 +125,7 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
                 <CreditCard className="w-4 h-4 text-blue-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">
-                  {profile.available_credits}
-                </p>
+                <p className="text-sm font-medium text-gray-900">{profile.available_credits}</p>
                 <p className="text-xs text-gray-600">Available Credits</p>
               </div>
             </div>
@@ -161,9 +137,7 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
                 <TrendingUp className="w-4 h-4 text-green-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">
-                  {profile.total_credits_earned}
-                </p>
+                <p className="text-sm font-medium text-gray-900">{profile.total_credits_earned}</p>
                 <p className="text-xs text-gray-600">Total Earned</p>
               </div>
             </div>
@@ -175,9 +149,7 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
                 <Calendar className="w-4 h-4 text-purple-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">
-                  {new Date(profile.created_at).toLocaleDateString()}
-                </p>
+                <p className="text-sm font-medium text-gray-900">{new Date(profile.created_at).toLocaleDateString()}</p>
                 <p className="text-xs text-gray-600">Member Since</p>
               </div>
             </div>
@@ -190,9 +162,7 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <DollarSign className="w-5 h-5 text-gray-600 mr-2" />
-            <h3 className="text-lg font-medium text-gray-900">
-              Billing History
-            </h3>
+            <h3 className="text-lg font-medium text-gray-900">Billing History</h3>
           </div>
           <Link href="/billing">
             <Button variant="outline" size="sm">
@@ -201,12 +171,10 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
           </Link>
         </div>
 
-        {profile.user_tier === "free" ? (
+        {profile.user_tier === 'free' ? (
           <div className="text-center py-8 text-gray-500">
             <p>No billing history available for free plan</p>
-            <p className="text-sm mt-1">
-              Upgrade to Pro to see billing details
-            </p>
+            <p className="text-sm mt-1">Upgrade to Pro to see billing details</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -217,9 +185,7 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
               </div>
               <div className="text-right">
                 <p className="font-medium text-gray-900">$9.99</p>
-                <p className="text-sm text-gray-600">
-                  {new Date().toLocaleDateString()}
-                </p>
+                <p className="text-sm text-gray-600">{new Date().toLocaleDateString()}</p>
               </div>
             </div>
           </div>
@@ -227,11 +193,9 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
       </Card>
 
       {/* Plan Management */}
-      {profile.user_tier !== "free" && (
+      {profile.user_tier !== 'free' && (
         <Card className="p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Plan Management
-          </h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Plan Management</h3>
           <div className="space-y-3">
             <Link href="/billing">
               <Button variant="outline" className="w-full sm:w-auto">
@@ -239,8 +203,7 @@ export default function BillingInfo({ profile }: BillingInfoProps) {
               </Button>
             </Link>
             <p className="text-sm text-gray-600">
-              Change your plan, update payment methods, or view detailed billing
-              information.
+              Change your plan, update payment methods, or view detailed billing information.
             </p>
           </div>
         </Card>

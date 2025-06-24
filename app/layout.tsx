@@ -1,33 +1,26 @@
-import "./globals.css";
+import './globals.css';
 
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 
-import { ScrollProgress } from "@/components/motion-primitives/scroll-progress";
-import Footer from "@/components/ui/Footer";
+import { ScrollProgress } from '@/components/motion-primitives/scroll-progress';
+import Footer from '@/components/ui/Footer';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "MFA Share - Secure TOTP Code Sharing",
+  title: 'MFA Share - Secure TOTP Code Sharing',
   description:
-    "Securely share your TOTP-based multi-factor authentication codes with trusted friends and family members.",
-  keywords: [
-    "MFA",
-    "TOTP",
-    "authentication",
-    "security",
-    "sharing",
-    "two-factor",
-  ],
+    'Securely share your TOTP-based multi-factor authentication codes with trusted friends and family members.',
+  keywords: ['MFA', 'TOTP', 'authentication', 'security', 'sharing', 'two-factor'],
 };
 
 /**
@@ -43,9 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
         <ScrollProgress className="fixed top-0 z-50" />
         <main className="flex-grow">{children}</main>
         <Footer />

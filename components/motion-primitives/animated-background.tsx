@@ -1,20 +1,11 @@
-"use client";
-import { AnimatePresence, motion, Transition } from "motion/react";
-import {
-  Children,
-  cloneElement,
-  ReactElement,
-  useEffect,
-  useId,
-  useState,
-} from "react";
+'use client';
+import { AnimatePresence, motion, Transition } from 'motion/react';
+import { Children, cloneElement, ReactElement, useEffect, useId, useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 export type AnimatedBackgroundProps = {
-  children:
-    | ReactElement<{ "data-id": string }>[]
-    | ReactElement<{ "data-id": string }>;
+  children: ReactElement<{ 'data-id': string }>[] | ReactElement<{ 'data-id': string }>;
   defaultValue?: string;
   onValueChange?: (newActiveId: string | null) => void;
   className?: string;
@@ -49,7 +40,7 @@ export function AnimatedBackground({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return Children.map(children, (child: any, index) => {
-    const id = child.props["data-id"];
+    const id = child.props['data-id'];
 
     const interactionProps = enableHover
       ? {
@@ -64,8 +55,8 @@ export function AnimatedBackground({
       child,
       {
         key: index,
-        className: cn("relative inline-flex", child.props.className),
-        "data-checked": activeId === id ? "true" : "false",
+        className: cn('relative inline-flex', child.props.className),
+        'data-checked': activeId === id ? 'true' : 'false',
         ...interactionProps,
       },
       <>
@@ -73,7 +64,7 @@ export function AnimatedBackground({
           {activeId === id && (
             <motion.div
               layoutId={`background-${uniqueId}`}
-              className={cn("absolute inset-0", className)}
+              className={cn('absolute inset-0', className)}
               transition={transition}
               initial={{ opacity: defaultValue ? 1 : 0 }}
               animate={{
@@ -86,7 +77,7 @@ export function AnimatedBackground({
           )}
         </AnimatePresence>
         <div className="z-10">{child.props.children}</div>
-      </>,
+      </>
     );
   });
 }

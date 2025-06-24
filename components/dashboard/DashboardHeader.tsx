@@ -1,25 +1,15 @@
-"use client";
+'use client';
 
-import type { User } from "@supabase/supabase-js";
-import {
-  ChevronDown,
-  CreditCard,
-  Home,
-  LogOut,
-  Menu,
-  Settings,
-  Shield,
-  User as UserIcon,
-  X,
-} from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import type { User } from '@supabase/supabase-js';
+import { ChevronDown, CreditCard, Home, LogOut, Menu, Settings, Shield, User as UserIcon, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
 
 interface DashboardHeaderProps {
   user: User;
@@ -35,39 +25,36 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsProfileDropdownOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   const handleSignOut = async () => {
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
+      await fetch('/api/auth/logout', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
-      router.push("/login");
+      router.push('/login');
       router.refresh();
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error('Error signing out:', error);
     }
   };
 
   const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: Home },
-    { name: "MFA", href: "/mfa", icon: Shield },
-    { name: "Billing", href: "/billing", icon: CreditCard },
+    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'MFA', href: '/mfa', icon: Shield },
+    { name: 'Billing', href: '/billing', icon: CreditCard },
   ];
 
   const isActivePath = (path: string) => pathname === path;
@@ -78,7 +65,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
         hidden: { opacity: 0, y: -20 },
         visible: { opacity: 1, y: 0 },
       }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
       viewOptions={{ once: true }}
     >
       <header className="glass-neutral border-b border-gray-200/40 sticky top-0 z-40">
@@ -113,8 +100,8 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                       href={item.href}
                       className={`inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-150 ${
                         isActivePath(item.href)
-                          ? "bg-gray-100/80 text-gray-900 shadow-sm backdrop-blur-sm"
-                          : "text-gray-600 hover:text-gray-900 hover:bg-gray-50/80"
+                          ? 'bg-gray-100/80 text-gray-900 shadow-sm backdrop-blur-sm'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50/80'
                       }`}
                     >
                       <IconComponent className="w-4 h-4 mr-2" />
@@ -133,14 +120,12 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                   hidden: { opacity: 0, scale: 0.8 },
                   visible: { opacity: 1, scale: 1 },
                 }}
-                transition={{ duration: 0.27, delay: 0.2, ease: "easeOut" }}
+                transition={{ duration: 0.27, delay: 0.2, ease: 'easeOut' }}
                 viewOptions={{ once: true }}
               >
                 <div className="hidden md:block relative" ref={dropdownRef}>
                   <button
-                    onClick={() =>
-                      setIsProfileDropdownOpen(!isProfileDropdownOpen)
-                    }
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                     className="flex items-center space-x-3 bg-gray-50/50 backdrop-blur-sm rounded-xl px-3 py-2 hover:bg-gray-100/50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
                     <div className="flex-shrink-0">
@@ -149,10 +134,10 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                         src={
                           user.user_metadata?.avatar_url ||
                           `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                            user.email || "User",
+                            user.email || 'User'
                           )}&background=404040&color=fff`
                         }
-                        alt={user.email || "User avatar"}
+                        alt={user.email || 'User avatar'}
                         width={32}
                         height={32}
                       />
@@ -161,13 +146,11 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                       <p className="text-sm font-medium text-gray-900 truncate">
                         {user.user_metadata?.full_name || user.email}
                       </p>
-                      <p className="text-xs text-gray-500 truncate">
-                        {user.email}
-                      </p>
+                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
                     </div>
                     <ChevronDown
                       className={`h-4 w-4 text-gray-400 transition-transform ${
-                        isProfileDropdownOpen ? "rotate-180" : ""
+                        isProfileDropdownOpen ? 'rotate-180' : ''
                       }`}
                     />
                   </button>
@@ -179,7 +162,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                         initial={{ opacity: 0, y: -10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        transition={{ duration: 0.13, ease: "easeOut" }}
+                        transition={{ duration: 0.13, ease: 'easeOut' }}
                         className="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
                       >
                         <div className="py-1">
@@ -191,20 +174,18 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                                 src={
                                   user.user_metadata?.avatar_url ||
                                   `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                    user.email || "User",
+                                    user.email || 'User'
                                   )}&background=404040&color=fff`
                                 }
-                                alt={user.email || "User avatar"}
+                                alt={user.email || 'User avatar'}
                                 width={40}
                                 height={40}
                               />
                               <div className="min-w-0 flex-1">
                                 <p className="text-sm font-medium text-gray-900 truncate">
-                                  {user.user_metadata?.full_name || "User"}
+                                  {user.user_metadata?.full_name || 'User'}
                                 </p>
-                                <p className="text-xs text-gray-500 truncate">
-                                  {user.email}
-                                </p>
+                                <p className="text-xs text-gray-500 truncate">{user.email}</p>
                               </div>
                             </div>
                           </div>
@@ -256,11 +237,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {isMobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
+                {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </motion.button>
             </div>
           </div>
@@ -271,9 +248,9 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
               <motion.div
                 className="md:hidden border-t border-gray-200/40 pb-4"
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
+                animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
               >
                 <div className="pt-4 space-y-1">
                   {/* Mobile User Info */}
@@ -289,18 +266,16 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                         src={
                           user.user_metadata?.avatar_url ||
                           `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                            user.email || "User",
+                            user.email || 'User'
                           )}&background=404040&color=fff`
                         }
-                        alt={user.email || "User avatar"}
+                        alt={user.email || 'User avatar'}
                         width={32}
                         height={32}
                       />
                     </div>
                     <div className="ml-3 min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-900">
-                        {user.user_metadata?.full_name || user.email}
-                      </p>
+                      <p className="text-sm font-medium text-gray-900">{user.user_metadata?.full_name || user.email}</p>
                       <p className="text-xs text-gray-500">{user.email}</p>
                     </div>
                   </motion.div>
@@ -320,8 +295,8 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                           onClick={() => setIsMobileMenuOpen(false)}
                           className={`flex items-center mx-3 px-3 py-2.5 text-base font-medium rounded-xl transition-all duration-150 ${
                             isActivePath(item.href)
-                              ? "bg-gray-100/80 text-gray-900 shadow-sm backdrop-blur-sm"
-                              : "text-gray-600 hover:text-gray-900 hover:bg-gray-50/80"
+                              ? 'bg-gray-100/80 text-gray-900 shadow-sm backdrop-blur-sm'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50/80'
                           }`}
                         >
                           <IconComponent className="w-5 h-5 mr-3" />

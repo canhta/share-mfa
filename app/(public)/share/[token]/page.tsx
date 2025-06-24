@@ -1,23 +1,20 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import ShareView from "@/components/share/ShareView";
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import ShareView from '@/components/share/ShareView';
 
 interface SharePageProps {
   params: Promise<{ token: string }>;
   searchParams: Promise<{ p?: string }>;
 }
 
-export default async function SharePage({
-  params,
-  searchParams,
-}: SharePageProps) {
+export default async function SharePage({ params, searchParams }: SharePageProps) {
   const { token } = await params;
   const { p: embeddedPassword } = await searchParams;
 
   if (!token) {
-    redirect("/");
+    redirect('/');
   }
 
   return (
@@ -28,23 +25,14 @@ export default async function SharePage({
             hidden: { opacity: 0, y: 30, scale: 0.95 },
             visible: { opacity: 1, y: 0, scale: 1 },
           }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
           viewOptions={{ once: true }}
         >
           <div className="text-center mb-8">
-            <TextEffect
-              per="word"
-              preset="slide"
-              className="text-3xl font-bold text-slate-900 mb-4"
-            >
+            <TextEffect per="word" preset="slide" className="text-3xl font-bold text-slate-900 mb-4">
               Shared MFA Code
             </TextEffect>
-            <TextEffect
-              per="word"
-              preset="fade-in-blur"
-              delay={0.4}
-              className="text-base text-slate-600"
-            >
+            <TextEffect per="word" preset="fade-in-blur" delay={0.4} className="text-base text-slate-600">
               Access a shared TOTP code below
             </TextEffect>
           </div>
@@ -55,7 +43,7 @@ export default async function SharePage({
             hidden: { opacity: 0, y: 20, scale: 0.95 },
             visible: { opacity: 1, y: 0, scale: 1 },
           }}
-          transition={{ duration: 0.33, delay: 0.13, ease: "easeOut" }}
+          transition={{ duration: 0.33, delay: 0.13, ease: 'easeOut' }}
           viewOptions={{ once: true }}
         >
           <ShareView token={token} embeddedPassword={embeddedPassword} />

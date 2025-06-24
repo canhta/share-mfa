@@ -1,7 +1,6 @@
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes } from 'react';
 
-interface CheckboxProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange"> {
+interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
   label: string;
   id: string;
   checked: boolean;
@@ -17,7 +16,7 @@ export default function Checkbox({
   onChange,
   description,
   error,
-  className = "",
+  className = '',
   ...props
 }: CheckboxProps) {
   return (
@@ -34,10 +33,7 @@ export default function Checkbox({
           />
         </div>
         <div className="ml-3 text-sm">
-          <label
-            htmlFor={id}
-            className="font-medium text-gray-700 cursor-pointer"
-          >
+          <label htmlFor={id} className="font-medium text-gray-700 cursor-pointer">
             {label}
           </label>
           {description && <p className="text-gray-500 mt-1">{description}</p>}

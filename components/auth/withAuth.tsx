@@ -1,20 +1,17 @@
-"use client";
+'use client';
 
-import type { User } from "@supabase/supabase-js";
-import { ComponentType } from "react";
+import type { User } from '@supabase/supabase-js';
+import { ComponentType } from 'react';
 
-import { useAuth } from "./AuthProvider";
-import ProtectedRoute from "./ProtectedRoute";
+import { useAuth } from './AuthProvider';
+import ProtectedRoute from './ProtectedRoute';
 
 interface WithAuthProps {
   redirectTo?: string;
 }
 
-export function withAuth<P extends object>(
-  Component: ComponentType<P>,
-  options: WithAuthProps = {},
-) {
-  const { redirectTo = "/login" } = options;
+export function withAuth<P extends object>(Component: ComponentType<P>, options: WithAuthProps = {}) {
+  const { redirectTo = '/login' } = options;
 
   return function AuthenticatedComponent(props: P) {
     return (
@@ -25,9 +22,7 @@ export function withAuth<P extends object>(
   };
 }
 
-export function withAuthUser<P extends object>(
-  Component: ComponentType<P & { user: User }>,
-) {
+export function withAuthUser<P extends object>(Component: ComponentType<P & { user: User }>) {
   return function AuthenticatedUserComponent(props: P) {
     return (
       <ProtectedRoute>

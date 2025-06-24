@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -11,5 +11,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.redirect(new URL("/login", request.url));
+  return NextResponse.redirect(new URL('/login', request.url));
 }

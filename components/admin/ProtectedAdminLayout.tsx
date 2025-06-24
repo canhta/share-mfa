@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import type { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import type { User } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
 
-import AdminLayout from "@/components/admin/AdminLayout";
+import AdminLayout from '@/components/admin/AdminLayout';
 
 interface ProtectedAdminLayoutProps {
   children: ReactNode;
@@ -17,9 +17,7 @@ interface LoadingState {
   error: string | null;
 }
 
-export default function ProtectedAdminLayout({
-  children,
-}: ProtectedAdminLayoutProps) {
+export default function ProtectedAdminLayout({ children }: ProtectedAdminLayoutProps) {
   const router = useRouter();
   const [state, setState] = useState<LoadingState>({
     isLoading: true,
@@ -31,15 +29,15 @@ export default function ProtectedAdminLayout({
   useEffect(() => {
     const checkAuthAndRole = async () => {
       try {
-        const response = await fetch("/api/auth/admin");
+        const response = await fetch('/api/auth/admin');
 
         if (response.status === 401) {
-          router.push("/login");
+          router.push('/login');
           return;
         }
 
         if (response.status === 403) {
-          router.push("/dashboard");
+          router.push('/dashboard');
           return;
         }
 
@@ -48,7 +46,7 @@ export default function ProtectedAdminLayout({
           setState((prev) => ({
             ...prev,
             isLoading: false,
-            error: errorData.error || "Failed to verify admin permissions",
+            error: errorData.error || 'Failed to verify admin permissions',
           }));
           return;
         }
@@ -63,11 +61,11 @@ export default function ProtectedAdminLayout({
           error: null,
         });
       } catch (error) {
-        console.error("Error in auth check:", error);
+        console.error('Error in auth check:', error);
         setState((prev) => ({
           ...prev,
           isLoading: false,
-          error: "Authentication error occurred",
+          error: 'Authentication error occurred',
         }));
       }
     };
@@ -96,7 +94,7 @@ export default function ProtectedAdminLayout({
             <h3 className="font-bold">Access Error</h3>
             <p>{state.error}</p>
             <button
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push('/dashboard')}
               className="mt-3 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded"
             >
               Return to Dashboard
@@ -116,7 +114,7 @@ export default function ProtectedAdminLayout({
             <h3 className="font-bold">Access Denied</h3>
             <p>You don&apos;t have permission to access the admin panel.</p>
             <button
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push('/dashboard')}
               className="mt-3 bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded"
             >
               Return to Dashboard

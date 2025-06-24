@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import Button from "@/components/ui/Button";
+import Button from '@/components/ui/Button';
 
 export default function GoogleSignInButton() {
   const handleGoogleSignIn = async () => {
     try {
-      const response = await fetch("/api/auth/signin", {
-        method: "POST",
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          provider: "google",
+          provider: 'google',
           redirectTo: `${window.location.origin}/api/auth/callback`,
         }),
       });
@@ -19,7 +19,7 @@ export default function GoogleSignInButton() {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("Error signing in with Google:", data.error);
+        console.error('Error signing in with Google:', data.error);
         return;
       }
 
@@ -27,17 +27,12 @@ export default function GoogleSignInButton() {
         window.location.href = data.url;
       }
     } catch (error) {
-      console.error("Unexpected error:", error);
+      console.error('Unexpected error:', error);
     }
   };
 
   return (
-    <Button
-      onClick={handleGoogleSignIn}
-      variant="primary"
-      className="w-full"
-      size="lg"
-    >
+    <Button onClick={handleGoogleSignIn} variant="primary" className="w-full" size="lg">
       <span className="absolute left-0 inset-y-0 flex items-center pl-3">
         <svg className="h-5 w-5" viewBox="0 0 24 24">
           <path

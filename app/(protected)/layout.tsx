@@ -1,9 +1,9 @@
-import { redirect } from "next/navigation";
-import { ReactNode } from "react";
+import { redirect } from 'next/navigation';
+import { ReactNode } from 'react';
 
-import { AuthProvider } from "@/components/auth/AuthProvider";
-import { UserProvider } from "@/components/auth/UserProvider";
-import { createClient } from "@/utils/supabase/server";
+import { AuthProvider } from '@/components/auth/AuthProvider';
+import { UserProvider } from '@/components/auth/UserProvider';
+import { createClient } from '@/utils/supabase/server';
 
 interface ProtectedLayoutProps {
   children: ReactNode;
@@ -17,9 +17,7 @@ interface ProtectedLayoutProps {
  *
  * Uses Next.js 15 nested layouts pattern for optimal performance and maintainability.
  */
-export default async function ProtectedLayout({
-  children,
-}: ProtectedLayoutProps) {
+export default async function ProtectedLayout({ children }: ProtectedLayoutProps) {
   const supabase = await createClient();
 
   // Server-side authentication check
@@ -30,15 +28,13 @@ export default async function ProtectedLayout({
 
   if (error || !user) {
     // Redirect unauthenticated users to login
-    redirect("/login");
+    redirect('/login');
   }
 
   return (
     <AuthProvider>
       <UserProvider>
-        <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">
-          {children}
-        </div>
+        <div className="min-h-screen bg-gradient-neutral bg-neutral-texture">{children}</div>
       </UserProvider>
     </AuthProvider>
   );

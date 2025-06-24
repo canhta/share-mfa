@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import Card from "@/components/ui/Card";
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import Card from '@/components/ui/Card';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,13 +15,13 @@ export default function LoginPage() {
     // Check if user is already authenticated
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/auth/user");
+        const response = await fetch('/api/auth/user');
         if (response.ok) {
-          router.push("/dashboard");
+          router.push('/dashboard');
         }
       } catch {
         // User not authenticated, stay on login page
-        console.log("User not authenticated");
+        console.log('User not authenticated');
       }
     };
 
@@ -36,16 +36,12 @@ export default function LoginPage() {
             hidden: { opacity: 0, y: 30, scale: 0.95 },
             visible: { opacity: 1, y: 0, scale: 1 },
           }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
           viewOptions={{ once: true }}
         >
           <Card className="space-y-8">
             <div>
-              <TextEffect
-                per="word"
-                preset="slide"
-                className="mt-6 text-center text-3xl font-extrabold text-slate-900"
-              >
+              <TextEffect per="word" preset="slide" className="mt-6 text-center text-3xl font-extrabold text-slate-900">
                 Sign in to MFA Share
               </TextEffect>
               <TextEffect
@@ -64,7 +60,7 @@ export default function LoginPage() {
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
                 }}
-                transition={{ duration: 0.33, delay: 0.53, ease: "easeOut" }}
+                transition={{ duration: 0.33, delay: 0.53, ease: 'easeOut' }}
                 viewOptions={{ once: true }}
               >
                 <GoogleSignInButton />
@@ -75,13 +71,12 @@ export default function LoginPage() {
                   hidden: { opacity: 0 },
                   visible: { opacity: 1 },
                 }}
-                transition={{ duration: 0.33, delay: 0.67, ease: "easeOut" }}
+                transition={{ duration: 0.33, delay: 0.67, ease: 'easeOut' }}
                 viewOptions={{ once: true }}
               >
                 <div className="text-center">
                   <p className="text-xs text-slate-500">
-                    By signing in, you agree to our terms of service and privacy
-                    policy.
+                    By signing in, you agree to our terms of service and privacy policy.
                   </p>
                 </div>
               </InView>

@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useRequireUser } from "@/components/auth";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import MfaEntrySummary from "@/components/dashboard/MfaEntrySummary";
-import ShareStatusDashboard from "@/components/dashboard/ShareStatusDashboard";
-import UsageStats from "@/components/dashboard/UsageStats";
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import { LoadingSpinner } from "@/components/ui";
+import { useRequireUser } from '@/components/auth';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import MfaEntrySummary from '@/components/dashboard/MfaEntrySummary';
+import ShareStatusDashboard from '@/components/dashboard/ShareStatusDashboard';
+import UsageStats from '@/components/dashboard/UsageStats';
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import { LoadingSpinner } from '@/components/ui';
 
 /**
  * Dashboard Page - Main user dashboard
@@ -38,23 +38,14 @@ export default function DashboardPage() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: 0.33, ease: "easeOut" }}
+            transition={{ duration: 0.33, ease: 'easeOut' }}
             viewOptions={{ once: true }}
           >
             <div className="text-center sm:text-left">
-              <TextEffect
-                per="word"
-                preset="slide"
-                className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2"
-              >
+              <TextEffect per="word" preset="slide" className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
                 Dashboard
               </TextEffect>
-              <TextEffect
-                per="word"
-                preset="fade-in-blur"
-                delay={0.3}
-                className="text-base text-slate-600"
-              >
+              <TextEffect per="word" preset="fade-in-blur" delay={0.3} className="text-base text-slate-600">
                 Manage your MFA codes, monitor usage, and track shared links
               </TextEffect>
             </div>
@@ -66,7 +57,7 @@ export default function DashboardPage() {
               hidden: { opacity: 0, y: 30, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
             }}
-            transition={{ duration: 0.4, delay: 0.13, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.13, ease: 'easeOut' }}
             viewOptions={{ once: true }}
           >
             <UsageStats />
@@ -80,7 +71,7 @@ export default function DashboardPage() {
                 hidden: { opacity: 0, x: -30, scale: 0.95 },
                 visible: { opacity: 1, x: 0, scale: 1 },
               }}
-              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
               viewOptions={{ once: true }}
             >
               <div className="lg:col-span-2">
@@ -94,7 +85,7 @@ export default function DashboardPage() {
                 hidden: { opacity: 0, x: 30, scale: 0.95 },
                 visible: { opacity: 1, x: 0, scale: 1 },
               }}
-              transition={{ duration: 0.4, delay: 0.27, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.27, ease: 'easeOut' }}
               viewOptions={{ once: true }}
             >
               <div className="lg:col-span-1">

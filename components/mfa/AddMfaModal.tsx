@@ -1,16 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import {
-  Button,
-  FormInput,
-  FormTextarea,
-  Modal,
-  StatusMessage,
-} from "@/components/ui";
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import { Button, FormInput, FormTextarea, Modal, StatusMessage } from '@/components/ui';
 
 interface AddMfaModalProps {
   isOpen: boolean;
@@ -18,33 +12,29 @@ interface AddMfaModalProps {
   onAdd: () => void;
 }
 
-export default function AddMfaModal({
-  isOpen,
-  onClose,
-  onAdd,
-}: AddMfaModalProps) {
-  const [name, setName] = useState("");
-  const [secret, setSecret] = useState("");
-  const [notes, setNotes] = useState("");
+export default function AddMfaModal({ isOpen, onClose, onAdd }: AddMfaModalProps) {
+  const [name, setName] = useState('');
+  const [secret, setSecret] = useState('');
+  const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError('');
 
     if (!name.trim() || !secret.trim()) {
-      setError("Name and secret are required");
+      setError('Name and secret are required');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/mfa", {
-        method: "POST",
+      const response = await fetch('/api/mfa', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: name.trim(),
@@ -56,31 +46,27 @@ export default function AddMfaModal({
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("Error adding MFA entry:", data.error);
+        console.error('Error adding MFA entry:', data.error);
         // Handle specific error cases
         if (response.status === 401) {
-          setError(
-            "You must be logged in to add MFA entries. Please refresh the page and try again.",
-          );
+          setError('You must be logged in to add MFA entries. Please refresh the page and try again.');
         } else if (response.status === 400) {
-          setError(
-            data.error || "Invalid input. Please check your secret key format.",
-          );
+          setError(data.error || 'Invalid input. Please check your secret key format.');
         } else {
-          setError("Failed to add MFA entry. Please try again.");
+          setError('Failed to add MFA entry. Please try again.');
         }
         return;
       }
 
       // Success - reset form and close modal
-      setName("");
-      setSecret("");
-      setNotes("");
-      setError("");
+      setName('');
+      setSecret('');
+      setNotes('');
+      setError('');
       onAdd();
     } catch (error) {
-      console.error("Error adding MFA entry:", error);
-      setError("Network error. Please check your connection and try again.");
+      console.error('Error adding MFA entry:', error);
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -88,36 +74,27 @@ export default function AddMfaModal({
 
   const handleClose = () => {
     if (!isLoading) {
-      setName("");
-      setSecret("");
-      setNotes("");
-      setError("");
+      setName('');
+      setSecret('');
+      setNotes('');
+      setError('');
       onClose();
     }
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      title="Add MFA Code"
-      maxWidth="md"
-    >
+    <Modal isOpen={isOpen} onClose={handleClose} title="Add MFA Code" maxWidth="md">
       <InView
         variants={{
           hidden: { opacity: 0, scale: 0.95 },
           visible: { opacity: 1, scale: 1 },
         }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
         viewOptions={{ once: true }}
       >
         <div className="space-y-6">
           {/* Description */}
-          <TextEffect
-            per="word"
-            preset="fade-in-blur"
-            className="text-sm text-slate-600 text-center"
-          >
+          <TextEffect per="word" preset="fade-in-blur" className="text-sm text-slate-600 text-center">
             Add a new multi-factor authentication code to your collection
           </TextEffect>
 

@@ -1,5 +1,5 @@
-import * as OTPAuth from "otplib";
-import QRCode from "qrcode";
+import * as OTPAuth from 'otplib';
+import QRCode from 'qrcode';
 
 // Configure TOTP with 30-second window and 6-digit codes
 OTPAuth.authenticator.options = {
@@ -26,11 +26,7 @@ export function getTimeRemaining(): number {
   return step - (now % step);
 }
 
-export function generateTOTPUri(
-  secret: string,
-  name: string,
-  issuer: string = "MFA Share",
-): string {
+export function generateTOTPUri(secret: string, name: string, issuer: string = 'MFA Share'): string {
   return OTPAuth.authenticator.keyuri(name, issuer, secret);
 }
 
@@ -38,21 +34,19 @@ export async function generateQRCode(uri: string): Promise<string> {
   try {
     return await QRCode.toDataURL(uri);
   } catch {
-    throw new Error("Failed to generate QR code");
+    throw new Error('Failed to generate QR code');
   }
 }
 
-export function parseTOTPUri(
-  uri: string,
-): { secret: string; name: string; issuer: string } | null {
+export function parseTOTPUri(uri: string): { secret: string; name: string; issuer: string } | null {
   try {
     const url = new URL(uri);
-    if (url.protocol !== "otpauth:" || url.host !== "totp") {
+    if (url.protocol !== 'otpauth:' || url.host !== 'totp') {
       return null;
     }
 
-    const secret = url.searchParams.get("secret");
-    const issuer = url.searchParams.get("issuer") || "Unknown";
+    const secret = url.searchParams.get('secret');
+    const issuer = url.searchParams.get('issuer') || 'Unknown';
     const name = decodeURIComponent(url.pathname.slice(1));
 
     if (!secret || !name) {

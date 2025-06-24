@@ -1,7 +1,7 @@
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 
 /**
  * Admin Reports Page
@@ -12,15 +12,10 @@ import Card from "@/components/ui/Card";
 export default function AdminReportsPage() {
   const reportTypes = [
     {
-      title: "User Reports",
-      description: "Download user activity and registration data",
+      title: 'User Reports',
+      description: 'Download user activity and registration data',
       icon: (
-        <svg
-          className="h-8 w-8 text-primary"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+        <svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -29,19 +24,14 @@ export default function AdminReportsPage() {
           />
         </svg>
       ),
-      buttonText: "Generate Report",
-      buttonVariant: "primary" as const,
+      buttonText: 'Generate Report',
+      buttonVariant: 'primary' as const,
     },
     {
-      title: "Usage Analytics",
-      description: "Export platform usage statistics",
+      title: 'Usage Analytics',
+      description: 'Export platform usage statistics',
       icon: (
-        <svg
-          className="h-8 w-8 text-primary"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+        <svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -50,19 +40,14 @@ export default function AdminReportsPage() {
           />
         </svg>
       ),
-      buttonText: "Generate Report",
-      buttonVariant: "secondary" as const,
+      buttonText: 'Generate Report',
+      buttonVariant: 'secondary' as const,
     },
     {
-      title: "Security Audit",
-      description: "Download security and audit logs",
+      title: 'Security Audit',
+      description: 'Download security and audit logs',
       icon: (
-        <svg
-          className="h-8 w-8 text-primary"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+        <svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -71,8 +56,8 @@ export default function AdminReportsPage() {
           />
         </svg>
       ),
-      buttonText: "Generate Report",
-      buttonVariant: "outline" as const,
+      buttonText: 'Generate Report',
+      buttonVariant: 'outline' as const,
     },
   ];
 
@@ -85,23 +70,14 @@ export default function AdminReportsPage() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
             viewOptions={{ once: true }}
           >
             <div>
-              <TextEffect
-                per="word"
-                preset="slide"
-                className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2"
-              >
+              <TextEffect per="word" preset="slide" className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
                 Reports & Exports
               </TextEffect>
-              <TextEffect
-                per="word"
-                preset="fade-in-blur"
-                delay={0.3}
-                className="text-base text-slate-600"
-              >
+              <TextEffect per="word" preset="fade-in-blur" delay={0.3} className="text-base text-slate-600">
                 Generate and download comprehensive reports.
               </TextEffect>
             </div>
@@ -118,32 +94,20 @@ export default function AdminReportsPage() {
                 transition={{
                   duration: 0.6,
                   delay: index * 0.1,
-                  ease: "easeOut",
+                  ease: 'easeOut',
                 }}
                 viewOptions={{ once: true }}
               >
-                <Card
-                  hover
-                  className="surface-elevated p-6 h-full flex flex-col"
-                >
+                <Card hover className="surface-elevated p-6 h-full flex flex-col">
                   <div className="flex items-center mb-4">
-                    <div className="flex-shrink-0 p-2 bg-primary/10 rounded-xl">
-                      {report.icon}
-                    </div>
+                    <div className="flex-shrink-0 p-2 bg-primary/10 rounded-xl">{report.icon}</div>
                     <div className="ml-4 flex-grow">
-                      <h3 className="text-lg font-semibold text-slate-900">
-                        {report.title}
-                      </h3>
-                      <p className="text-sm text-slate-600 leading-relaxed">
-                        {report.description}
-                      </p>
+                      <h3 className="text-lg font-semibold text-slate-900">{report.title}</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed">{report.description}</p>
                     </div>
                   </div>
                   <div className="mt-auto">
-                    <Button
-                      variant={report.buttonVariant}
-                      className="w-full rounded-xl"
-                    >
+                    <Button variant={report.buttonVariant} className="w-full rounded-xl">
                       {report.buttonText}
                     </Button>
                   </div>
@@ -158,24 +122,17 @@ export default function AdminReportsPage() {
               hidden: { opacity: 0, y: 30, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
             }}
-            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
             viewOptions={{ once: true }}
           >
             <Card className="surface-elevated">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-semibold text-slate-900">
-                  Recent Reports
-                </h3>
+                <h3 className="text-lg font-semibold text-slate-900">Recent Reports</h3>
               </div>
               <div className="px-6 py-12">
                 <div className="text-center">
                   <div className="text-slate-400 mb-4">
-                    <svg
-                      className="mx-auto h-12 w-12"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
+                    <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -184,12 +141,8 @@ export default function AdminReportsPage() {
                       />
                     </svg>
                   </div>
-                  <p className="text-slate-600 mb-2">
-                    No reports generated yet.
-                  </p>
-                  <p className="text-sm text-slate-500">
-                    Use the options above to generate your first report.
-                  </p>
+                  <p className="text-slate-600 mb-2">No reports generated yet.</p>
+                  <p className="text-sm text-slate-500">Use the options above to generate your first report.</p>
                 </div>
               </div>
             </Card>

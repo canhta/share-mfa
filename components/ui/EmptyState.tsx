@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { motion } from "motion/react";
-import { ReactNode } from "react";
+import { motion } from 'motion/react';
+import { ReactNode } from 'react';
 
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import Button from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import Button from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
 
 interface EmptyStateProps {
   icon?: ReactNode;
@@ -15,25 +15,14 @@ interface EmptyStateProps {
   action?: {
     label: string;
     onClick: () => void;
-    variant?: "primary" | "secondary" | "outline";
+    variant?: 'primary' | 'secondary' | 'outline';
   };
   className?: string;
 }
 
-export default function EmptyState({
-  icon,
-  title,
-  description,
-  action,
-  className = "",
-}: EmptyStateProps) {
+export default function EmptyState({ icon, title, description, action, className = '' }: EmptyStateProps) {
   const defaultIcon = (
-    <svg
-      className="w-12 h-12 text-gray-400"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
+    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -49,15 +38,10 @@ export default function EmptyState({
         hidden: { opacity: 0, y: 20, scale: 0.95 },
         visible: { opacity: 1, y: 0, scale: 1 },
       }}
-              transition={{ duration: 0.33, ease: "easeOut" }}
+      transition={{ duration: 0.33, ease: 'easeOut' }}
       viewOptions={{ once: true }}
     >
-      <div
-        className={cn(
-          "flex flex-col items-center justify-center py-12 px-4 text-center",
-          className,
-        )}
-      >
+      <div className={cn('flex flex-col items-center justify-center py-12 px-4 text-center', className)}>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -96,11 +80,7 @@ export default function EmptyState({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.27, delay: 0.4 }}
           >
-            <Button
-              onClick={action.onClick}
-              variant={action.variant || "primary"}
-              className="rounded-xl"
-            >
+            <Button onClick={action.onClick} variant={action.variant || 'primary'} className="rounded-xl">
               {action.label}
             </Button>
           </motion.div>

@@ -1,13 +1,7 @@
-"use client";
+'use client';
 
-import type { User } from "@supabase/supabase-js";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import type { User } from '@supabase/supabase-js';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface UserContextType {
   user: User | null;
@@ -25,7 +19,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch("/api/auth/user");
+      const response = await fetch('/api/auth/user');
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
@@ -35,12 +29,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
         setError(null);
       } else {
         const errorData = await response.json();
-        setError(errorData.error || "Failed to fetch user");
+        setError(errorData.error || 'Failed to fetch user');
         setUser(null);
       }
     } catch (err) {
-      console.error("Error fetching user:", err);
-      setError("Network error");
+      console.error('Error fetching user:', err);
+      setError('Network error');
       setUser(null);
     } finally {
       setLoading(false);
@@ -56,17 +50,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
     await fetchUser();
   };
 
-  return (
-    <UserContext.Provider value={{ user, loading, error, refreshUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ user, loading, error, refreshUser }}>{children}</UserContext.Provider>;
 }
 
 export function useUser() {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error("useUser must be used within a UserProvider");
+    throw new Error('useUser must be used within a UserProvider');
   }
   return context;
 }
@@ -79,7 +69,7 @@ export function useRequireUser() {
   }
 
   if (!user) {
-    throw new Error("User authentication required");
+    throw new Error('User authentication required');
   }
 
   return { user, loading: false, error };

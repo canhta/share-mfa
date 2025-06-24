@@ -1,19 +1,16 @@
-"use client";
+'use client';
 
-import { ArrowRight, CheckCircle, Gift, Rocket } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, CheckCircle, Gift, Rocket } from 'lucide-react';
+import { useState } from 'react';
 
-import Button from "@/components/ui/Button";
+import Button from '@/components/ui/Button';
 
 interface CompletionStepProps {
   onComplete: () => void;
   hasInvitationCode?: boolean;
 }
 
-export default function CompletionStep({
-  onComplete,
-  hasInvitationCode = false,
-}: CompletionStepProps) {
+export default function CompletionStep({ onComplete, hasInvitationCode = false }: CompletionStepProps) {
   const [isCompleting, setIsCompleting] = useState(false);
 
   const handleComplete = async () => {
@@ -24,7 +21,7 @@ export default function CompletionStep({
       await new Promise((resolve) => setTimeout(resolve, 500));
       onComplete();
     } catch (error) {
-      console.error("Completion error:", error);
+      console.error('Completion error:', error);
     } finally {
       setIsCompleting(false);
     }
@@ -36,13 +33,10 @@ export default function CompletionStep({
         <CheckCircle className="w-8 h-8 text-white" />
       </div>
 
-      <h2 className="text-3xl font-bold text-gray-900 mb-4">
-        Welcome to ShareMFA! 🎉
-      </h2>
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">Welcome to ShareMFA! 🎉</h2>
 
       <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-        Your account is now set up and ready to use. Let&apos;s get you started
-        with sharing your MFA codes securely.
+        Your account is now set up and ready to use. Let&apos;s get you started with sharing your MFA codes securely.
       </p>
 
       {/* Features Overview */}
@@ -52,9 +46,7 @@ export default function CompletionStep({
             <Rocket className="w-5 h-5 text-blue-600" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">Quick Setup</h3>
-          <p className="text-sm text-gray-600">
-            Add your first MFA entry and start sharing codes instantly
-          </p>
+          <p className="text-sm text-gray-600">Add your first MFA entry and start sharing codes instantly</p>
         </div>
 
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
@@ -62,9 +54,7 @@ export default function CompletionStep({
             <CheckCircle className="w-5 h-5 text-green-600" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">Secure Sharing</h3>
-          <p className="text-sm text-gray-600">
-            Generate time-limited links with configurable access controls
-          </p>
+          <p className="text-sm text-gray-600">Generate time-limited links with configurable access controls</p>
         </div>
 
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
@@ -74,8 +64,8 @@ export default function CompletionStep({
           <h3 className="font-semibold text-gray-900 mb-2">Free Credits</h3>
           <p className="text-sm text-gray-600">
             {hasInvitationCode
-              ? "Bonus credits earned from your invitation code!"
-              : "Start with free sharing credits, earn more by referring friends"}
+              ? 'Bonus credits earned from your invitation code!'
+              : 'Start with free sharing credits, earn more by referring friends'}
           </p>
         </div>
       </div>
@@ -87,9 +77,8 @@ export default function CompletionStep({
             <span className="font-medium">Invitation Code Bonus!</span>
           </div>
           <p className="text-sm text-purple-600">
-            Thanks for using an invitation code! Your referrer will receive
-            bonus credits, and you&apos;ll get extra credits too once our
-            referral program launches.
+            Thanks for using an invitation code! Your referrer will receive bonus credits, and you&apos;ll get extra
+            credits too once our referral program launches.
           </p>
         </div>
       )}
@@ -100,9 +89,7 @@ export default function CompletionStep({
         <div className="space-y-3 text-sm text-gray-600">
           <div className="flex items-center">
             <ArrowRight className="w-4 h-4 mr-3 text-blue-500" />
-            <span>
-              Add your first MFA entry (authenticator app or manual entry)
-            </span>
+            <span>Add your first MFA entry (authenticator app or manual entry)</span>
           </div>
           <div className="flex items-center">
             <ArrowRight className="w-4 h-4 mr-3 text-blue-500" />
@@ -115,12 +102,8 @@ export default function CompletionStep({
         </div>
       </div>
 
-      <Button
-        onClick={handleComplete}
-        disabled={isCompleting}
-        className="w-full md:w-auto px-8 py-3 text-lg"
-      >
-        {isCompleting ? "Finishing setup..." : "Go to Dashboard"}
+      <Button onClick={handleComplete} disabled={isCompleting} className="w-full md:w-auto px-8 py-3 text-lg">
+        {isCompleting ? 'Finishing setup...' : 'Go to Dashboard'}
         {!isCompleting && <ArrowRight className="w-5 h-5 ml-2" />}
       </Button>
     </div>

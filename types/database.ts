@@ -48,22 +48,17 @@ export interface Database {
       profiles: {
         Row: {
           id: string;
-          user_tier: "free" | "pro" | "enterprise";
+          user_tier: 'free' | 'pro' | 'enterprise';
           display_name: string | null;
           company: string | null;
-          use_case: "personal" | "business" | "team" | null;
+          use_case: 'personal' | 'business' | 'team' | null;
           newsletter_consent: boolean;
           product_updates_consent: boolean;
           onboarding_completed: boolean;
           profile_setup_completed: boolean;
           stripe_customer_id: string | null;
           subscription_id: string | null;
-          subscription_status:
-            | "active"
-            | "canceled"
-            | "past_due"
-            | "trialing"
-            | null;
+          subscription_status: 'active' | 'canceled' | 'past_due' | 'trialing' | null;
           current_period_start: string | null;
           current_period_end: string | null;
           cancel_at_period_end: boolean;
@@ -75,22 +70,17 @@ export interface Database {
         };
         Insert: {
           id: string;
-          user_tier?: "free" | "pro" | "enterprise";
+          user_tier?: 'free' | 'pro' | 'enterprise';
           display_name?: string | null;
           company?: string | null;
-          use_case?: "personal" | "business" | "team" | null;
+          use_case?: 'personal' | 'business' | 'team' | null;
           newsletter_consent?: boolean;
           product_updates_consent?: boolean;
           onboarding_completed?: boolean;
           profile_setup_completed?: boolean;
           stripe_customer_id?: string | null;
           subscription_id?: string | null;
-          subscription_status?:
-            | "active"
-            | "canceled"
-            | "past_due"
-            | "trialing"
-            | null;
+          subscription_status?: 'active' | 'canceled' | 'past_due' | 'trialing' | null;
           current_period_start?: string | null;
           current_period_end?: string | null;
           cancel_at_period_end?: boolean;
@@ -102,22 +92,17 @@ export interface Database {
         };
         Update: {
           id?: string;
-          user_tier?: "free" | "pro" | "enterprise";
+          user_tier?: 'free' | 'pro' | 'enterprise';
           display_name?: string | null;
           company?: string | null;
-          use_case?: "personal" | "business" | "team" | null;
+          use_case?: 'personal' | 'business' | 'team' | null;
           newsletter_consent?: boolean;
           product_updates_consent?: boolean;
           onboarding_completed?: boolean;
           profile_setup_completed?: boolean;
           stripe_customer_id?: string | null;
           subscription_id?: string | null;
-          subscription_status?:
-            | "active"
-            | "canceled"
-            | "past_due"
-            | "trialing"
-            | null;
+          subscription_status?: 'active' | 'canceled' | 'past_due' | 'trialing' | null;
           current_period_start?: string | null;
           current_period_end?: string | null;
           cancel_at_period_end?: boolean;
@@ -133,7 +118,7 @@ export interface Database {
           id: string;
           mfa_entry_id: string;
           share_token: string;
-          status: "active" | "revoked";
+          status: 'active' | 'revoked';
           require_password: boolean;
           share_password: string | null;
           embed_password_in_link: boolean;
@@ -148,7 +133,7 @@ export interface Database {
           id?: string;
           mfa_entry_id: string;
           share_token: string;
-          status?: "active" | "revoked";
+          status?: 'active' | 'revoked';
           require_password?: boolean;
           share_password?: string | null;
           embed_password_in_link?: boolean;
@@ -163,7 +148,7 @@ export interface Database {
           id?: string;
           mfa_entry_id?: string;
           share_token?: string;
-          status?: "active" | "revoked";
+          status?: 'active' | 'revoked';
           require_password?: boolean;
           share_password?: string | null;
           embed_password_in_link?: boolean;
@@ -210,9 +195,9 @@ export interface Database {
           email: string;
           name: string | null;
           company: string | null;
-          tier_interest: "pro" | "enterprise" | "newsletter";
+          tier_interest: 'pro' | 'enterprise' | 'newsletter';
           message: string | null;
-          status: "new" | "contacted" | "converted";
+          status: 'new' | 'contacted' | 'converted';
           source: string | null;
           referrer_url: string | null;
           utm_source: string | null;
@@ -226,9 +211,9 @@ export interface Database {
           email: string;
           name?: string | null;
           company?: string | null;
-          tier_interest: "pro" | "enterprise" | "newsletter";
+          tier_interest: 'pro' | 'enterprise' | 'newsletter';
           message?: string | null;
-          status?: "new" | "contacted" | "converted";
+          status?: 'new' | 'contacted' | 'converted';
           source?: string | null;
           referrer_url?: string | null;
           utm_source?: string | null;
@@ -242,9 +227,9 @@ export interface Database {
           email?: string;
           name?: string | null;
           company?: string | null;
-          tier_interest?: "pro" | "enterprise" | "newsletter";
+          tier_interest?: 'pro' | 'enterprise' | 'newsletter';
           message?: string | null;
-          status?: "new" | "contacted" | "converted";
+          status?: 'new' | 'contacted' | 'converted';
           source?: string | null;
           referrer_url?: string | null;
           utm_source?: string | null;
@@ -264,7 +249,7 @@ export interface Database {
           customer_id: string | null;
           amount: number | null;
           currency: string | null;
-          status: "pending" | "succeeded" | "failed" | "canceled";
+          status: 'pending' | 'succeeded' | 'failed' | 'canceled';
           metadata: Record<string, unknown> | null;
           created_at: string;
         };
@@ -277,7 +262,7 @@ export interface Database {
           customer_id?: string | null;
           amount?: number | null;
           currency?: string | null;
-          status: "pending" | "succeeded" | "failed" | "canceled";
+          status: 'pending' | 'succeeded' | 'failed' | 'canceled';
           metadata?: Record<string, unknown> | null;
           created_at?: string;
         };
@@ -290,7 +275,7 @@ export interface Database {
           customer_id?: string | null;
           amount?: number | null;
           currency?: string | null;
-          status?: "pending" | "succeeded" | "failed" | "canceled";
+          status?: 'pending' | 'succeeded' | 'failed' | 'canceled';
           metadata?: Record<string, unknown> | null;
           created_at?: string;
         };
@@ -527,39 +512,29 @@ export interface Database {
   };
 }
 
-export type MfaEntry = Database["public"]["Tables"]["mfa_entries"]["Row"];
-export type MfaEntryInsert =
-  Database["public"]["Tables"]["mfa_entries"]["Insert"];
-export type MfaEntryUpdate =
-  Database["public"]["Tables"]["mfa_entries"]["Update"];
+export type MfaEntry = Database['public']['Tables']['mfa_entries']['Row'];
+export type MfaEntryInsert = Database['public']['Tables']['mfa_entries']['Insert'];
+export type MfaEntryUpdate = Database['public']['Tables']['mfa_entries']['Update'];
 
-export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
-export type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
-export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
+export type Profile = Database['public']['Tables']['profiles']['Row'];
+export type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
+export type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
 
-export type SharedLink = Database["public"]["Tables"]["shared_links"]["Row"];
-export type SharedLinkInsert =
-  Database["public"]["Tables"]["shared_links"]["Insert"];
-export type SharedLinkUpdate =
-  Database["public"]["Tables"]["shared_links"]["Update"];
+export type SharedLink = Database['public']['Tables']['shared_links']['Row'];
+export type SharedLinkInsert = Database['public']['Tables']['shared_links']['Insert'];
+export type SharedLinkUpdate = Database['public']['Tables']['shared_links']['Update'];
 
-export type UsageTracking =
-  Database["public"]["Tables"]["usage_tracking"]["Row"];
-export type UsageTrackingInsert =
-  Database["public"]["Tables"]["usage_tracking"]["Insert"];
-export type UsageTrackingUpdate =
-  Database["public"]["Tables"]["usage_tracking"]["Update"];
+export type UsageTracking = Database['public']['Tables']['usage_tracking']['Row'];
+export type UsageTrackingInsert = Database['public']['Tables']['usage_tracking']['Insert'];
+export type UsageTrackingUpdate = Database['public']['Tables']['usage_tracking']['Update'];
 
-export type Lead = Database["public"]["Tables"]["leads"]["Row"];
-export type LeadInsert = Database["public"]["Tables"]["leads"]["Insert"];
-export type LeadUpdate = Database["public"]["Tables"]["leads"]["Update"];
+export type Lead = Database['public']['Tables']['leads']['Row'];
+export type LeadInsert = Database['public']['Tables']['leads']['Insert'];
+export type LeadUpdate = Database['public']['Tables']['leads']['Update'];
 
-export type BillingEvent =
-  Database["public"]["Tables"]["billing_events"]["Row"];
-export type BillingEventInsert =
-  Database["public"]["Tables"]["billing_events"]["Insert"];
-export type BillingEventUpdate =
-  Database["public"]["Tables"]["billing_events"]["Update"];
+export type BillingEvent = Database['public']['Tables']['billing_events']['Row'];
+export type BillingEventInsert = Database['public']['Tables']['billing_events']['Insert'];
+export type BillingEventUpdate = Database['public']['Tables']['billing_events']['Update'];
 
 export interface ShareSettings {
   requirePassword: boolean;
@@ -580,13 +555,13 @@ export interface UsageStats {
     mfaEntriesCount: number;
   };
   canCreateShare: boolean;
-  userTier: "free" | "pro" | "enterprise";
+  userTier: 'free' | 'pro' | 'enterprise';
 }
 
 export interface OnboardingData {
   displayName?: string;
   company?: string;
-  useCase?: "personal" | "business" | "team";
+  useCase?: 'personal' | 'business' | 'team';
   newsletterConsent?: boolean;
   productUpdatesConsent?: boolean;
   invitationCode?: string;

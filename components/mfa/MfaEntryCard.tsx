@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { AnimatedNumber } from "@/components/motion-primitives/animated-number";
-import { GlowEffect } from "@/components/motion-primitives/glow-effect";
-import { InView } from "@/components/motion-primitives/in-view";
-import { Card, ConfirmDialog, CopyButton, IconButton } from "@/components/ui";
-import type { MfaEntry } from "@/types/database";
+import { AnimatedNumber } from '@/components/motion-primitives/animated-number';
+import { GlowEffect } from '@/components/motion-primitives/glow-effect';
+import { InView } from '@/components/motion-primitives/in-view';
+import { Card, ConfirmDialog, CopyButton, IconButton } from '@/components/ui';
+import type { MfaEntry } from '@/types/database';
 
-import ShareModal from "./ShareModal";
+import ShareModal from './ShareModal';
 
 interface MfaEntryCardProps {
   entry: MfaEntry;
@@ -17,12 +17,7 @@ interface MfaEntryCardProps {
   onDelete: () => void;
 }
 
-export default function MfaEntryCard({
-  entry,
-  currentCode,
-  timeRemaining,
-  onDelete,
-}: MfaEntryCardProps) {
+export default function MfaEntryCard({ entry, currentCode, timeRemaining, onDelete }: MfaEntryCardProps) {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -31,16 +26,16 @@ export default function MfaEntryCard({
     setIsDeleting(true);
     try {
       const response = await fetch(`/api/mfa/${entry.id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
       if (response.ok) {
         onDelete();
       } else {
-        console.error("Failed to delete MFA entry");
+        console.error('Failed to delete MFA entry');
       }
     } catch (error) {
-      console.error("Error deleting MFA entry:", error);
+      console.error('Error deleting MFA entry:', error);
     } finally {
       setIsDeleting(false);
       setShowDeleteDialog(false);
@@ -56,23 +51,13 @@ export default function MfaEntryCard({
           hidden: { opacity: 0, y: 20, scale: 0.95 },
           visible: { opacity: 1, y: 0, scale: 1 },
         }}
-        transition={{ duration: 0.33, ease: "easeOut" }}
+        transition={{ duration: 0.33, ease: 'easeOut' }}
         viewOptions={{ once: true }}
       >
-        <Card
-          hover
-          variant="elevated"
-          className="transition-all duration-150 relative overflow-hidden"
-        >
+        <Card hover variant="elevated" className="transition-all duration-150 relative overflow-hidden">
           <GlowEffect
             className="opacity-5"
-            colors={
-              timeRemaining > 10
-                ? ["#737373"]
-                : timeRemaining > 5
-                  ? ["#525252"]
-                  : ["#404040"]
-            }
+            colors={timeRemaining > 10 ? ['#737373'] : timeRemaining > 5 ? ['#525252'] : ['#404040']}
             mode="static"
             blur="soft"
             duration={4}
@@ -80,22 +65,10 @@ export default function MfaEntryCard({
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 truncate">
-                {entry.name}
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 truncate">{entry.name}</h3>
               <div className="flex space-x-2">
-                <IconButton
-                  onClick={() => setShowShareModal(true)}
-                  variant="ghost"
-                  size="md"
-                  title="Share"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                <IconButton onClick={() => setShowShareModal(true)} variant="ghost" size="md" title="Share">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -104,18 +77,8 @@ export default function MfaEntryCard({
                     />
                   </svg>
                 </IconButton>
-                <IconButton
-                  onClick={() => setShowDeleteDialog(true)}
-                  variant="ghost"
-                  size="md"
-                  title="Delete"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                <IconButton onClick={() => setShowDeleteDialog(true)} variant="ghost" size="md" title="Delete">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -127,11 +90,7 @@ export default function MfaEntryCard({
               </div>
             </div>
 
-            {entry.notes && (
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                {entry.notes}
-              </p>
-            )}
+            {entry.notes && <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{entry.notes}</p>}
 
             <div className="surface-elevated rounded-xl p-4 mb-4 group">
               <div className="flex items-center justify-between">
@@ -148,11 +107,7 @@ export default function MfaEntryCard({
               <div className="flex-1 bg-gray-200 rounded-full h-2 mr-3">
                 <div
                   className={`h-2 rounded-full transition-all duration-700 ${
-                    timeRemaining > 10
-                      ? "bg-gray-600"
-                      : timeRemaining > 5
-                        ? "bg-gray-500"
-                        : "bg-gray-400"
+                    timeRemaining > 10 ? 'bg-gray-600' : timeRemaining > 5 ? 'bg-gray-500' : 'bg-gray-400'
                   }`}
                   style={{ width: `${progressPercentage}%` }}
                 />
@@ -160,11 +115,7 @@ export default function MfaEntryCard({
               <AnimatedNumber
                 value={timeRemaining}
                 className={`text-sm font-mono font-medium ${
-                  timeRemaining > 10
-                    ? "text-gray-500"
-                    : timeRemaining > 5
-                      ? "text-gray-600"
-                      : "text-gray-700"
+                  timeRemaining > 10 ? 'text-gray-500' : timeRemaining > 5 ? 'text-gray-600' : 'text-gray-700'
                 }`}
                 springOptions={{
                   stiffness: 200,
@@ -173,11 +124,7 @@ export default function MfaEntryCard({
               />
               <span
                 className={`text-sm font-mono font-medium ml-1 ${
-                  timeRemaining > 10
-                    ? "text-gray-500"
-                    : timeRemaining > 5
-                      ? "text-gray-600"
-                      : "text-gray-700"
+                  timeRemaining > 10 ? 'text-gray-500' : timeRemaining > 5 ? 'text-gray-600' : 'text-gray-700'
                 }`}
               >
                 s
@@ -187,9 +134,7 @@ export default function MfaEntryCard({
         </Card>
       </InView>
 
-      {showShareModal && (
-        <ShareModal entry={entry} onClose={() => setShowShareModal(false)} />
-      )}
+      {showShareModal && <ShareModal entry={entry} onClose={() => setShowShareModal(false)} />}
 
       <ConfirmDialog
         isOpen={showDeleteDialog}

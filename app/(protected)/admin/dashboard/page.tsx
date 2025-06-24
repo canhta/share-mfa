@@ -1,5 +1,5 @@
-import AdminDashboard from "@/components/admin/AdminDashboard";
-import { InView } from "@/components/motion-primitives/in-view";
+import AdminDashboard from '@/components/admin/AdminDashboard';
+import { InView } from '@/components/motion-primitives/in-view';
 
 /**
  * Admin Dashboard Page
@@ -15,7 +15,7 @@ export default function AdminDashboardPage() {
           hidden: { opacity: 0, y: 20, scale: 0.95 },
           visible: { opacity: 1, y: 0, scale: 1 },
         }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
         viewOptions={{ once: true }}
       >
         <AdminDashboard />

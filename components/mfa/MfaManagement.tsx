@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import { Button, EmptyState } from "@/components/ui";
-import { generateTOTP, getTimeRemaining } from "@/lib/totp";
-import type { MfaEntry } from "@/types/database";
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import { Button, EmptyState } from '@/components/ui';
+import { generateTOTP, getTimeRemaining } from '@/lib/totp';
+import type { MfaEntry } from '@/types/database';
 
-import AddMfaModal from "./AddMfaModal";
-import MfaEntryCard from "./MfaEntryCard";
+import AddMfaModal from './AddMfaModal';
+import MfaEntryCard from './MfaEntryCard';
 
 export default function MfaManagement() {
   const [entries, setEntries] = useState<MfaEntry[]>([]);
@@ -20,7 +20,7 @@ export default function MfaManagement() {
 
   const fetchEntries = async () => {
     try {
-      const response = await fetch("/api/mfa");
+      const response = await fetch('/api/mfa');
       if (response.ok) {
         const data = await response.json();
         setEntries(data.entries || []);
@@ -35,7 +35,7 @@ export default function MfaManagement() {
         setCurrentCodes(codes);
       }
     } catch (error) {
-      console.error("Error fetching MFA entries:", error);
+      console.error('Error fetching MFA entries:', error);
     } finally {
       setLoading(false);
     }
@@ -94,41 +94,21 @@ export default function MfaManagement() {
           hidden: { opacity: 0, y: 20 },
           visible: { opacity: 1, y: 0 },
         }}
-        transition={{ duration: 0.27, ease: "easeOut" }}
+        transition={{ duration: 0.27, ease: 'easeOut' }}
         viewOptions={{ once: true }}
       >
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 glass-neutral rounded-2xl">
           <div>
-            <TextEffect
-              per="word"
-              preset="slide"
-              className="text-xl font-semibold text-slate-900 mb-1"
-            >
+            <TextEffect per="word" preset="slide" className="text-xl font-semibold text-slate-900 mb-1">
               Your MFA Codes
             </TextEffect>
             <div className="text-sm text-slate-600">
-              {entries.length} {entries.length === 1 ? "code" : "codes"}{" "}
-              configured
+              {entries.length} {entries.length === 1 ? 'code' : 'codes'} configured
             </div>
           </div>
-          <Button
-            onClick={() => setShowAddModal(true)}
-            variant="primary"
-            size="md"
-            className="rounded-xl"
-          >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
+          <Button onClick={() => setShowAddModal(true)} variant="primary" size="md" className="rounded-xl">
+            <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
             Add MFA Code
           </Button>
@@ -142,17 +122,12 @@ export default function MfaManagement() {
             hidden: { opacity: 0, scale: 0.95 },
             visible: { opacity: 1, scale: 1 },
           }}
-          transition={{ duration: 0.33, delay: 0.13, ease: "easeOut" }}
+          transition={{ duration: 0.33, delay: 0.13, ease: 'easeOut' }}
           viewOptions={{ once: true }}
         >
           <EmptyState
             icon={
-              <svg
-                className="h-12 w-12 text-slate-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+              <svg className="h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -164,9 +139,9 @@ export default function MfaManagement() {
             title="No MFA codes yet"
             description="Get started by adding your first multi-factor authentication code to begin sharing securely."
             action={{
-              label: "Add Your First MFA Code",
+              label: 'Add Your First MFA Code',
               onClick: () => setShowAddModal(true),
-              variant: "primary",
+              variant: 'primary',
             }}
           />
         </InView>
@@ -181,14 +156,14 @@ export default function MfaManagement() {
               }}
               transition={{
                 duration: 0.33,
-                                  delay: 0.067 + index * 0.067,
-                ease: "easeOut",
+                delay: 0.067 + index * 0.067,
+                ease: 'easeOut',
               }}
               viewOptions={{ once: true }}
             >
               <MfaEntryCard
                 entry={entry}
-                currentCode={currentCodes[entry.id] || "------"}
+                currentCode={currentCodes[entry.id] || '------'}
                 timeRemaining={timeRemaining}
                 onDelete={() => handleEntryDeleted(entry.id)}
               />
@@ -198,11 +173,7 @@ export default function MfaManagement() {
       )}
 
       {/* Add MFA Modal */}
-      <AddMfaModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onAdd={handleEntryAdded}
-      />
+      <AddMfaModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} onAdd={handleEntryAdded} />
     </div>
   );
 }

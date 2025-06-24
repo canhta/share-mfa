@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
-import { generateTOTP, getTimeRemaining } from "@/lib/totp";
+import { generateTOTP, getTimeRemaining } from '@/lib/totp';
 
 interface ShareViewProps {
   token: string;
@@ -19,23 +19,23 @@ interface ShareEntry {
 
 export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
   const [entry, setEntry] = useState<ShareEntry | null>(null);
-  const [currentCode, setCurrentCode] = useState("------");
+  const [currentCode, setCurrentCode] = useState('------');
   const [timeRemaining, setTimeRemaining] = useState(30);
-  const [password, setPassword] = useState(embeddedPassword || "");
+  const [password, setPassword] = useState(embeddedPassword || '');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [requiresPassword, setRequiresPassword] = useState(false);
 
   const validateAndLoad = useCallback(
     async (passwordToUse?: string) => {
       setLoading(true);
-      setError("");
+      setError('');
 
       try {
-        const response = await fetch("/api/share/validate", {
-          method: "POST",
+        const response = await fetch('/api/share/validate', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             shareToken: token,
@@ -49,22 +49,19 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
           setEntry(data.entry);
           setRequiresPassword(false);
         } else {
-          if (
-            response.status === 400 &&
-            data.error === "Password is required"
-          ) {
+          if (response.status === 400 && data.error === 'Password is required') {
             setRequiresPassword(true);
           } else {
-            setError(data.error || "Failed to access shared entry");
+            setError(data.error || 'Failed to access shared entry');
           }
         }
       } catch {
-        setError("Network error occurred");
+        setError('Network error occurred');
       } finally {
         setLoading(false);
       }
     },
-    [token, password],
+    [token, password]
   );
 
   // Auto-validate if embedded password is provided
@@ -101,7 +98,7 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
       await navigator.clipboard.writeText(currentCode);
       // You could add a toast notification here
     } catch (err) {
-      console.error("Failed to copy code:", err);
+      console.error('Failed to copy code:', err);
     }
   };
 
@@ -109,12 +106,7 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
     return (
       <div className="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
         <div className="text-center">
-          <svg
-            className="mx-auto h-12 w-12 text-red-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg className="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -122,9 +114,7 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.232 15.5c-.77.833.192 2.5 1.732 2.5z"
             />
           </svg>
-          <h3 className="mt-2 text-lg font-medium text-gray-900">
-            Access Error
-          </h3>
+          <h3 className="mt-2 text-lg font-medium text-gray-900">Access Error</h3>
           <p className="mt-1 text-sm text-gray-500">{error}</p>
         </div>
       </div>
@@ -136,10 +126,7 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
       <div className="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password Required
             </label>
             <input
@@ -157,7 +144,7 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
             disabled={loading || !password}
             className="btn-primary text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
           >
-            {loading ? "Validating..." : "Access MFA Code"}
+            {loading ? 'Validating...' : 'Access MFA Code'}
           </button>
         </form>
       </div>
@@ -179,12 +166,8 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
   return (
     <div className="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          {entry.name}
-        </h2>
-        {entry.notes && (
-          <p className="text-sm text-gray-500 mb-4">{entry.notes}</p>
-        )}
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">{entry.name}</h2>
+        {entry.notes && <p className="text-sm text-gray-500 mb-4">{entry.notes}</p>}
 
         <div
           className="cursor-pointer bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-all duration-150 mb-4 group"
@@ -203,31 +186,21 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
           <div className="flex-1 bg-gray-200 rounded-full h-3 mr-3">
             <div
               className={`h-3 rounded-full transition-all duration-700 ${
-                timeRemaining > 10
-                  ? "bg-blue-600"
-                  : timeRemaining > 5
-                    ? "bg-yellow-500"
-                    : "bg-red-500"
+                timeRemaining > 10 ? 'bg-blue-600' : timeRemaining > 5 ? 'bg-yellow-500' : 'bg-red-500'
               }`}
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
           <span
             className={`text-sm font-mono font-medium ${
-              timeRemaining > 10
-                ? "text-gray-500"
-                : timeRemaining > 5
-                  ? "text-yellow-600"
-                  : "text-red-600"
+              timeRemaining > 10 ? 'text-gray-500' : timeRemaining > 5 ? 'text-yellow-600' : 'text-red-600'
             }`}
           >
             {timeRemaining}s
           </span>
         </div>
 
-        <p className="text-xs text-gray-400">
-          This code updates every 30 seconds. Click to copy.
-        </p>
+        <p className="text-xs text-gray-400">This code updates every 30 seconds. Click to copy.</p>
       </div>
     </div>
   );

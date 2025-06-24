@@ -1,15 +1,9 @@
-"use client";
+'use client';
 
-import type { User } from "@supabase/supabase-js";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import type { User } from '@supabase/supabase-js';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from '@/utils/supabase/client';
 
 interface AuthContextType {
   user: User | null;
@@ -27,7 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const getInitialUser = async () => {
       try {
-        const response = await fetch("/api/auth/user");
+        const response = await fetch('/api/auth/user');
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
@@ -35,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(null);
         }
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error('Error fetching user:', error);
         setUser(null);
       } finally {
         setLoading(false);
@@ -58,29 +52,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
+      await fetch('/api/auth/logout', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
       setUser(null);
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error('Error signing out:', error);
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, loading, signOut }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }
@@ -93,7 +83,7 @@ export function useRequireAuth() {
   }
 
   if (!user) {
-    throw new Error("Authentication required");
+    throw new Error('Authentication required');
   }
 
   return { user, loading: false };

@@ -1,26 +1,18 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion } from "motion/react";
-import { TextareaHTMLAttributes, useState } from "react";
+import { AnimatePresence, motion } from 'motion/react';
+import { TextareaHTMLAttributes, useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-interface FormTextareaProps
-  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface FormTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   id: string;
   error?: string;
   description?: string;
 }
 
-export default function FormTextarea({
-  label,
-  id,
-  error,
-  description,
-  className = "",
-  ...props
-}: FormTextareaProps) {
+export default function FormTextarea({ label, id, error, description, className = '', ...props }: FormTextareaProps) {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
@@ -28,7 +20,7 @@ export default function FormTextarea({
       className="space-y-2"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
     >
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
         {label}
@@ -47,16 +39,15 @@ export default function FormTextarea({
             props.onBlur?.(e);
           }}
           className={cn(
-            "block w-full px-4 py-3 text-gray-900",
-            "bg-white backdrop-blur-sm",
-            "border border-gray-300/60",
-            "rounded-xl shadow-sm transition-all duration-150",
-            "focus:ring-2 focus:ring-gray-400/20 focus:border-gray-500",
-            "placeholder:text-gray-400",
-            "hover:border-gray-400/60",
-            error &&
-              "border-gray-400 focus:border-gray-600 focus:ring-gray-500/20",
-            className,
+            'block w-full px-4 py-3 text-gray-900',
+            'bg-white backdrop-blur-sm',
+            'border border-gray-300/60',
+            'rounded-xl shadow-sm transition-all duration-150',
+            'focus:ring-2 focus:ring-gray-400/20 focus:border-gray-500',
+            'placeholder:text-gray-400',
+            'hover:border-gray-400/60',
+            error && 'border-gray-400 focus:border-gray-600 focus:ring-gray-500/20',
+            className
           )}
         />
 
@@ -68,7 +59,7 @@ export default function FormTextarea({
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
             />
           )}
         </AnimatePresence>
@@ -92,13 +83,9 @@ export default function FormTextarea({
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <svg
-              className="w-4 h-4 flex-shrink-0"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
+            <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"

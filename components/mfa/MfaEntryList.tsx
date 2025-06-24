@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import { generateTOTP, getTimeRemaining } from "@/lib/totp";
-import type { MfaEntry } from "@/types/database";
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import { generateTOTP, getTimeRemaining } from '@/lib/totp';
+import type { MfaEntry } from '@/types/database';
 
-import AddMfaEntry from "../dashboard/AddMfaEntry";
-import MfaEntryCard from "./MfaEntryCard";
+import AddMfaEntry from '../dashboard/AddMfaEntry';
+import MfaEntryCard from './MfaEntryCard';
 
 export default function MfaEntryList() {
   const [entries, setEntries] = useState<MfaEntry[]>([]);
@@ -17,7 +17,7 @@ export default function MfaEntryList() {
 
   const fetchEntries = async () => {
     try {
-      const response = await fetch("/api/mfa");
+      const response = await fetch('/api/mfa');
       if (response.ok) {
         const data = await response.json();
         setEntries(data.entries || []);
@@ -32,7 +32,7 @@ export default function MfaEntryList() {
         setCurrentCodes(codes);
       }
     } catch (error) {
-      console.error("Error fetching MFA entries:", error);
+      console.error('Error fetching MFA entries:', error);
     } finally {
       setLoading(false);
     }
@@ -85,9 +85,7 @@ export default function MfaEntryList() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <div className="hidden sm:block">
-          {/* Title moved to dashboard page */}
-        </div>
+        <div className="hidden sm:block">{/* Title moved to dashboard page */}</div>
         <AddMfaEntry onAdd={handleEntryAdded} />
       </div>
 
@@ -108,11 +106,7 @@ export default function MfaEntryList() {
               />
             </svg>
           </div>
-          <TextEffect
-            per="word"
-            preset="slide"
-            className="text-lg font-medium text-gray-900 dark:text-white mb-2"
-          >
+          <TextEffect per="word" preset="slide" className="text-lg font-medium text-gray-900 dark:text-white mb-2">
             No MFA codes yet
           </TextEffect>
           <TextEffect
@@ -121,8 +115,7 @@ export default function MfaEntryList() {
             delay={0.3}
             className="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-sm mx-auto"
           >
-            Get started by adding your first multi-factor authentication code to
-            begin sharing securely.
+            Get started by adding your first multi-factor authentication code to begin sharing securely.
           </TextEffect>
         </div>
       ) : (
@@ -131,7 +124,7 @@ export default function MfaEntryList() {
             <MfaEntryCard
               key={entry.id}
               entry={entry}
-              currentCode={currentCodes[entry.id] || "------"}
+              currentCode={currentCodes[entry.id] || '------'}
               timeRemaining={timeRemaining}
               onDelete={() => handleEntryDeleted(entry.id)}
             />

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
-import { InView } from "@/components/motion-primitives/in-view";
-import Button from "@/components/ui/Button";
+import { InView } from '@/components/motion-primitives/in-view';
+import Button from '@/components/ui/Button';
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Pricing", href: "/pricing" },
+  { name: 'Home', href: '/' },
+  { name: 'Pricing', href: '/pricing' },
 ];
 
 export default function Header() {
@@ -17,8 +17,8 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActivePath = (href: string) => {
-    if (href === "/") {
-      return pathname === "/";
+    if (href === '/') {
+      return pathname === '/';
     }
     return pathname.startsWith(href);
   };
@@ -29,14 +29,11 @@ export default function Header() {
         hidden: { opacity: 0, y: -20 },
         visible: { opacity: 1, y: 0 },
       }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
       viewOptions={{ once: true }}
     >
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-border">
-        <nav
-          className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
-          aria-label="Global"
-        >
+        <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
           <div className="flex lg:flex-1">
             <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">MFA Share</span>
@@ -56,9 +53,7 @@ export default function Header() {
                     />
                   </svg>
                 </div>
-                <span className="text-xl font-semibold text-slate-900">
-                  MFA Share
-                </span>
+                <span className="text-xl font-semibold text-slate-900">MFA Share</span>
               </div>
             </Link>
           </div>
@@ -71,32 +66,12 @@ export default function Header() {
             >
               <span className="sr-only">Open main menu</span>
               {mobileMenuOpen ? (
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
@@ -109,8 +84,8 @@ export default function Header() {
                 href={item.href}
                 className={`text-sm font-semibold leading-6 transition-colors duration-150 ${
                   isActivePath(item.href)
-                    ? "text-primary border-b-2 border-primary pb-1"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? 'text-primary border-b-2 border-primary pb-1'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 {item.name}
@@ -156,9 +131,7 @@ export default function Header() {
                         />
                       </svg>
                     </div>
-                    <span className="text-xl font-semibold text-slate-900">
-                      MFA Share
-                    </span>
+                    <span className="text-xl font-semibold text-slate-900">MFA Share</span>
                   </div>
                 </Link>
                 <button
@@ -167,18 +140,8 @@ export default function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <span className="sr-only">Close menu</span>
-                  <svg
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
@@ -191,9 +154,7 @@ export default function Header() {
                         key={item.name}
                         href={item.href}
                         className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 transition-colors ${
-                          isActivePath(item.href)
-                            ? "text-primary bg-primary/5"
-                            : "text-slate-900 hover:bg-slate-50"
+                          isActivePath(item.href) ? 'text-primary bg-primary/5' : 'text-slate-900 hover:bg-slate-50'
                         }`}
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -203,18 +164,12 @@ export default function Header() {
                   </div>
 
                   <div className="py-6 space-y-4">
-                    <Link
-                      href="/login"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
+                    <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="ghost" className="w-full rounded-xl">
                         Sign In
                       </Button>
                     </Link>
-                    <Link
-                      href="/login"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
+                    <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="primary" className="w-full rounded-xl">
                         Get Started
                       </Button>

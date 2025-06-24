@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
-import Header from "@/components/ui/Header";
+import Header from '@/components/ui/Header';
 
 interface PublicLayoutProps {
   children: ReactNode;

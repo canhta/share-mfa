@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
-import ProtectedAdminLayout from "@/components/admin/ProtectedAdminLayout";
+import ProtectedAdminLayout from '@/components/admin/ProtectedAdminLayout';
 
 interface AdminLayoutProps {
   children: ReactNode;

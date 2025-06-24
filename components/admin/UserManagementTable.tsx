@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { ChevronLeft, ChevronRight, Search, User } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Search, User } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface User {
   id: string;
   display_name: string | null;
-  user_tier: "free" | "pro" | "enterprise";
-  subscription_status: "active" | "canceled" | "past_due" | "trialing" | null;
+  user_tier: 'free' | 'pro' | 'enterprise';
+  subscription_status: 'active' | 'canceled' | 'past_due' | 'trialing' | null;
   onboarding_completed: boolean;
   created_at: string;
   available_credits: number;
@@ -18,24 +18,22 @@ interface UserManagementTableProps {
   onUserSelect?: (user: User) => void;
 }
 
-export default function UserManagementTable({
-  onUserSelect,
-}: UserManagementTableProps) {
+export default function UserManagementTable({ onUserSelect }: UserManagementTableProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState("");
-  const [tierFilter, setTierFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [search, setSearch] = useState('');
+  const [tierFilter, setTierFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: "20",
+        limit: '20',
         ...(search && { search }),
         ...(tierFilter && { tier: tierFilter }),
         ...(statusFilter && { status: statusFilter }),
@@ -44,14 +42,14 @@ export default function UserManagementTable({
       const response = await fetch(`/api/admin/users?${params}`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch users");
+        throw new Error('Failed to fetch users');
       }
 
       const data = await response.json();
       setUsers(data.users);
       setTotalPages(data.pagination.pages);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -61,16 +59,12 @@ export default function UserManagementTable({
     fetchUsers();
   }, [fetchUsers]);
 
-  const handleUserAction = async (
-    userId: string,
-    action: string,
-    value?: unknown,
-  ) => {
+  const handleUserAction = async (userId: string, action: string, value?: unknown) => {
     try {
-      const response = await fetch("/api/admin/users", {
-        method: "PUT",
+      const response = await fetch('/api/admin/users', {
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId,
@@ -81,42 +75,42 @@ export default function UserManagementTable({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update user");
+        throw new Error('Failed to update user');
       }
 
       // Refresh the users list
       fetchUsers();
     } catch (err) {
-      console.error("Error updating user:", err);
-      alert("Failed to update user");
+      console.error('Error updating user:', err);
+      alert('Failed to update user');
     }
   };
 
   const getTierBadgeColor = (tier: string) => {
     switch (tier) {
-      case "free":
-        return "bg-gray-100 text-gray-800";
-      case "pro":
-        return "bg-blue-100 text-blue-800";
-      case "enterprise":
-        return "bg-purple-100 text-purple-800";
+      case 'free':
+        return 'bg-gray-100 text-gray-800';
+      case 'pro':
+        return 'bg-blue-100 text-blue-800';
+      case 'enterprise':
+        return 'bg-purple-100 text-purple-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusBadgeColor = (status: string | null) => {
     switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800";
-      case "trialing":
-        return "bg-yellow-100 text-yellow-800";
-      case "past_due":
-        return "bg-red-100 text-red-800";
-      case "canceled":
-        return "bg-gray-100 text-gray-800";
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'trialing':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'past_due':
+        return 'bg-red-100 text-red-800';
+      case 'canceled':
+        return 'bg-gray-100 text-gray-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -143,9 +137,7 @@ export default function UserManagementTable({
   if (error) {
     return (
       <div className="bg-white shadow rounded-lg p-6">
-        <div className="text-center text-red-600">
-          Error loading users: {error}
-        </div>
+        <div className="text-center text-red-600">Error loading users: {error}</div>
       </div>
     );
   }
@@ -156,12 +148,8 @@ export default function UserManagementTable({
       <div className="p-6 border-b border-gray-200">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
           <div>
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              User Management
-            </h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Manage user accounts, tiers, and settings
-            </p>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">User Management</h3>
+            <p className="mt-1 text-sm text-gray-500">Manage user accounts, tiers, and settings</p>
           </div>
 
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
@@ -212,21 +200,13 @@ export default function UserManagementTable({
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                User
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tier
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tier</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Credits
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Joined
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
@@ -243,12 +223,8 @@ export default function UserManagementTable({
                       </div>
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        {user.display_name || "No name"}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {user.id.substring(0, 8)}...
-                      </div>
+                      <div className="text-sm font-medium text-gray-900">{user.display_name || 'No name'}</div>
+                      <div className="text-sm text-gray-500">{user.id.substring(0, 8)}...</div>
                     </div>
                   </div>
                 </td>
@@ -263,32 +239,23 @@ export default function UserManagementTable({
                   <span
                     className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(user.subscription_status)}`}
                   >
-                    {user.subscription_status || "none"}
+                    {user.subscription_status || 'none'}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {user.available_credits}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.available_credits}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(user.created_at).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <button
-                    onClick={() => onUserSelect?.(user)}
-                    className="text-blue-600 hover:text-blue-900"
-                  >
+                  <button onClick={() => onUserSelect?.(user)} className="text-blue-600 hover:text-blue-900">
                     View
                   </button>
                   <div className="relative inline-block text-left">
                     <select
                       onChange={(e) => {
                         if (e.target.value) {
-                          handleUserAction(
-                            user.id,
-                            "change_tier",
-                            e.target.value,
-                          );
-                          e.target.value = ""; // Reset selection
+                          handleUserAction(user.id, 'change_tier', e.target.value);
+                          e.target.value = ''; // Reset selection
                         }
                       }}
                       className="text-green-600 hover:text-green-900 border-none bg-transparent cursor-pointer"
@@ -328,8 +295,7 @@ export default function UserManagementTable({
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Page <span className="font-medium">{page}</span> of{" "}
-                <span className="font-medium">{totalPages}</span>
+                Page <span className="font-medium">{page}</span> of <span className="font-medium">{totalPages}</span>
               </p>
             </div>
             <div>

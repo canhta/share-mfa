@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useRequireUser } from "@/components/auth";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import ProfileManagement from "@/components/profile/ProfileManagement";
-import { LoadingSpinner } from "@/components/ui";
+import { useRequireUser } from '@/components/auth';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import ProfileManagement from '@/components/profile/ProfileManagement';
+import { LoadingSpinner } from '@/components/ui';
 
 /**
  * User Profile Page - User profile management and settings
@@ -36,25 +36,15 @@ export default function ProfilePage() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: 0.33, ease: "easeOut" }}
+            transition={{ duration: 0.33, ease: 'easeOut' }}
             viewOptions={{ once: true }}
           >
             <div className="text-center sm:text-left">
-              <TextEffect
-                per="word"
-                preset="slide"
-                className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2"
-              >
+              <TextEffect per="word" preset="slide" className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
                 Profile Settings
               </TextEffect>
-              <TextEffect
-                per="word"
-                preset="fade-in-blur"
-                delay={0.3}
-                className="text-lg text-slate-600 max-w-2xl"
-              >
-                Manage your account information, preferences, and security
-                settings.
+              <TextEffect per="word" preset="fade-in-blur" delay={0.3} className="text-lg text-slate-600 max-w-2xl">
+                Manage your account information, preferences, and security settings.
               </TextEffect>
             </div>
           </InView>
@@ -65,7 +55,7 @@ export default function ProfilePage() {
               hidden: { opacity: 0, y: 30, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
             }}
-            transition={{ duration: 0.4, delay: 0.13, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.13, ease: 'easeOut' }}
             viewOptions={{ once: true }}
           >
             <ProfileManagement />

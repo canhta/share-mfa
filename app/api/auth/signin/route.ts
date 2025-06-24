@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,17 +8,13 @@ export async function POST(request: NextRequest) {
     const { provider, redirectTo } = await request.json();
 
     if (!provider) {
-      return NextResponse.json(
-        { error: "Provider is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Provider is required' }, { status: 400 });
     }
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo:
-          redirectTo || `${new URL(request.url).origin}/auth/callback`,
+        redirectTo: redirectTo || `${new URL(request.url).origin}/auth/callback`,
       },
     });
 
@@ -28,10 +24,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: data.url });
   } catch (error) {
-    console.error("Sign-in API error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    console.error('Sign-in API error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

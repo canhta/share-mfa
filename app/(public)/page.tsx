@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-import { InView } from "@/components/motion-primitives/in-view";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import { InView } from '@/components/motion-primitives/in-view';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 
 export default function HomePage() {
   const router = useRouter();
@@ -16,13 +16,13 @@ export default function HomePage() {
     // Check if user is already authenticated
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/auth/user");
+        const response = await fetch('/api/auth/user');
         if (response.ok) {
-          router.push("/dashboard");
+          router.push('/dashboard');
         }
       } catch {
         // User not authenticated, stay on this page
-        console.log("User not authenticated");
+        console.log('User not authenticated');
       }
     };
 
@@ -47,8 +47,7 @@ export default function HomePage() {
             delay={0.5}
             className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700"
           >
-            Share your TOTP-based multi-factor authentication codes securely
-            with trusted friends and family members.
+            Share your TOTP-based multi-factor authentication codes securely with trusted friends and family members.
           </TextEffect>
           <div className="mt-10 flex justify-center gap-x-6">
             <InView
@@ -56,7 +55,7 @@ export default function HomePage() {
                 hidden: { opacity: 0, y: 20, scale: 0.9 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.4, delay: 0.67, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.67, ease: 'easeOut' }}
               viewOptions={{ once: true }}
             >
               <Link href="/login">
@@ -75,17 +74,12 @@ export default function HomePage() {
                 hidden: { opacity: 0, y: 40, scale: 0.9 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.4, delay: 0.067, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.067, ease: 'easeOut' }}
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <svg
-                    className="h-8 w-8"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -94,12 +88,9 @@ export default function HomePage() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-slate-900">
-                  Secure by Design
-                </h3>
+                <h3 className="mt-6 text-xl font-semibold text-slate-900">Secure by Design</h3>
                 <p className="mt-2 text-base text-slate-600">
-                  All secrets are encrypted at rest and shared links can be
-                  password protected.
+                  All secrets are encrypted at rest and shared links can be password protected.
                 </p>
               </Card>
             </InView>
@@ -109,17 +100,12 @@ export default function HomePage() {
                 hidden: { opacity: 0, y: 40, scale: 0.9 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <svg
-                    className="h-8 w-8"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -128,12 +114,9 @@ export default function HomePage() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-slate-900">
-                  Easy Sharing
-                </h3>
+                <h3 className="mt-6 text-xl font-semibold text-slate-900">Easy Sharing</h3>
                 <p className="mt-2 text-base text-slate-600">
-                  Generate shareable links with customizable expiration and
-                  password protection.
+                  Generate shareable links with customizable expiration and password protection.
                 </p>
               </Card>
             </InView>
@@ -143,17 +126,12 @@ export default function HomePage() {
                 hidden: { opacity: 0, y: 40, scale: 0.9 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.4, delay: 0.33, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.33, ease: 'easeOut' }}
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <svg
-                    className="h-8 w-8"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -162,12 +140,9 @@ export default function HomePage() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-slate-900">
-                  Google Integration
-                </h3>
+                <h3 className="mt-6 text-xl font-semibold text-slate-900">Google Integration</h3>
                 <p className="mt-2 text-base text-slate-600">
-                  Sign in with Google and import your existing authenticator
-                  codes.
+                  Sign in with Google and import your existing authenticator codes.
                 </p>
               </Card>
             </InView>

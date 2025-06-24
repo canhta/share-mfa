@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { decryptSecret, verifyPassword } from "@/lib/crypto";
-import { createClient } from "@/utils/supabase/server";
+import { decryptSecret, verifyPassword } from '@/lib/crypto';
+import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,62 +11,41 @@ export async function POST(request: NextRequest) {
     const { shareToken, password } = body;
 
     if (!shareToken) {
-      return NextResponse.json(
-        { error: "Share token is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Share token is required' }, { status: 400 });
     }
 
     // Find the MFA entry by share token
     const { data: entry, error } = await supabase
-      .from("mfa_entries")
-      .select("*")
-      .eq("share_token", shareToken)
+      .from('mfa_entries')
+      .select('*')
+      .eq('share_token', shareToken)
       .single();
 
     if (error || !entry) {
-      return NextResponse.json(
-        { error: "Invalid share token" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: 'Invalid share token' }, { status: 404 });
     }
 
     // Check if token has expired
     if (entry.token_expires_at) {
       const expiresAt = new Date(entry.token_expires_at);
       if (expiresAt < new Date()) {
-        return NextResponse.json(
-          { error: "Share link has expired" },
-          { status: 410 },
-        );
+        return NextResponse.json({ error: 'Share link has expired' }, { status: 410 });
       }
     }
 
     // Check password if required
     if (entry.require_password && !entry.embed_password_in_link) {
       if (!password) {
-        return NextResponse.json(
-          { error: "Password is required" },
-          { status: 400 },
-        );
+        return NextResponse.json({ error: 'Password is required' }, { status: 400 });
       }
 
       if (!entry.share_password) {
-        return NextResponse.json(
-          { error: "Invalid configuration" },
-          { status: 500 },
-        );
+        return NextResponse.json({ error: 'Invalid configuration' }, { status: 500 });
       }
 
-      const isValidPassword = await verifyPassword(
-        password,
-        entry.share_password,
-      );
+      const isValidPassword = await verifyPassword(password, entry.share_password);
       if (!isValidPassword) {
-        return NextResponse.json(
-          { error: "Invalid password" },
-          { status: 401 },
-        );
+        return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
       }
     }
 
@@ -81,9 +60,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ entry: responseEntry });
   } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

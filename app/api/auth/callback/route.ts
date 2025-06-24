@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
+  const code = searchParams.get('code');
   // if "next" is in param, use it as the redirect URL
-  let next = searchParams.get("next") ?? "/dashboard";
-  if (!next.startsWith("/")) {
+  let next = searchParams.get('next') ?? '/dashboard';
+  if (!next.startsWith('/')) {
     // if "next" is not a relative URL, use the default
-    next = "/dashboard";
+    next = '/dashboard';
   }
 
   if (code) {
@@ -21,16 +21,12 @@ export async function GET(request: NextRequest) {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("id")
-          .eq("id", user.id)
-          .single();
+        const { data: profile } = await supabase.from('profiles').select('id').eq('id', user.id).single();
         if (!profile) {
-          await supabase.from("profiles").insert({
+          await supabase.from('profiles').insert({
             id: user.id,
-            user_tier: "free",
-            role: "user",
+            user_tier: 'free',
+            role: 'user',
             onboarding_completed: false,
             profile_setup_completed: false,
             available_credits: 0,
@@ -40,8 +36,8 @@ export async function GET(request: NextRequest) {
           });
         }
       }
-      const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer
-      const isLocalEnv = process.env.NODE_ENV === "development";
+      const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer
+      const isLocalEnv = process.env.NODE_ENV === 'development';
       if (isLocalEnv) {
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${next}`);
