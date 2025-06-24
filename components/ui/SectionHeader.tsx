@@ -74,7 +74,7 @@ export default function SectionHeader({
           <motion.div
             initial={animated ? { opacity: 0, x: 20 } : false}
             animate={animated ? { opacity: 1, x: 0 } : false}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.33, delay: 0.27 }}
           >
             {children}
           </motion.div>
@@ -90,7 +90,7 @@ export default function SectionHeader({
           hidden: { opacity: 0, y: 20 },
           visible: { opacity: 1, y: 0 },
         }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         viewOptions={{ once: true }}
       >
         <Content />

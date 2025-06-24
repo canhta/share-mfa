@@ -330,7 +330,7 @@ export default function PricingPage() {
               hidden: { opacity: 0, y: 30 },
               visible: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             viewOptions={{ once: true }}
           >
             <TextEffect

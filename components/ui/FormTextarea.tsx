@@ -28,7 +28,7 @@ export default function FormTextarea({
       className="space-y-2"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
         {label}
@@ -50,7 +50,7 @@ export default function FormTextarea({
             "block w-full px-4 py-3 text-gray-900",
             "bg-white backdrop-blur-sm",
             "border border-gray-300/60",
-            "rounded-xl shadow-sm transition-all duration-200",
+            "rounded-xl shadow-sm transition-all duration-150",
             "focus:ring-2 focus:ring-gray-400/20 focus:border-gray-500",
             "placeholder:text-gray-400",
             "hover:border-gray-400/60",
@@ -79,7 +79,7 @@ export default function FormTextarea({
           className="text-xs text-gray-500"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.067 }}
         >
           {description}
         </motion.p>

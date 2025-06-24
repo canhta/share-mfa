@@ -69,7 +69,7 @@ export default function IconButton({
       title={title}
       className={cn(
         "inline-flex items-center justify-center",
-        "rounded-lg transition-all duration-200",
+        "rounded-lg transition-all duration-150",
         "focus-ring-neutral",
         "disabled:opacity-50 disabled:pointer-events-none",
         variants[variant],

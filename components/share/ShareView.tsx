@@ -187,14 +187,14 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
         )}
 
         <div
-          className="cursor-pointer bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-all duration-200 mb-4 group"
+          className="cursor-pointer bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-all duration-150 mb-4 group"
           onClick={copyCode}
           title="Click to copy"
         >
-          <span className="text-3xl sm:text-4xl font-mono font-bold text-gray-900 tracking-wider group-hover:scale-105 transition-transform duration-200 inline-block">
+          <span className="text-3xl sm:text-4xl font-mono font-bold text-gray-900 tracking-wider group-hover:scale-105 transition-transform duration-150 inline-block">
             {currentCode}
           </span>
-          <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
             <span className="text-xs text-gray-500">Click to copy</span>
           </div>
         </div>
@@ -202,7 +202,7 @@ export default function ShareView({ token, embeddedPassword }: ShareViewProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex-1 bg-gray-200 rounded-full h-3 mr-3">
             <div
-              className={`h-3 rounded-full transition-all duration-1000 ${
+              className={`h-3 rounded-full transition-all duration-700 ${
                 timeRemaining > 10
                   ? "bg-blue-600"
                   : timeRemaining > 5

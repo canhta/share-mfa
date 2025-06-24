@@ -28,7 +28,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const baseClasses = [
-      "inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200",
+      "inline-flex items-center justify-center rounded-xl font-medium transition-all duration-150",
       "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white",
       "disabled:opacity-50 disabled:pointer-events-none",
       "relative overflow-hidden",
@@ -74,7 +74,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <motion.div
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        transition={{ duration: 0.15, ease: "easeInOut" }}
+        transition={{ duration: 0.1, ease: "easeInOut" }}
       >
         <button
           ref={ref}
@@ -88,7 +88,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0"
               whileHover={{ opacity: 1 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
             />
           )}
 
@@ -97,7 +97,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               <motion.div
                 className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"
                 animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 0.67, repeat: Infinity, ease: "linear" }}
               />
               <span>Loading...</span>
             </div>

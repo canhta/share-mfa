@@ -28,7 +28,7 @@ export default async function SharePage({
             hidden: { opacity: 0, y: 30, scale: 0.95 },
             visible: { opacity: 1, y: 0, scale: 1 },
           }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           viewOptions={{ once: true }}
         >
           <div className="text-center mb-8">
@@ -55,7 +55,7 @@ export default async function SharePage({
             hidden: { opacity: 0, y: 20, scale: 0.95 },
             visible: { opacity: 1, y: 0, scale: 1 },
           }}
-          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.33, delay: 0.13, ease: "easeOut" }}
           viewOptions={{ once: true }}
         >
           <ShareView token={token} embeddedPassword={embeddedPassword} />

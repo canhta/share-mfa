@@ -45,11 +45,11 @@ export default function Card({
         whileHover: {
           y: -2,
           scale: 1.02,
-          transition: { duration: 0.2, ease: "easeOut" as const },
+          transition: { duration: 0.13, ease: "easeOut" as const },
         },
         whileTap: {
           scale: 0.98,
-          transition: { duration: 0.1 },
+          transition: { duration: 0.067 },
         },
       }
     : {};
@@ -57,7 +57,7 @@ export default function Card({
   return (
     <MotionCard
       className={cn(
-        "rounded-2xl transition-all duration-200",
+        "rounded-2xl transition-all duration-150",
         variantClasses[variant],
         paddingClasses[padding],
         hover && "cursor-pointer hover:shadow-lg hover:shadow-gray-200/30",

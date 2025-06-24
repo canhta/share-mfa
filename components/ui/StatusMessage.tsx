@@ -56,7 +56,7 @@ export default function StatusMessage({
       initial={{ opacity: 0, y: 10, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -10, scale: 0.95 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
@@ -83,7 +83,7 @@ export default function StatusMessage({
         {onClose && (
           <motion.button
             onClick={onClose}
-            className="ml-4 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100/60 rounded-lg transition-all duration-200 flex-shrink-0"
+            className="ml-4 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100/60 rounded-lg transition-all duration-150 flex-shrink-0"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >

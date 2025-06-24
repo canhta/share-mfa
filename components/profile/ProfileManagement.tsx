@@ -133,7 +133,7 @@ export default function ProfileManagement() {
           hidden: { opacity: 0, y: 20 },
           visible: { opacity: 1, y: 0 },
         }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        transition={{ duration: 0.27, ease: "easeOut" }}
         viewOptions={{ once: true }}
       >
         <Card className="p-6">
@@ -188,7 +188,7 @@ export default function ProfileManagement() {
           hidden: { opacity: 0, y: 20 },
           visible: { opacity: 1, y: 0 },
         }}
-        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+        transition={{ duration: 0.33, delay: 0.067, ease: "easeOut" }}
         viewOptions={{ once: true }}
       >
         {activeTab === "profile" && (

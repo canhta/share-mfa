@@ -56,13 +56,13 @@ export default function MfaEntryCard({
           hidden: { opacity: 0, y: 20, scale: 0.95 },
           visible: { opacity: 1, y: 0, scale: 1 },
         }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.33, ease: "easeOut" }}
         viewOptions={{ once: true }}
       >
         <Card
           hover
           variant="elevated"
-          className="transition-all duration-200 relative overflow-hidden"
+          className="transition-all duration-150 relative overflow-hidden"
         >
           <GlowEffect
             className="opacity-5"
@@ -136,7 +136,7 @@ export default function MfaEntryCard({
             <div className="surface-elevated rounded-xl p-4 mb-4 group">
               <div className="flex items-center justify-between">
                 <div className="text-center flex-1">
-                  <span className="text-2xl sm:text-3xl font-mono font-bold text-gray-900 tracking-wider group-hover:scale-105 transition-transform duration-200 inline-block">
+                  <span className="text-2xl sm:text-3xl font-mono font-bold text-gray-900 tracking-wider group-hover:scale-105 transition-transform duration-150 inline-block">
                     {currentCode}
                   </span>
                 </div>
@@ -147,7 +147,7 @@ export default function MfaEntryCard({
             <div className="flex items-center justify-between">
               <div className="flex-1 bg-gray-200 rounded-full h-2 mr-3">
                 <div
-                  className={`h-2 rounded-full transition-all duration-1000 ${
+                  className={`h-2 rounded-full transition-all duration-700 ${
                     timeRemaining > 10
                       ? "bg-gray-600"
                       : timeRemaining > 5

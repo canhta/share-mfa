@@ -27,7 +27,7 @@ export default function FormInput({
       className="space-y-2"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
         {label}
@@ -49,7 +49,7 @@ export default function FormInput({
             "block w-full px-4 py-3 text-gray-900",
             "bg-white/80 backdrop-blur-sm",
             "border border-gray-300/60",
-            "rounded-xl shadow-sm transition-all duration-200",
+            "rounded-xl shadow-sm transition-all duration-150",
             "focus-ring-neutral focus:border-gray-500",
             "placeholder:text-gray-400",
             "hover:border-gray-400/80 hover:bg-white/90",
@@ -77,7 +77,7 @@ export default function FormInput({
           className="text-xs text-muted-foreground"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.067 }}
         >
           {description}
         </motion.p>

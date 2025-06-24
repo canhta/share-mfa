@@ -91,7 +91,7 @@ export default function ConfirmDialog({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.13, ease: "easeOut" }}
         >
           {/* Backdrop */}
           <motion.div
@@ -110,14 +110,14 @@ export default function ConfirmDialog({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.13, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start space-x-4">
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.1, duration: 0.3 }}
+                transition={{ delay: 0.067, duration: 0.2 }}
               >
                 {icon || defaultIcon}
               </motion.div>
@@ -127,7 +127,7 @@ export default function ConfirmDialog({
                   className="text-lg font-semibold text-gray-900 mb-2"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1, duration: 0.3 }}
+                  transition={{ delay: 0.067, duration: 0.2 }}
                 >
                   {title}
                 </motion.h3>
@@ -137,7 +137,7 @@ export default function ConfirmDialog({
                     className="text-sm text-muted-foreground mb-6 leading-relaxed"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.15, duration: 0.3 }}
+                    transition={{ delay: 0.1, duration: 0.2 }}
                   >
                     {description}
                   </motion.p>
@@ -147,7 +147,7 @@ export default function ConfirmDialog({
                   className="flex justify-end space-x-3"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.3 }}
+                  transition={{ delay: 0.13, duration: 0.2 }}
                 >
                   <Button
                     onClick={onClose}

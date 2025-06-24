@@ -38,7 +38,7 @@ export default function DashboardPage() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.33, ease: "easeOut" }}
             viewOptions={{ once: true }}
           >
             <div className="text-center sm:text-left">
@@ -66,7 +66,7 @@ export default function DashboardPage() {
               hidden: { opacity: 0, y: 30, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
             }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.13, ease: "easeOut" }}
             viewOptions={{ once: true }}
           >
             <UsageStats />
@@ -80,7 +80,7 @@ export default function DashboardPage() {
                 hidden: { opacity: 0, x: -30, scale: 0.95 },
                 visible: { opacity: 1, x: 0, scale: 1 },
               }}
-              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
               viewOptions={{ once: true }}
             >
               <div className="lg:col-span-2">
@@ -94,7 +94,7 @@ export default function DashboardPage() {
                 hidden: { opacity: 0, x: 30, scale: 0.95 },
                 visible: { opacity: 1, x: 0, scale: 1 },
               }}
-              transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.27, ease: "easeOut" }}
               viewOptions={{ once: true }}
             >
               <div className="lg:col-span-1">

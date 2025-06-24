@@ -53,7 +53,7 @@ export default function Modal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.13, ease: "easeOut" }}
         >
           {/* Backdrop */}
           <motion.div
@@ -73,7 +73,7 @@ export default function Modal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.13, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -82,19 +82,19 @@ export default function Modal({
                 className="text-xl font-semibold text-gray-900"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1, duration: 0.3 }}
+                transition={{ delay: 0.067, duration: 0.2 }}
               >
                 {title}
               </motion.h3>
 
               <motion.button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all duration-200"
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all duration-150"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, rotate: -90 }}
                 animate={{ opacity: 1, rotate: 0 }}
-                transition={{ delay: 0.1, duration: 0.3 }}
+                transition={{ delay: 0.067, duration: 0.2 }}
               >
                 <svg
                   className="w-5 h-5"
@@ -116,7 +116,7 @@ export default function Modal({
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.3 }}
+              transition={{ delay: 0.1, duration: 0.2 }}
             >
               {children}
             </motion.div>

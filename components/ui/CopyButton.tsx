@@ -47,7 +47,7 @@ export default function CopyButton({
         "inline-flex items-center justify-center",
         "text-gray-400 hover:text-gray-600",
         "hover:bg-gray-100/60 focus:bg-gray-100/60",
-        "rounded-lg transition-all duration-200",
+        "rounded-lg transition-all duration-150",
         "focus-ring-neutral",
         sizes[size],
         className,
@@ -58,7 +58,7 @@ export default function CopyButton({
     >
       <motion.div
         animate={copied ? { scale: [1, 1.2, 1] } : {}}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
       >
         {copied ? (
           <svg

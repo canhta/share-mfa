@@ -46,14 +46,14 @@ export default function MfaEntrySummary() {
         hidden: { opacity: 0, y: 20, scale: 0.95 },
         visible: { opacity: 1, y: 0, scale: 1 },
       }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.33, ease: "easeOut" }}
       viewOptions={{ once: true }}
     >
       <Card
         hover
         variant="elevated"
         padding="lg"
-        className="transition-all duration-200"
+        className="transition-all duration-150"
       >
         <div className="space-y-6">
           {/* Header */}

@@ -45,7 +45,7 @@ export default function LoadingSpinner({
           sizes[size],
         )}
         animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: 0.67, repeat: Infinity, ease: "linear" }}
       />
 
       {text && (
@@ -53,7 +53,7 @@ export default function LoadingSpinner({
           className={cn("text-muted-foreground font-medium", textSizes[size])}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.13 }}
         >
           {text}
         </motion.p>
@@ -68,7 +68,7 @@ export default function LoadingSpinner({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.13 }}
       >
         <Spinner />
       </motion.div>

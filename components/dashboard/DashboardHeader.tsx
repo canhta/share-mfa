@@ -78,7 +78,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
         hidden: { opacity: 0, y: -20 },
         visible: { opacity: 1, y: 0 },
       }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
       viewOptions={{ once: true }}
     >
       <header className="glass-neutral border-b border-gray-200/40 sticky top-0 z-40">
@@ -107,11 +107,11 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                     key={item.name}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.15 }}
+                    transition={{ duration: 0.1 }}
                   >
                     <Link
                       href={item.href}
-                      className={`inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${
+                      className={`inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-150 ${
                         isActivePath(item.href)
                           ? "bg-gray-100/80 text-gray-900 shadow-sm backdrop-blur-sm"
                           : "text-gray-600 hover:text-gray-900 hover:bg-gray-50/80"
@@ -133,7 +133,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                   hidden: { opacity: 0, scale: 0.8 },
                   visible: { opacity: 1, scale: 1 },
                 }}
-                transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+                transition={{ duration: 0.27, delay: 0.2, ease: "easeOut" }}
                 viewOptions={{ once: true }}
               >
                 <div className="hidden md:block relative" ref={dropdownRef}>
@@ -179,7 +179,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                         initial={{ opacity: 0, y: -10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        transition={{ duration: 0.13, ease: "easeOut" }}
                         className="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
                       >
                         <div className="py-1">
@@ -273,7 +273,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
               >
                 <div className="pt-4 space-y-1">
                   {/* Mobile User Info */}
@@ -281,7 +281,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                     className="flex items-center px-3 py-3 mb-4 bg-gray-50/50 backdrop-blur-sm rounded-xl mx-3"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
+                    transition={{ delay: 0.067 }}
                   >
                     <div className="flex-shrink-0">
                       <Image
@@ -313,12 +313,12 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                         key={item.name}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.1 + index * 0.05 }}
+                        transition={{ delay: 0.067 + index * 0.033 }}
                       >
                         <Link
                           href={item.href}
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className={`flex items-center mx-3 px-3 py-2.5 text-base font-medium rounded-xl transition-all duration-200 ${
+                          className={`flex items-center mx-3 px-3 py-2.5 text-base font-medium rounded-xl transition-all duration-150 ${
                             isActivePath(item.href)
                               ? "bg-gray-100/80 text-gray-900 shadow-sm backdrop-blur-sm"
                               : "text-gray-600 hover:text-gray-900 hover:bg-gray-50/80"
@@ -335,7 +335,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + navigation.length * 0.05 }}
+                    transition={{ delay: 0.067 + navigation.length * 0.033 }}
                     className="border-t border-gray-200/40 pt-4 mt-4"
                   >
                     <button

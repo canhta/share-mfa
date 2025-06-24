@@ -202,7 +202,7 @@ export default function AdminSystemPage() {
                       </div>
                       <div className="w-full bg-slate-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full transition-all duration-1000 ease-out ${getProgressColor(resource.color)}`}
+                          className={`h-2 rounded-full transition-all duration-700 ease-out ${getProgressColor(resource.color)}`}
                           style={{ width: `${resource.value}%` }}
                         ></div>
                       </div>

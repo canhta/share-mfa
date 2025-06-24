@@ -56,7 +56,7 @@ export default function HomePage() {
                 hidden: { opacity: 0, y: 20, scale: 0.9 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.6, delay: 1.0, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.67, ease: "easeOut" }}
               viewOptions={{ once: true }}
             >
               <Link href="/login">
@@ -75,7 +75,7 @@ export default function HomePage() {
                 hidden: { opacity: 0, y: 40, scale: 0.9 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.067, ease: "easeOut" }}
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
@@ -109,7 +109,7 @@ export default function HomePage() {
                 hidden: { opacity: 0, y: 40, scale: 0.9 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">
@@ -143,7 +143,7 @@ export default function HomePage() {
                 hidden: { opacity: 0, y: 40, scale: 0.9 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.33, ease: "easeOut" }}
               viewOptions={{ once: true }}
             >
               <Card hover className="text-center">

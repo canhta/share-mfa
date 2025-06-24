@@ -94,7 +94,7 @@ export default function MfaManagement() {
           hidden: { opacity: 0, y: 20 },
           visible: { opacity: 1, y: 0 },
         }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        transition={{ duration: 0.27, ease: "easeOut" }}
         viewOptions={{ once: true }}
       >
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 glass-neutral rounded-2xl">
@@ -142,7 +142,7 @@ export default function MfaManagement() {
             hidden: { opacity: 0, scale: 0.95 },
             visible: { opacity: 1, scale: 1 },
           }}
-          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.33, delay: 0.13, ease: "easeOut" }}
           viewOptions={{ once: true }}
         >
           <EmptyState
@@ -180,8 +180,8 @@ export default function MfaManagement() {
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
               transition={{
-                duration: 0.5,
-                delay: 0.1 + index * 0.1,
+                duration: 0.33,
+                                  delay: 0.067 + index * 0.067,
                 ease: "easeOut",
               }}
               viewOptions={{ once: true }}

@@ -49,7 +49,7 @@ export default function EmptyState({
         hidden: { opacity: 0, y: 20, scale: 0.95 },
         visible: { opacity: 1, y: 0, scale: 1 },
       }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.33, ease: "easeOut" }}
       viewOptions={{ once: true }}
     >
       <div
@@ -61,7 +61,7 @@ export default function EmptyState({
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
+          transition={{ duration: 0.27, delay: 0.067 }}
         >
           {icon || defaultIcon}
         </motion.div>
@@ -94,7 +94,7 @@ export default function EmptyState({
             className="mt-8"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.6 }}
+            transition={{ duration: 0.27, delay: 0.4 }}
           >
             <Button
               onClick={action.onClick}

@@ -36,7 +36,7 @@ export function GlowEffect({
   blur = "medium",
   transition,
   scale = 1,
-  duration = 5,
+  duration = 3.33,
 }: GlowEffectProps) {
   const BASE_TRANSITION = {
     repeat: Infinity,

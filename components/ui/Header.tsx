@@ -107,7 +107,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`text-sm font-semibold leading-6 transition-colors duration-200 ${
+                className={`text-sm font-semibold leading-6 transition-colors duration-150 ${
                   isActivePath(item.href)
                     ? "text-primary border-b-2 border-primary pb-1"
                     : "text-slate-600 hover:text-slate-900"

@@ -82,7 +82,7 @@ export default function AddMfaEntry({ onAdd }: AddMfaEntryProps) {
         hidden: { opacity: 0, y: 20, scale: 0.95 },
         visible: { opacity: 1, y: 0, scale: 1 },
       }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.33, ease: "easeOut" }}
       viewOptions={{ once: true }}
     >
       <Card variant="elevated" className="mb-8">

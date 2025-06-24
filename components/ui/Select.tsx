@@ -18,7 +18,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         className="space-y-2"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
       >
         {label && (
           <label
@@ -37,7 +37,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               "block w-full px-4 py-3 pr-10 text-gray-900",
               "bg-white/80 backdrop-blur-sm",
               "border border-gray-300/60",
-              "rounded-xl shadow-sm transition-all duration-200",
+              "rounded-xl shadow-sm transition-all duration-150",
               "focus-ring-neutral focus:border-gray-500",
               "hover:border-gray-400/80 hover:bg-white/90",
               "appearance-none",
