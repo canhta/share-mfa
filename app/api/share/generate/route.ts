@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { hashPassword } from '@/lib/crypto';
 import { prisma } from '@/lib/prisma';
-import type { ShareResponse } from '@/types/database';
+import type { ShareResponse } from '@/types';
 import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {

@@ -6,7 +6,7 @@ import { InView } from '@/components/motion-primitives/in-view';
 import { TextEffect } from '@/components/motion-primitives/text-effect';
 import { Button, EmptyState } from '@/components/ui';
 import { generateTOTP, getTimeRemaining } from '@/lib/totp';
-import type { MfaEntry } from '@/types/database';
+import type { MfaEntry } from '@/types';
 
 import AddMfaModal from './AddMfaModal';
 import MfaEntryCard from './MfaEntryCard';

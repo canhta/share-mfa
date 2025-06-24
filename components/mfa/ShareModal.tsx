@@ -10,7 +10,7 @@ import FormInput from '@/components/ui/FormInput';
 import Modal from '@/components/ui/Modal';
 import ModalActions from '@/components/ui/ModalActions';
 import Select from '@/components/ui/Select';
-import type { MfaEntry, ShareResponse } from '@/types/database';
+import type { MfaEntry, ShareResponse } from '@/types';
 
 interface ShareModalProps {
   entry: MfaEntry;

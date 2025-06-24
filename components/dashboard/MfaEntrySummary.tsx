@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { InView } from '@/components/motion-primitives/in-view';
 import { TextEffect } from '@/components/motion-primitives/text-effect';
 import { Button, Card } from '@/components/ui';
-import type { MfaEntry } from '@/types/database';
+import type { MfaEntry } from '@/types';
 
 export default function MfaEntrySummary() {
   const [entries, setEntries] = useState<MfaEntry[]>([]);

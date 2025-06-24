@@ -10,7 +10,7 @@ import OnboardingLayout from '@/components/onboarding/OnboardingLayout';
 import ProfileSetupStep from '@/components/onboarding/ProfileSetupStep';
 import WelcomeStep from '@/components/onboarding/WelcomeStep';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { OnboardingData } from '@/types/database';
+import { OnboardingData } from '@/types';
 
 /**
  * Onboarding Page - New user onboarding flow

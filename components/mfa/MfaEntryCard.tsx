@@ -6,7 +6,7 @@ import { AnimatedNumber } from '@/components/motion-primitives/animated-number';
 import { GlowEffect } from '@/components/motion-primitives/glow-effect';
 import { InView } from '@/components/motion-primitives/in-view';
 import { Card, ConfirmDialog, CopyButton, IconButton } from '@/components/ui';
-import type { MfaEntry } from '@/types/database';
+import type { MfaEntry } from '@/types';
 
 import ShareModal from './ShareModal';
 
