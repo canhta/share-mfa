@@ -16,6 +16,8 @@ alwaysApply: false
 - **ALWAYS verify Next.js 15 features** before applying changes (cache(), Server Actions, streaming, etc.)
 - **ALWAYS implement actual code changes** - never just provide suggestions or explanations
 - **ALWAYS use Next.js 15 specific APIs** when available (use cache(), async components, server actions)
+- **ALWAYS create API server routes** - never call Supabase directly from components
+- **ALWAYS use the API layer** for all database interactions
 - **ALWAYS validate code works** by checking for proper imports and syntax
 
 ## ELIMINATE CLIENT-SIDE FETCHING
@@ -24,10 +26,17 @@ alwaysApply: false
 - Use `cache()` for data functions
 
 ```typescript
-// ❌ DELETE THIS
+// ❌ DELETE THIS - Direct Supabase calls
+import { createClient } from '@/utils/supabase/client'
+useEffect(() => {
+  const supabase = createClient()
+  supabase.from('table').select('*').then(setData)
+}, [])
+
+// ❌ DELETE THIS - Client-side fetching
 useEffect(() => { fetch('/api/data').then(setData) }, [])
 
-// ✅ DO THIS INSTEAD - Next.js 15 with cache()
+// ✅ DO THIS INSTEAD - Server component with API layer
 import { cache } from 'react'
 
 const getData = cache(async () => {
@@ -41,12 +50,25 @@ export default async function Page() {
   const data = await getData()
   return <div>{data}</div>
 }
+
+// ✅ CREATE API ROUTE - Always use server API layer
+// app/api/data/route.ts
+import { createClient } from '@/utils/supabase/server'
+
+export async function GET() {
+  const supabase = createClient()
+  const { data, error } = await supabase.from('table').select('*')
+  
+  if (error) return Response.json({ error }, { status: 500 })
+  return Response.json(data)
+}
 ```
 
-## CENTRALIZE SHARED STATE
+## CENTRALIZE SHARED STATE + API LAYER
 - Create context providers in `lib/contexts/`
-- Fetch initial data server-side in root layout
+- Fetch initial data server-side in root layout using API routes
 - Pass server data to client context
+- Always create API endpoints for data access
 
 ```typescript
 // lib/contexts/app-context.tsx
@@ -54,10 +76,23 @@ export function AppProvider({ children, serverData }) {
   return <Context.Provider value={serverData}>{children}</Context.Provider>
 }
 
-// app/layout.tsx
+// app/layout.tsx - Use API layer, never direct Supabase
 export default async function Layout({ children }) {
-  const serverData = await getServerData()
+  const serverData = await fetch('/api/server-data').then(r => r.json())
   return <AppProvider serverData={serverData}>{children}</AppProvider>
+}
+
+// app/api/server-data/route.ts - API layer for server data
+import { createClient } from '@/utils/supabase/server'
+
+export async function GET() {
+  const supabase = createClient()
+  const [user, settings] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.from('settings').select('*').single()
+  ])
+  
+  return Response.json({ user: user.data.user, settings: settings.data })
 }
 ```
 
@@ -69,7 +104,9 @@ export default async function Layout({ children }) {
 
 ## MANDATORY ACTIONS
 - [ ] **Research Context7 docs** before making changes
-- [ ] Search codebase for `useEffect` + `fetch`
+- [ ] Search codebase for direct Supabase client calls - ELIMINATE ALL
+- [ ] Search codebase for `useEffect` + `fetch` patterns
+- [ ] Create API routes in `app/api/` for all data operations
 - [ ] Convert found patterns to server components with Next.js 15 features
 - [ ] Add `cache()` to all server data functions with proper revalidation
 - [ ] Replace client loading states with server data + Suspense
@@ -78,13 +115,29 @@ export default async function Layout({ children }) {
 
 ## STOP DOING THIS
 ```typescript
-// Multiple API calls for same data
+// ❌ Direct Supabase calls from components
+import { createClient } from '@/utils/supabase/client'
+function Component() {
+  const supabase = createClient()
+  const [data, setData] = useState(null)
+  useEffect(() => {
+    supabase.from('users').select('*').then(({ data }) => setData(data))
+  }, [])
+}
+
+// ❌ Multiple API calls for same data
 function Header() { useSWR('/api/user') }
 function Nav() { useSWR('/api/user') }
 
-// Client loading for server data
+// ❌ Client loading for server data
 const [loading, setLoading] = useState(true)
 useEffect(() => fetchData().then(() => setLoading(false)), [])
 ```
+
+## API LAYER REQUIREMENTS
+- **NEVER import Supabase client** in components or pages
+- **ALWAYS create API routes** for database operations
+- **Use server-side Supabase** only in API routes (`@/utils/supabase/server`)
+- **Fetch data through API endpoints** from server components
 
 **APPLY IMMEDIATELY when refactoring components with data fetching.**
