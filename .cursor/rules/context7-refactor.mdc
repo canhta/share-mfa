@@ -1,0 +1,90 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: Context7 refactoring - eliminate client fetching, centralize state, maximize SSR with Next.js 15 features
+globs: ["app/**/*", "components/**/*", "lib/**/*"]
+alwaysApply: false
+---
+
+# Context7 Refactoring Commands
+
+## AGENT INSTRUCTIONS
+- **ALWAYS research Context7 documentation** using available tools to understand latest patterns
+- **ALWAYS verify Next.js 15 features** before applying changes (cache(), Server Actions, streaming, etc.)
+- **ALWAYS implement actual code changes** - never just provide suggestions or explanations
+- **ALWAYS use Next.js 15 specific APIs** when available (use cache(), async components, server actions)
+- **ALWAYS validate code works** by checking for proper imports and syntax
+
+## ELIMINATE CLIENT-SIDE FETCHING
+- Remove all `useEffect` + `fetch` patterns
+- Convert to async server components
+- Use `cache()` for data functions
+
+```typescript
+// ❌ DELETE THIS
+useEffect(() => { fetch('/api/data').then(setData) }, [])
+
+// ✅ DO THIS INSTEAD - Next.js 15 with cache()
+import { cache } from 'react'
+
+const getData = cache(async () => {
+  const res = await fetch('/api/data', {
+    next: { revalidate: 3600, tags: ['data'] }
+  })
+  return res.json()
+})
+
+export default async function Page() {
+  const data = await getData()
+  return <div>{data}</div>
+}
+```
+
+## CENTRALIZE SHARED STATE
+- Create context providers in `lib/contexts/`
+- Fetch initial data server-side in root layout
+- Pass server data to client context
+
+```typescript
+// lib/contexts/app-context.tsx
+export function AppProvider({ children, serverData }) {
+  return <Context.Provider value={serverData}>{children}</Context.Provider>
+}
+
+// app/layout.tsx
+export default async function Layout({ children }) {
+  const serverData = await getServerData()
+  return <AppProvider serverData={serverData}>{children}</AppProvider>
+}
+```
+
+## RESEARCH CONTEXT7 FIRST
+- Use `mcp_context7_resolve-library-id` to find Context7 library
+- Use `mcp_context7_get-library-docs` to get latest patterns
+- Search web for "Context7 Next.js 15" best practices
+- Apply latest Context7 patterns found in documentation
+
+## MANDATORY ACTIONS
+- [ ] **Research Context7 docs** before making changes
+- [ ] Search codebase for `useEffect` + `fetch`
+- [ ] Convert found patterns to server components with Next.js 15 features
+- [ ] Add `cache()` to all server data functions with proper revalidation
+- [ ] Replace client loading states with server data + Suspense
+- [ ] Use context instead of prop drilling
+- [ ] **Implement actual code changes** - don't just suggest
+
+## STOP DOING THIS
+```typescript
+// Multiple API calls for same data
+function Header() { useSWR('/api/user') }
+function Nav() { useSWR('/api/user') }
+
+// Client loading for server data
+const [loading, setLoading] = useState(true)
+useEffect(() => fetchData().then(() => setLoading(false)), [])
+```
+
+**APPLY IMMEDIATELY when refactoring components with data fetching.**
